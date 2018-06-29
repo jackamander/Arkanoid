@@ -1,0 +1,5 @@
+{
+    "screen_size" : [256, 200],
+    "full_screen" : false,
+    "frame_rate" : 60
+}
