@@ -25,23 +25,19 @@ def main():
 
     # Mainloop
     clock = pygame.time.Clock()
-    running = True
 
     eng = engine.Engine(config)
 
-    while running:
+    while True:
 
         # Event pump
         for event in pygame.event.get():
             logging.debug("Event: %s", pygame.event.event_name(event.type))
 
             if event.type == pygame.QUIT:
-                running = False
-            else:
-                running = eng.input(event)
+                return
 
-        if not running:
-            break
+            eng.input(event)
 
         eng.draw(camera)
 

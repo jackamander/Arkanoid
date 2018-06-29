@@ -27,7 +27,7 @@ class Engine(object):
         self.allsprites = pygame.sprite.RenderPlain(self.paddle)
 
     def input(self, event):
-        return True
+        pass
 
     def update(self):
         pass
