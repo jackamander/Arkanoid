@@ -33,19 +33,24 @@ class Camera(object):
     def clear(self, color):
         self.screen.fill(utils.color(color))
 
-    def draw_text(self, text, pos, size=30, color="black", aa=False):
-        """Draw some text."""
-        font = self.get_font(size)
-        surf = font.render(text, aa, utils.color(color))
-        self.screen.blit(surf, pos)
+    def draw_text(self, text, pos):
+        config = utils.get_config("config.json")["font"]
+        filename = config["filename"]
+        size = config["size"]
+        characters = config["characters"]
 
-    def get_font(self, size):
-        if size in self.fonts:
-            font = self.fonts[size]
-        else:
-            font = pygame.font.Font(None, size)
-            self.fonts[size] = font
-        return font
+        for char in text:
+            for row, data in enumerate(characters):
+                col = data.find(char)
+                if col > -1:
+                    offset = (col * size[0], row * size[1])
+                    break
+            else:
+                raise ValueError("Unsupported Character: %s" % char)
+
+            image = get_image(filename, pygame.Rect(offset, size))
+            self.screen.blit(image, pos)
+            pos = [pos[0] + size[0], pos[1]]
 
 image_cache = {}
 
@@ -63,4 +68,3 @@ def get_image(name, rect=None):
         image = image.subsurface(rect)
 
     return image
-

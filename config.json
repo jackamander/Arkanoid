@@ -1,5 +1,257 @@
 {
-    "screen_size" : [256, 200],
+    "screen_size" : [256, 224],
     "full_screen" : false,
-    "frame_rate" : 60
+    "frame_rate" : 60,
+    "sprites" : {
+        "vaus" : {
+            "filename" : "vaus.png",
+            "size" : [32, 8],
+            "offsets" : [[0, 0]],
+            "position" : [80,201]
+        },
+        "vause" : {
+            "filename" : "vaus.png",
+            "size" : [48, 8],
+            "offsets" : [[0, 8]]
+        },
+        "vausl" : {
+            "filename" : "vaus.png",
+            "size" : [32, 32],
+            "offsets" : [[0, 16]]
+        },
+        "ball" : {
+            "filename" : "vaus.png",
+            "size" : [5, 4],
+            "offsets" : [[40, 0]]
+        },
+        "laser" : {
+            "filename" : "vaus.png",
+            "size" : [16, 8],
+            "offsets" : [[40, 16]]
+        },
+        "bg1" : {
+            "filename" : "fields.png",
+            "size" : [192, 232],
+            "offsets" : [[0, 0]],
+            "position" : [8,0]
+        },
+        "bg2" : {
+            "filename" : "fields.png",
+            "size" : [192, 232],
+            "offsets" : [[192, 0]],
+            "position" : [8,0]
+        },
+        "bg3" : {
+            "filename" : "fields.png",
+            "size" : [192, 232],
+            "offsets" : [[384, 0]],
+            "position" : [8,0]
+        },
+        "bg4" : {
+            "filename" : "fields.png",
+            "size" : [192, 232],
+            "offsets" : [[576, 0]],
+            "position" : [8,0]
+        },
+        "bg5" : {
+            "filename" : "fields.png",
+            "size" : [192, 232],
+            "offsets" : [[768, 0]],
+            "position" : [8,0]
+        },
+        "cornl" : {
+            "filename" : "blocks and backgrounds.png",
+            "size" : [8, 8],
+            "offsets" : [[64, 32]]
+        },
+        "connh" : {
+            "filename" : "blocks and backgrounds.png",
+            "size" : [8, 8],
+            "offsets" : [[72, 32]]
+        },
+        "cornr" : {
+            "filename" : "blocks and backgrounds.png",
+            "size" : [8, 8],
+            "offsets" : [[80, 32]]
+        },
+        "connv" : {
+            "filename" : "blocks and backgrounds.png",
+            "size" : [8, 8],
+            "offsets" : [[64, 40]]
+        },
+        "pipeh" : {
+            "filename" : "blocks and backgrounds.png",
+            "size" : [32, 8],
+            "offsets" : [[64, 48]]
+        },
+        "pipev" : {
+            "filename" : "blocks and backgrounds.png",
+            "size" : [8, 32],
+            "offsets" : [[96, 32]]
+        },
+        "inlet" : {
+            "filename" : "blocks and backgrounds.png",
+            "size" : [24, 8],
+            "offsets" : [[64, 56], [64, 64], [64, 56]],
+            "speed" : 5
+        },
+        "warp" : {
+            "filename" : "blocks and backgrounds.png",
+            "size" : [8, 24],
+            "offsets" : [[104, 32], [112, 32], [120, 32]],
+            "speed" : 1
+        },
+        "w" : {
+            "filename" : "blocks and backgrounds.png",
+            "size" : [16, 8],
+            "offsets" : [[0, 64]]
+        },
+        "p" : {
+            "filename" : "blocks and backgrounds.png",
+            "size" : [16, 8],
+            "offsets" : [[16, 64]]
+        },
+        "c" : {
+            "filename" : "blocks and backgrounds.png",
+            "size" : [16, 8],
+            "offsets" : [[32, 64]]
+        },
+        "g" : {
+            "filename" : "blocks and backgrounds.png",
+            "size" : [16, 8],
+            "offsets" : [[48, 64]]
+        },
+        "r" : {
+            "filename" : "blocks and backgrounds.png",
+            "size" : [16, 8],
+            "offsets" : [[0, 72]]
+        },
+        "b" : {
+            "filename" : "blocks and backgrounds.png",
+            "size" : [16, 8],
+            "offsets" : [[16, 72]]
+        },
+        "m" : {
+            "filename" : "blocks and backgrounds.png",
+            "size" : [16, 8],
+            "offsets" : [[32, 72]]
+        },
+        "o" : {
+            "filename" : "blocks and backgrounds.png",
+            "size" : [16, 8],
+            "offsets" : [[48, 72]]
+        },
+        "s" : {
+            "filename" : "blocks and backgrounds.png",
+            "size" : [16, 8],
+            "offsets" : [[0, 80], [16, 80], [32, 80], [48, 80], [64, 80], [80, 80]],
+            "speed" : 2
+        },
+        "y" : {
+            "filename" : "blocks and backgrounds.png",
+            "size" : [16, 8],
+            "offsets" : [[0, 88], [16, 88], [32, 88], [48, 88], [64, 88], [80, 88]],
+            "speed" : 2
+        },
+        "B" : {
+            "filename" : "capsules.png",
+            "size" : [16, 8],
+            "offsets" : [[0, 0], [16, 0], [32, 0], [48, 0], [64, 0], [80, 0]],
+            "speed" : 2
+        },
+        "C" : {
+            "filename" : "capsules.png",
+            "size" : [16, 8],
+            "offsets" : [[0, 8], [16, 8], [32, 8], [48, 8], [64, 8], [80, 8]],
+            "speed" : 2
+        },
+        "D" : {
+            "filename" : "capsules.png",
+            "size" : [16, 8],
+            "offsets" : [[0, 16], [16, 16], [32, 16], [48, 16], [64, 16], [80, 16]],
+            "speed" : 2
+        },
+        "E" : {
+            "filename" : "capsules.png",
+            "size" : [16, 8],
+            "offsets" : [[0, 24], [16, 24], [32, 24], [48, 24], [64, 24], [80, 24]],
+            "speed" : 2
+        },
+        "L" : {
+            "filename" : "capsules.png",
+            "size" : [16, 8],
+            "offsets" : [[0, 32], [16, 32], [32, 32], [48, 32], [64, 32], [80, 32]],
+            "speed" : 2
+        },
+        "P" : {
+            "filename" : "capsules.png",
+            "size" : [16, 8],
+            "offsets" : [[0, 40], [16, 40], [32, 40], [48, 40], [64, 40], [80, 40]],
+            "speed" : 2
+        },
+        "S" : {
+            "filename" : "capsules.png",
+            "size" : [16, 8],
+            "offsets" : [[0, 48], [16, 48], [32, 48], [48, 48], [64, 48], [80, 48]],
+            "speed" : 2
+        },
+        "alien1" : {
+            "filename" : "enemies.png",
+            "size" : [16, 16],
+            "offsets" : [[0, 0], [16, 0], [32, 0], [48, 0], [64, 0], [80, 0], [96, 0], [112, 0]],
+            "speed" : 5
+        },
+        "alien2" : {
+            "filename" : "enemies.png",
+            "size" : [16, 16],
+            "offsets" : [[0, 16], [16, 16], [32, 16], [48, 16], [64, 16], [80, 16], [96, 16]],
+            "speed" : 5
+        },
+        "alien3" : {
+            "filename" : "enemies.png",
+            "size" : [16, 16],
+            "offsets" : [[0, 32], [16, 32], [32, 32], [48, 32], [64, 32], [80, 32]],
+            "speed" : 5
+        },
+        "alien4" : {
+            "filename" : "enemies.png",
+            "size" : [16, 16],
+            "offsets" : [[0, 48], [16, 48], [32, 48], [48, 48], [64, 48], [80, 48], [96, 48], [112, 48]],
+            "speed" : 5
+        },
+        "aliendead" : {
+            "filename" : "enemies.png",
+            "size" : [16, 16],
+            "offsets" : [[0, 64], [16, 64], [32, 64], [48, 64]],
+            "speed" : 3
+        }
+    },
+    "playspace" : [16,8,176,224],
+    "levels" : {
+        "1" : [
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "sssssssssss",
+            "rrrrrrrrrrr",
+            "bbbbbbbbbbb",
+            "ooooooooooo",
+            "ppppppppppp",
+            "ggggggggggg"
+        ]
+    },
+    "font" : {
+        "filename" : "nesfont8.png",
+        "size" : [8,8],
+        "characters" : [
+            " !\"#$%&'()*+,-./",
+            "0123456789:;<=>?",
+            "@ABCDEFGHIJKLMNO",
+            "PQRSTUVWXYZ[\\]^_",
+            "`abcdefghijklmno",
+            "pqrstuvwxyz{|}~"
+        ]
+
+    }
 }
