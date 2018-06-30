@@ -12,13 +12,13 @@ import utils
 
 class Camera(object):
     """Screen management."""
-    def __init__(self, config):
+    def __init__(self):
         self.fonts = {}
 
-        size = config['screen_size']
+        size = utils.config['screen_size']
 
         flags = 0
-        if config['full_screen']:
+        if utils.config['full_screen']:
             flags = pygame.FULLSCREEN | pygame.HWSURFACE | pygame.DOUBLEBUF
 
         self.screen = pygame.display.set_mode(size, flags)
@@ -34,7 +34,7 @@ class Camera(object):
         self.screen.fill(utils.color(color))
 
     def draw_text(self, text, pos):
-        config = utils.get_config("config.json")["font"]
+        config = utils.config["font"]
         filename = config["filename"]
         size = config["size"]
         characters = config["characters"]

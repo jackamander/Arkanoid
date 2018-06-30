@@ -13,20 +13,20 @@ import display
 import engine
 import utils
 
+def init():
+    utils.config = utils.get_config("config.json")
 
 def main():
     """Main loop"""
-
-    config = utils.get_config("config.json")
-
     pygame.init()
 
-    camera = display.Camera(config)
+    camera = display.Camera()
+    pygame.display.set_caption(utils.config["title"])
 
     # Mainloop
     clock = pygame.time.Clock()
 
-    eng = engine.Engine(config)
+    eng = engine.Engine()
 
     while True:
 
@@ -44,13 +44,14 @@ def main():
         fps = str(int(clock.get_fps()))
         camera.draw_text(fps, (0, 0))
 
-        clock.tick(config["frame_rate"])
+        clock.tick(utils.config["frame_rate"])
         pygame.display.flip()
 
 if __name__ == '__main__':
     utils.setup_logging("logging.json")
 
     try:
+        init()
         main()
     except Exception as exc:
         logging.exception("Uncaught exception!")

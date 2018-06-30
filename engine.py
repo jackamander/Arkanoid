@@ -7,16 +7,14 @@ import pygame
 import display
 import utils
 
-
-
 class Sprite(pygame.sprite.Sprite):
-    def __init__(self, config):
+    def __init__(self, cfg):
         pygame.sprite.Sprite.__init__(self)
 
-        name = config["filename"]
-        size = config["size"]
-        offsets = config["offsets"]
-        pos = config.get("position", [0,0])
+        name = cfg["filename"]
+        size = cfg["size"]
+        offsets = cfg["offsets"]
+        pos = cfg.get("position", [0,0])
 
         rects = [pygame.Rect(offset, size) for offset in offsets]
 
@@ -35,18 +33,19 @@ class Sprite(pygame.sprite.Sprite):
         self.rect.y += delta[1]
 
 class Engine(object):
-    def __init__(self, config):
-        sprites = config["sprites"]
+    def __init__(self):
+        sprites = utils.config["sprites"]
+        level = utils.config["levels"]["1"]
 
-        self.playspace = pygame.Rect(*config["playspace"])
+        self.playspace = pygame.Rect(*utils.config["playspace"])
 
-        bg1 = Sprite(sprites["bg1"])
+        bg1 = Sprite(sprites[level["bg"]])
         self.bg = pygame.sprite.Group(bg1)
 
-        self.vaus = Sprite(sprites["vaus"])
+        self.paddle = Sprite(sprites["paddle"])
 
-        self.fg = pygame.sprite.Group(self.vaus)
-        for row, data in enumerate(config["levels"]["1"]):
+        self.fg = pygame.sprite.Group(self.paddle)
+        for row, data in enumerate(level["map"]):
             for col, block in enumerate(data):
                 cfg = sprites.get(block, None)
                 if cfg:
@@ -59,8 +58,8 @@ class Engine(object):
 
     def input(self, event):
         if event.type == pygame.MOUSEMOTION:
-            self.vaus.move([event.rel[0],0])
-            self.vaus.rect.clamp_ip(self.playspace)
+            self.paddle.move([event.rel[0],0])
+            self.paddle.rect.clamp_ip(self.playspace)
 
     def update(self):
         pass

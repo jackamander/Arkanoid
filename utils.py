@@ -50,3 +50,6 @@ def blend(color1, color2, ratio):
     color2 = color(color2)
     final = lerp(color1, color2, ratio)
     return final
+
+# Global config file - initialized in main
+config = None

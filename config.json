@@ -1,20 +1,22 @@
 {
+    "title" : "Arkanoid",
     "screen_size" : [256, 224],
     "full_screen" : false,
     "frame_rate" : 60,
+    "playspace" : [16,8,176,224],
     "sprites" : {
-        "vaus" : {
+        "paddle" : {
             "filename" : "vaus.png",
             "size" : [32, 8],
             "offsets" : [[0, 0]],
             "position" : [80,201]
         },
-        "vause" : {
+        "paddle_ext" : {
             "filename" : "vaus.png",
             "size" : [48, 8],
             "offsets" : [[0, 8]]
         },
-        "vausl" : {
+        "paddle_laser" : {
             "filename" : "vaus.png",
             "size" : [32, 32],
             "offsets" : [[0, 16]]
@@ -226,20 +228,22 @@
             "speed" : 3
         }
     },
-    "playspace" : [16,8,176,224],
     "levels" : {
-        "1" : [
-            "           ",
-            "           ",
-            "           ",
-            "           ",
-            "sssssssssss",
-            "rrrrrrrrrrr",
-            "bbbbbbbbbbb",
-            "ooooooooooo",
-            "ppppppppppp",
-            "ggggggggggg"
-        ]
+        "1" : {
+            "bg" : "bg1",
+            "map" : [
+                "           ",
+                "           ",
+                "           ",
+                "           ",
+                "sssssssssss",
+                "rrrrrrrrrrr",
+                "bbbbbbbbbbb",
+                "ooooooooooo",
+                "ppppppppppp",
+                "ggggggggggg"
+            ]
+        }
     },
     "font" : {
         "filename" : "nesfont8.png",
