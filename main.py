@@ -13,11 +13,8 @@ import display
 import engine
 import utils
 
-def init():
-    utils.config = utils.get_config("config.json")
-
 def main():
-    """Main loop"""
+    utils.config = utils.get_config("config.json")
     pygame.init()
 
     screen = display.init_screen()
@@ -51,7 +48,6 @@ if __name__ == '__main__':
     utils.setup_logging("logging.json")
 
     try:
-        init()
         main()
     except Exception as exc:
         logging.exception("Uncaught exception!")
