@@ -33,24 +33,28 @@ class Camera(object):
     def clear(self, color):
         self.screen.fill(utils.color(color))
 
-    def draw_text(self, text, pos):
-        config = utils.config["font"]
-        filename = config["filename"]
-        size = config["size"]
-        characters = config["characters"]
+def draw_text(text):
+    config = utils.config["font"]
+    filename = config["filename"]
+    size = config["size"]
+    characters = config["characters"]
 
-        for char in text:
-            for row, data in enumerate(characters):
-                col = data.find(char)
-                if col > -1:
-                    offset = (col * size[0], row * size[1])
-                    break
-            else:
-                raise ValueError("Unsupported Character: %s" % char)
+    surf = pygame.Surface([size[0]*len(text), size[1]])
+    pos = 0
+    for char in text:
+        for row, data in enumerate(characters):
+            col = data.find(char)
+            if col > -1:
+                offset = (col * size[0], row * size[1])
+                break
+        else:
+            raise ValueError("Unsupported Character: %s" % char)
 
-            image = get_image(filename, pygame.Rect(offset, size))
-            self.screen.blit(image, pos)
-            pos = [pos[0] + size[0], pos[1]]
+        image = get_image(filename, pygame.Rect(offset, size))
+        surf.blit(image, [pos, 0])
+        pos += size[0]
+
+    return surf
 
 image_cache = {}
 

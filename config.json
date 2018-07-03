@@ -4,7 +4,7 @@
     "full_screen" : false,
     "frame_rate" : 60,
     "playspace" : [16,8,176,224],
-    "sprites" : {
+    "images" : {
         "paddle" : {
             "filename" : "vaus.png",
             "size" : [32, 8],
@@ -226,6 +226,30 @@
             "size" : [16, 16],
             "offsets" : [[0, 64], [16, 64], [32, 64], [48, 64]],
             "speed" : 3
+        },
+        "arkanoid" : {
+            "filename" : "Arkanoid.png",
+            "size" : [122, 23],
+            "offsets" : [[763, 1685]],
+            "position" : [67,61]
+        },
+        "taito" : {
+            "filename" : "Arkanoid.png",
+            "size" : [72, 15],
+            "offsets" : [[788, 1797]],
+            "position" : [92,169]
+        },
+        "copyright" : {
+            "filename" : "Arkanoid.png",
+            "size" : [8, 8],
+            "offsets" : [[728, 1820]],
+            "position" : [32, 192]
+        },
+        "cursor" : {
+            "filename" : "Arkanoid.png",
+            "size" : [8, 8],
+            "offsets" : [[780, 1748]],
+            "position" : [80, 120]
         }
     },
     "levels" : {

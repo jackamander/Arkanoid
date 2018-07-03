@@ -39,10 +39,12 @@ def main():
 
             eng.input(event)
 
+        eng.update()
+
         eng.draw(camera)
 
         fps = str(int(clock.get_fps()))
-        camera.draw_text(fps, (0, 0))
+        camera.screen.blit(display.draw_text(fps), (0, 0))
 
         clock.tick(utils.config["frame_rate"])
         pygame.display.flip()
