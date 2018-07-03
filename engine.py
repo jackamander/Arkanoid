@@ -74,10 +74,10 @@ class Level(object):
     def update(self):
         pass
 
-    def draw(self, camera):
-        camera.clear("black")
-        self.bg.draw(camera.screen)
-        self.fg.draw(camera.screen)
+    def draw(self, screen):
+        screen.fill(utils.color("black"))
+        self.bg.draw(screen)
+        self.fg.draw(screen)
 
 
 class State(object):
@@ -90,7 +90,7 @@ class State(object):
     def update(self):
         pass
 
-    def draw(self, camera):
+    def draw(self, screen):
         pass
 
 def render_scene(name, vars):
@@ -133,9 +133,9 @@ class TitleState(State):
     def update(self):
         pass
 
-    def draw(self, camera):
+    def draw(self, screen):
         surf = render_scene("title", {"p1score":0, "hiscore":0})
-        camera.screen.blit(surf, [0,0])
+        screen.blit(surf, [0,0])
 
 class BlinkState(TitleState):
     def __init__(self, engine):
@@ -155,8 +155,8 @@ class BlinkState(TitleState):
         if self.sound.is_done():
             return "level"
 
-    def draw(self, camera):
-        TitleState.draw(self, camera)
+    def draw(self, screen):
+        TitleState.draw(self, screen)
 
         if self.engine.players == 1:
             rect = pygame.Rect(96, 120, 72, 8)
@@ -164,15 +164,15 @@ class BlinkState(TitleState):
             rect = pygame.Rect(96, 136, 72, 8)
 
         if self.timer < self.blink_rate:
-            camera.screen.fill(utils.color("black"), rect)
+            screen.fill(utils.color("black"), rect)
 
 class LevelState(State):
     def __init__(self, engine):
         State.__init__(self, engine)
 
-    def draw(self, camera):
-        camera.clear("black")
-        camera.screen.blit(display.draw_text("ROUND %2d" % self.engine.level), [96, 108])
+    def draw(self, screen):
+        screen.fill(utils.color("black"))
+        screen.blit(display.draw_text("ROUND %2d" % self.engine.level), [96, 108])
 
 class Engine(object):
     def __init__(self):
@@ -195,5 +195,5 @@ class Engine(object):
         next_state = self.state.update()
         self.set_state(next_state)
 
-    def draw(self, camera):
-        self.state.draw(camera)
+    def draw(self, screen):
+        self.state.draw(screen)

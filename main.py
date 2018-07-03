@@ -20,10 +20,8 @@ def main():
     """Main loop"""
     pygame.init()
 
-    camera = display.Camera()
-    pygame.display.set_caption(utils.config["title"])
+    screen = display.init_screen()
 
-    # Mainloop
     clock = pygame.time.Clock()
 
     eng = engine.Engine()
@@ -41,10 +39,10 @@ def main():
 
         eng.update()
 
-        eng.draw(camera)
+        eng.draw(screen)
 
         fps = str(int(clock.get_fps()))
-        camera.screen.blit(display.draw_text(fps), (0, 0))
+        screen.blit(display.draw_text(fps), (0, 0))
 
         clock.tick(utils.config["frame_rate"])
         pygame.display.flip()
