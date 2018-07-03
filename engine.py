@@ -7,10 +7,21 @@ import pygame
 import display
 import utils
 
+class Sound:
+    def __init__(self, name):
+        cfg = utils.config["sounds"][name]
+        sound = pygame.mixer.Sound(cfg["filename"])
+        self.channel = sound.play(maxtime = cfg["range"][1])
+
+    def is_done(self):
+        return not self.channel.get_busy()
+
+
 class Sprite(pygame.sprite.Sprite):
-    def __init__(self, cfg):
+    def __init__(self, name):
         pygame.sprite.Sprite.__init__(self)
 
+        cfg = utils.config["images"][name]
         name = cfg["filename"]
         size = cfg["size"]
         offsets = cfg["offsets"]
@@ -40,18 +51,16 @@ class Level(object):
         level = utils.config["levels"][key]
         self.playspace = pygame.Rect(*utils.config["playspace"])
 
-        sprites = utils.config["images"]
         bg_key = level["bg"]
-        self.bg = pygame.sprite.Group(Sprite(sprites[bg_key]))
+        self.bg = pygame.sprite.Group(Sprite(bg_key))
 
-        self.paddle = Sprite(sprites["paddle"])
+        self.paddle = Sprite("paddle")
 
         self.fg = pygame.sprite.Group(self.paddle)
         for row, data in enumerate(level["map"]):
             for col, block in enumerate(data):
-                cfg = sprites.get(block, None)
-                if cfg:
-                    sprite = Sprite(cfg)
+                if block != " ":
+                    sprite = Sprite(block)
                     lft, top = self.playspace.topleft
                     wid, hgt = sprite.rect.size
                     sprite.set_pos([lft + col * wid, top + row * hgt])
@@ -84,19 +93,28 @@ class State(object):
     def draw(self, camera):
         pass
 
+def render_scene(name, vars):
+    cfg = utils.config["scenes"][name]
+
+    surf = pygame.Surface(utils.config["screen_size"])
+
+    surf.fill(utils.color(cfg["bg"]))
+
+    for type_, key, pos in cfg["sprites"]:
+        if type_ == "text":
+            image = display.draw_text(key)
+            surf.blit(image, pos)
+        elif type_ == "var":
+            text = str(vars[key])
+            image = display.draw_text(text)
+            surf.blit(image, pos)
+        elif type_ == "image":
+            sprite = Sprite(key)
+            surf.blit(sprite.image, pos)
+
+    return surf
+
 class TitleState(State):
-    def __init__(self, engine):
-        State.__init__(self, engine)
-
-        sprites = utils.config["images"]
-
-        arkanoid = Sprite(sprites["arkanoid"])
-        taito = Sprite(sprites["taito"])
-        copyright = Sprite(sprites["copyright"])
-        self.cursor = Sprite(sprites["cursor"])
-
-        self.group = pygame.sprite.Group(arkanoid, taito, copyright, self.cursor)
-
     def input(self, event):
         if event.type == pygame.MOUSEMOTION:
             pass
@@ -116,34 +134,17 @@ class TitleState(State):
         pass
 
     def draw(self, camera):
-        if self.engine.players == 1:
-            self.cursor.set_pos([80, 120])
-        else:
-            self.cursor.set_pos([80, 136])
-
-        camera.clear("black")
-        camera.screen.blit(display.draw_text("1UP"), [32, 8])
-        camera.screen.blit(display.draw_text("HIGH SCORE"), [88, 8])
-        camera.screen.blit(display.draw_text("00"), [48, 16])
-        camera.screen.blit(display.draw_text("50000"), [112, 16])
-        camera.screen.blit(display.draw_text("1 PLAYER"), [96, 120])
-        camera.screen.blit(display.draw_text("2 PLAYERS"), [96, 136])
-        camera.screen.blit(display.draw_text("TAITO CORPORATION 1987"), [48, 192])
-        camera.screen.blit(display.draw_text("LICENSED BY"), [84, 200])
-        camera.screen.blit(display.draw_text("NINTENDO OF AMERICA INC."), [32, 208])
-        self.group.draw(camera.screen)
+        surf = render_scene("title", {"p1score":0, "hiscore":0})
+        camera.screen.blit(surf, [0,0])
 
 class BlinkState(TitleState):
     def __init__(self, engine):
         TitleState.__init__(self, engine)
 
-        self.cursor.kill()
-
         self.timer = 0
         self.blink_rate = utils.config["frame_rate"] / 2
 
-        sound = pygame.mixer.Sound("resources\\sounds\\Intro.wav")
-        self.channel = sound.play(maxtime=4500)
+        self.sound = Sound("Intro")
 
     def input(self, event):
         pass
@@ -151,7 +152,7 @@ class BlinkState(TitleState):
     def update(self):
         self.timer = (self.timer + 1) % (self.blink_rate * 2)
 
-        if not self.channel.get_busy():
+        if self.sound.is_done():
             return "level"
 
     def draw(self, camera):
@@ -171,14 +172,13 @@ class LevelState(State):
 
     def draw(self, camera):
         camera.clear("black")
-
-
+        camera.screen.blit(display.draw_text("ROUND %2d" % self.engine.level), [96, 108])
 
 class Engine(object):
     def __init__(self):
         self.high = 0
         self.players = 1
-        self.level = Level("1")
+        self.level = 1
         self.state = TitleState(self)
 
     def set_state(self, next_state):

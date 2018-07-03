@@ -58,15 +58,13 @@ def draw_text(text):
 
 image_cache = {}
 
-def get_image(name, rect=None):
-    fullname = os.path.join("resources", "images", name)
-
-    if fullname in image_cache:
-        image = image_cache[fullname]
+def get_image(fname, rect=None):
+    if fname in image_cache:
+        image = image_cache[fname]
     else:
-        image = pygame.image.load(fullname)
+        image = pygame.image.load(fname)
         image = image.convert_alpha()
-        image_cache[fullname] = image
+        image_cache[fname] = image
 
     if rect:
         image = image.subsurface(rect)
