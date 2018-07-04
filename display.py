@@ -59,7 +59,7 @@ def draw_text(text):
 
 image_cache = {}
 
-def _load_image(fname, rect=None):
+def _load_image(fname, rect=None, scaled=[]):
     if fname in image_cache:
         image = image_cache[fname]
     else:
@@ -70,6 +70,9 @@ def _load_image(fname, rect=None):
     if rect:
         image = image.subsurface(rect)
 
+    if scaled:
+        image = pygame.transform.smoothscale(image, scaled)
+
     return image
 
 def get_image(name):
@@ -78,15 +81,28 @@ def get_image(name):
     fname = cfg["filename"]
     size = cfg.get("size")
     offsets = cfg.get("offsets")
+    scaled = cfg.get("scaled")
 
     if size and offsets:
         rect = pygame.Rect(offsets[0], size)
     else:
         rect = None
 
-    image = _load_image(fname, rect)
+    image = _load_image(fname, rect, scaled)
 
     return image
+
+class Follow:
+    def __init__(self, target):
+        self.target = target
+        self.last = target.get_pos()
+
+    def update(self, sprite):
+        pos = self.target.get_pos()
+        if pos != self.last:
+            delta = [pos[0] - self.last[0], pos[1] - self.last[1]]
+            sprite.move(delta)
+            self.last = pos
 
 class Blink:
     def __init__(self, rate):

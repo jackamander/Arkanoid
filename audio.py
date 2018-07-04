@@ -7,6 +7,10 @@ import utils
 
 def play_sound(name):
     cfg = utils.config["sounds"][name]
-    sound = pygame.mixer.Sound(cfg["filename"])
-    return sound.play(maxtime = cfg["range"][1])
+    fname = cfg["filename"]
+    _, stop = cfg.get("range", [0, 0])
+
+    sound = pygame.mixer.Sound(fname)
+
+    return sound.play(maxtime = stop)
 

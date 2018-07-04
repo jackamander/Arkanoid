@@ -1,15 +1,20 @@
 {
     "title" : "Arkanoid",
-    "screen_size" : [256, 224],
+    "screen_size" : [256, 232],
     "full_screen" : false,
     "frame_rate" : 60,
-    "playspace" : [16,8,176,224],
     "bg_color" : "black",
     "images" : {
         "paddle" : {
             "filename" : "resources\\images\\vaus.png",
             "size" : [32, 8],
             "offsets" : [[0, 0]]
+        },
+        "life" : {
+            "filename" : "resources\\images\\vaus.png",
+            "size" : [32, 8],
+            "offsets" : [[0, 0]],
+            "scaled" : [16, 4]
         },
         "paddle_ext" : {
             "filename" : "resources\\images\\vaus.png",
@@ -264,6 +269,9 @@
         "Intro" : {
             "filename" : "resources\\sounds\\Intro.wav",
             "range" : [0, 5000]
+        },
+        "Ready" : {
+            "filename" : "resources\\sounds\\Ready.wav"
         }
     },
     "scenes": {
@@ -298,6 +306,32 @@
                 [      "", "var",   "level",                    [144, 108]]
             ],
             "data" : []
+        },
+        "game" : {
+            "sprites" : [
+                [      "", "text",  "HIGH",                     [200,  24]],
+                [      "", "text",  "SCORE",                    [208,  32]],
+                [      "", "var",   "high",                     [208,  40]],
+                [      "", "text",  "1UP",                      [200,  56]],
+                [      "", "var",   "score1",                   [208,  64]],
+                [      "", "text",  "ROUND",                    [208, 192]],
+                [      "", "var",   "level",                    [232, 200]],
+                ["paddle", "image", "paddle",                   [ 80, 201]],
+                [  "ball", "image", "ball",                     [ 96, 197]],
+                [ "life1", "image", "life",                     [200, 112]],
+                [ "life2", "image", "life",                     [220, 112]],
+                [ "life3", "image", "life",                     [240, 112]],
+                [ "life4", "image", "life",                     [200, 120]],
+                [ "life5", "image", "life",                     [220, 120]],
+                [ "life6", "image", "life",                     [240, 120]],
+                ["start1", "text",  "PLAYER ",                  [ 72, 160]],
+                ["start2", "var",   "player",                   [128, 160]],
+                ["start3", "text",  "READY",                    [ 84, 176]]
+            ],
+            "data" : {
+                "playspace"  : [16,8,176,224],
+                "bg_pos"     : [8,8]
+            }
         }
     },
     "font" : {
