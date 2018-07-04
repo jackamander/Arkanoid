@@ -83,11 +83,12 @@ class RoundState(State):
         self.group, self.names, self.data = display.render_scene("round", engine.vars)
 
         self.counter = 0
+        self.limit = 2 * utils.config["frame_rate"]
 
     def update(self):
         self.counter += 1
 
-        if self.counter > 2 * utils.config["frame_rate"]:
+        if self.counter > self.limit:
             return "game"
 
     def draw(self, screen):
