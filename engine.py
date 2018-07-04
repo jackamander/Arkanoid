@@ -4,81 +4,9 @@ Main game engine for Arkanoid
 
 import pygame
 
+import audio
 import display
 import utils
-
-class Sound:
-    def __init__(self, name):
-        cfg = utils.config["sounds"][name]
-        sound = pygame.mixer.Sound(cfg["filename"])
-        self.channel = sound.play(maxtime = cfg["range"][1])
-
-    def is_done(self):
-        return not self.channel.get_busy()
-
-
-class Sprite(pygame.sprite.Sprite):
-    def __init__(self, name):
-        pygame.sprite.Sprite.__init__(self)
-
-        cfg = utils.config["images"][name]
-        name = cfg["filename"]
-        size = cfg["size"]
-        offsets = cfg["offsets"]
-        pos = cfg.get("position", [0,0])
-
-        rects = [pygame.Rect(offset, size) for offset in offsets]
-
-        self.images = [display.get_image(name, rect) for rect in rects]
-        self.image = self.images[0]
-        self.rect = self.image.get_rect()
-
-        self.set_pos(pos)
-
-    def update(self):
-        pass
-
-    def set_pos(self, pos):
-        self.rect.x = pos[0]
-        self.rect.y = pos[1]
-
-    def move(self, delta):
-        self.rect.x += delta[0]
-        self.rect.y += delta[1]
-
-class Level(object):
-    def __init__(self, key):
-        level = utils.config["levels"][key]
-        self.playspace = pygame.Rect(*utils.config["playspace"])
-
-        bg_key = level["bg"]
-        self.bg = pygame.sprite.Group(Sprite(bg_key))
-
-        self.paddle = Sprite("paddle")
-
-        self.fg = pygame.sprite.Group(self.paddle)
-        for row, data in enumerate(level["map"]):
-            for col, block in enumerate(data):
-                if block != " ":
-                    sprite = Sprite(block)
-                    lft, top = self.playspace.topleft
-                    wid, hgt = sprite.rect.size
-                    sprite.set_pos([lft + col * wid, top + row * hgt])
-                    self.fg.add(sprite)
-
-    def input(self, event):
-        if event.type == pygame.MOUSEMOTION:
-            self.paddle.move([event.rel[0],0])
-            self.paddle.rect.clamp_ip(self.playspace)
-
-    def update(self):
-        pass
-
-    def draw(self, screen):
-        screen.fill(utils.color("black"))
-        self.bg.draw(screen)
-        self.fg.draw(screen)
-
 
 class State(object):
     def __init__(self, engine):
@@ -93,28 +21,12 @@ class State(object):
     def draw(self, screen):
         pass
 
-def render_scene(name, vars):
-    cfg = utils.config["scenes"][name]
-
-    surf = pygame.Surface(utils.config["screen_size"])
-
-    surf.fill(utils.color(cfg["bg"]))
-
-    for type_, key, pos in cfg["sprites"]:
-        if type_ == "text":
-            image = display.draw_text(key)
-            surf.blit(image, pos)
-        elif type_ == "var":
-            text = str(vars[key])
-            image = display.draw_text(text)
-            surf.blit(image, pos)
-        elif type_ == "image":
-            sprite = Sprite(key)
-            surf.blit(sprite.image, pos)
-
-    return surf
-
 class TitleState(State):
+    def __init__(self, engine):
+        State.__init__(self, engine)
+
+        self.group, self.names, self.data = display.render_scene("title", engine.vars)
+
     def input(self, event):
         if event.type == pygame.MOUSEMOTION:
             pass
@@ -129,63 +41,114 @@ class TitleState(State):
             elif event.key == pygame.K_RETURN:
                 return "blink"
 
-
-    def update(self):
-        pass
-
     def draw(self, screen):
-        surf = render_scene("title", {"p1score":0, "hiscore":0})
-        screen.blit(surf, [0,0])
+        display.clear_screen(screen)
 
-class BlinkState(TitleState):
-    def __init__(self, engine):
-        TitleState.__init__(self, engine)
+        # Update cursor position
+        index = self.engine.players - 1
+        pos = self.data[index]
+        self.names["cursor"].set_pos(pos)
 
-        self.timer = 0
-        self.blink_rate = utils.config["frame_rate"] / 2
+        self.group.draw(screen)
 
-        self.sound = Sound("Intro")
-
-    def input(self, event):
-        pass
-
-    def update(self):
-        self.timer = (self.timer + 1) % (self.blink_rate * 2)
-
-        if self.sound.is_done():
-            return "level"
-
-    def draw(self, screen):
-        TitleState.draw(self, screen)
-
-        if self.engine.players == 1:
-            rect = pygame.Rect(96, 120, 72, 8)
-        else:
-            rect = pygame.Rect(96, 136, 72, 8)
-
-        if self.timer < self.blink_rate:
-            screen.fill(utils.color("black"), rect)
-
-class LevelState(State):
+class BlinkState(State):
     def __init__(self, engine):
         State.__init__(self, engine)
 
+        self.group, self.names, self.data = display.render_scene("title", engine.vars)
+
+        self.sound = audio.play_sound("Intro")
+
+        # Blink the chosen option
+        key = {1 : "p1", 2 : "p2"}[engine.players]
+        self.names[key].set_action(display.Blink(1.0))
+
+        # Get rid of the cursor
+        self.names["cursor"].kill()
+
+    def update(self):
+        self.group.update()
+
+        if not self.sound.get_busy():
+            return "round"
+
     def draw(self, screen):
-        screen.fill(utils.color("black"))
-        screen.blit(display.draw_text("ROUND %2d" % self.engine.level), [96, 108])
+        display.clear_screen(screen)
+        self.group.draw(screen)
+
+class RoundState(State):
+    def __init__(self, engine):
+        State.__init__(self, engine)
+
+        self.group, self.names, self.data = display.render_scene("round", engine.vars)
+
+        self.counter = 0
+
+    def update(self):
+        self.counter += 1
+
+        if self.counter > 2 * utils.config["frame_rate"]:
+            return "game"
+
+    def draw(self, screen):
+        display.clear_screen(screen)
+        self.group.draw(screen)
+
+class GameState(State):
+    def __init__(self, engine):
+        State.__init__(self, engine)
+
+        self.playspace = pygame.Rect(*utils.config["playspace"])
+
+        key = str(engine.vars["level"])
+        cfg = utils.config["levels"][key]
+
+        bg_key = cfg["bg"]
+        bg_image = display.get_image(bg_key)
+        bg_sprite = display.Sprite(bg_image)
+        self.bg = pygame.sprite.Group(bg_sprite)
+
+        paddle_image = display.get_image("paddle")
+        self.paddle = display.Sprite(paddle_image)
+
+        self.fg = pygame.sprite.Group(self.paddle)
+
+        for row, data in enumerate(cfg["map"]):
+            for col, block in enumerate(data):
+                if block != " ":
+                    image = display.get_image(block)
+                    sprite = display.Sprite(image)
+                    lft, top = self.playspace.topleft
+                    wid, hgt = sprite.rect.size
+                    sprite.set_pos([lft + col * wid, top + row * hgt])
+                    self.fg.add(sprite)
+
+    def input(self, event):
+        if event.type == pygame.MOUSEMOTION:
+            self.paddle.move([event.rel[0],0])
+            self.paddle.rect.clamp_ip(self.playspace)
+
+    def update(self):
+        pass
+
+    def draw(self, screen):
+        screen.fill(utils.color(utils.config["bg_color"]))
+        self.bg.draw(screen)
+        self.fg.draw(screen)
 
 class Engine(object):
     def __init__(self):
-        self.high = 0
+        self.vars = {"high":0, "score1":0, "level":1}
         self.players = 1
-        self.level = 1
         self.state = TitleState(self)
 
     def set_state(self, next_state):
         if next_state == "blink":
             self.state = BlinkState(self)
-        elif next_state == "level":
-            self.state = LevelState(self)
+        elif next_state == "round":
+            self.state = RoundState(self)
+        elif next_state == "game":
+            self.state = GameState(self)
 
     def input(self, event):
         next_state = self.state.input(event)
