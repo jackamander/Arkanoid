@@ -99,72 +99,69 @@ class GameState(State):
     def __init__(self, engine):
         State.__init__(self, engine)
 
-        self.group, self.names, self.data = display.render_scene("game", engine.vars)
-
-        self.playspace = pygame.Rect(*self.data["playspace"])
-
-        key = str(engine.vars["level"])
-        cfg = utils.config["levels"][key]
-
-        # Background
-        bg = display.Sprite(display.get_image(cfg["bg"]))
-        bg.set_pos(self.data["bg_pos"])
-        self.group.add(bg)
-
-        # Bricks
-        lft, top = self.playspace.topleft
-        for row, data in enumerate(cfg["map"]):
-            for col, block in enumerate(data):
-                if block != " ":
-                    sprite = display.Sprite(display.get_image(block))
-                    wid, hgt = sprite.rect.size
-                    sprite.set_pos([lft + col * wid, top + row * hgt])
-                    self.group.add(sprite)
-
-        # Paddle and ball
-        for key in ["paddle", "ball"]:
-            self.group.change_layer(self.names[key], 2)
-
-        self.names["ball"].set_action(display.Follow(self.names["paddle"]))
+        self.scenes = [display.render_scene(scene, engine.vars) for scene in ["game", "level1", "paddle_ball"]]
 
         # Lives
         for life in range(engine.vars["lives"], 7):
             key = "life%d" % life
-            self.names[key].kill()
+            self.scenes[0][1][key].kill()
+
+        self.playspace = pygame.Rect(*utils.config["playspace"])
+
+        self.balls = [self.scenes[2][1]["ball"]]
+        self.paddle = self.scenes[2][1]["paddle"]
+
+        self.balls[0].set_action(display.Follow(self.paddle))
 
     def input(self, event):
         if event.type == pygame.MOUSEMOTION:
-            self.names["paddle"].move([event.rel[0],0])
-            self.names["paddle"].rect.clamp_ip(self.playspace)
+            self.paddle.move([event.rel[0],0])
+            self.paddle.rect.clamp_ip(self.playspace)
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            if event.button == 1:
+                self.balls[0].set_action(display.Move([1,-2]))
 
     def update(self):
-        self.group.update()
+        for group, _, _ in self.scenes:
+            group.update()
+
+        ball = self.balls[0]
+        if ball.rect.left < self.playspace.left or ball.rect.right > self.playspace.right:
+            ball.action.delta[0] *= -1
+        if ball.rect.top < self.playspace.top:
+            ball.action.delta[1] *= -1
+        if ball.rect.top > self.playspace.bottom:
+            ball.kill()
 
     def draw(self, screen):
         display.clear_screen(screen)
-        self.group.draw(screen)
+        for group, _, _ in self.scenes:
+            group.draw(screen)
 
-class GameStartState(GameState):
+class GameStartState(State):
     def __init__(self, engine):
-        GameState.__init__(self, engine)
+        State.__init__(self, engine)
 
-        for key in ["paddle", "ball"]:
-            self.names[key].kill()
+        self.scenes = [display.render_scene(scene, engine.vars) for scene in ["game", "level1", "ready"]]
 
-        for key in ["start1", "start2", "start3"]:
-            self.group.change_layer(self.names[key], 2)
+        # Lives
+        for life in range(engine.vars["lives"], 7):
+            key = "life%d" % life
+            self.scenes[0][1][key].kill()
 
         self.sound = audio.play_sound("Ready")
 
-    def input(self, event):
-        pass
-
     def update(self):
-        self.group.update()
+        for group, _, _ in self.scenes:
+            group.update()
 
         if not self.sound.get_busy():
             return "game"
 
+    def draw(self, screen):
+        display.clear_screen(screen)
+        for group, _, _ in self.scenes:
+            group.draw(screen)
 
 
 class Engine(object):

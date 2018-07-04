@@ -92,6 +92,13 @@ def get_image(name):
 
     return image
 
+class Move:
+    def __init__(self, delta):
+        self.delta = delta
+
+    def update(self, sprite):
+        sprite.move(self.delta)
+
 class Follow:
     def __init__(self, target):
         self.target = target
