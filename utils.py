@@ -51,5 +51,46 @@ def blend(color1, color2, ratio):
     final = lerp(color1, color2, ratio)
     return final
 
+class Events:
+    def __init__(self):
+        self.handlers = {}
+
+    def register(self, eventtype, handler):
+        """Register a handler method for the given event"""
+        handlers = self.handlers.setdefault(eventtype, set())
+        handlers.add(handler)
+
+    def unregister(self, eventtype, handler):
+        handlers = self.handlers.setdefault(eventtype, set())
+        handlers.remove(handler)
+
+    def input(self, event):
+        """Process an incoming event"""
+        handlers = self.handlers.get(event.type, [])
+        for handler in handlers:
+            handler(event)
+
+class Timer:
+    def __init__(self):
+        self.timers = {}
+
+    def update(self):
+        for handler, [frames, args, kwargs] in self.timers.items():
+            frames -= 1
+
+            if frames <= 0:
+                handler(*args, **kwargs)
+                self.cancel(handler)
+            else:
+                self.timers[handler] = [frames, args, kwargs]
+
+    def start(self, delay, handler, *args, **kwargs):
+        fps = config["frame_rate"]
+        frames = int(delay * fps)
+        self.timers[handler] = [frames, args, kwargs]
+
+    def cancel(self, handler):
+        self.timers.pop(handler, None)
+
 # Global config file - initialized in main
 config = {}

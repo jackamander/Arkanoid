@@ -27,24 +27,29 @@ class TitleState(State):
 
         self.scene = display.Scene("title", engine.vars)
 
+        self.events = utils.Events()
+        self.events.register(pygame.MOUSEBUTTONDOWN, self.on_click)
+        self.events.register(pygame.KEYDOWN, self.on_keydown)
+
     def input(self, event):
-        if event.type == pygame.MOUSEMOTION:
-            pass
-        elif event.type == pygame.MOUSEBUTTONDOWN:
-            if event.button == 1:
-                self.engine.set_state(BlinkState)
-        elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_UP:
-                self.engine.vars["players"] = 1
-            elif event.key == pygame.K_DOWN:
-                self.engine.vars["players"] = 2
-            elif event.key == pygame.K_RETURN:
-                self.engine.set_state(BlinkState)
+        self.events.input(event)
 
         # Update cursor position
         index = self.engine.vars["players"] - 1
         pos = self.scene.data[index]
         self.scene.names["cursor"].set_pos(pos)
+
+    def on_click(self, event):
+        if event.button == 1:
+            self.engine.set_state(BlinkState)
+
+    def on_keydown(self, event):
+        if event.key == pygame.K_UP:
+            self.engine.vars["players"] = 1
+        elif event.key == pygame.K_DOWN:
+            self.engine.vars["players"] = 2
+        elif event.key == pygame.K_RETURN:
+            self.engine.set_state(BlinkState)
 
     def draw(self, screen):
         display.clear_screen(screen)
@@ -84,14 +89,11 @@ class RoundState(State):
 
         self.scene = display.Scene("round", engine.vars)
 
-        self.counter = 0
-        self.limit = 2 * utils.config["frame_rate"]
+        self.timer = utils.Timer()
+        self.timer.start(2.0, self.engine.set_state, StartState)
 
     def update(self):
-        self.counter += 1
-
-        if self.counter > self.limit:
-            self.engine.set_state(StartState)
+        self.timer.update()
 
     def draw(self, screen):
         display.clear_screen(screen)
@@ -137,24 +139,43 @@ class GameState(State):
 
         self.playspace = pygame.Rect(*utils.config["playspace"])
 
-        self.balls = [self.scenes["tools"].names["ball"]]
+        self.ball = self.scenes["tools"].names["ball"]
         self.paddle = self.scenes["tools"].names["paddle"]
 
-        self.balls[0].set_action(display.Follow(self.paddle))
+        self.events = utils.Events()
+        self.timer = utils.Timer()
+        self.events.register(pygame.MOUSEMOTION, self.on_mousemove)
+
+        self.enable_stuck(self.ball)
+
+    def enable_stuck(self, ball):
+        # Stick the ball to the paddle
+        ball.set_action(display.Follow(self.paddle))
+
+        # Listen for release
+        self.events.register(pygame.MOUSEBUTTONDOWN, lambda event: self.disable_stuck(ball))
+
+        # Set up the auto release timer
+        self.timer.start(3.0, self.disable_stuck, ball)
+
+    def disable_stuck(self, ball):
+        self.timer.cancel(self.disable_stuck)
+        ball.set_action(display.Move([1,-2]))
+
+    def on_mousemove(self, event):
+        self.paddle.move([event.rel[0],0])
+        self.paddle.rect.clamp_ip(self.playspace)
 
     def input(self, event):
-        if event.type == pygame.MOUSEMOTION:
-            self.paddle.move([event.rel[0],0])
-            self.paddle.rect.clamp_ip(self.playspace)
-        elif event.type == pygame.MOUSEBUTTONDOWN:
-            if event.button == 1:
-                self.balls[0].set_action(display.Move([1,-2]))
+        self.events.input(event)
 
     def update(self):
+        self.timer.update()
+
         for scene in self.scenes.values():
             scene.group.update()
 
-        ball = self.balls[0]
+        ball = self.ball
         if ball.rect.left < self.playspace.left or ball.rect.right > self.playspace.right:
             ball.action.delta[0] *= -1
         if ball.rect.top < self.playspace.top:
