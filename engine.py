@@ -95,6 +95,31 @@ class RoundState(State):
         display.clear_screen(screen)
         self.group.draw(screen)
 
+class StartState(State):
+    def __init__(self, engine):
+        State.__init__(self, engine)
+
+        self.scenes = [display.render_scene(scene, engine.vars) for scene in ["game", "level1", "ready"]]
+
+        # Lives
+        for life in range(engine.vars["lives"], 7):
+            key = "life%d" % life
+            self.scenes[0][1][key].kill()
+
+        self.sound = audio.play_sound("Ready")
+
+    def update(self):
+        for group, _, _ in self.scenes:
+            group.update()
+
+        if not self.sound.get_busy():
+            self.engine.set_state(GameState)
+
+    def draw(self, screen):
+        display.clear_screen(screen)
+        for group, _, _ in self.scenes:
+            group.draw(screen)
+
 class GameState(State):
     def __init__(self, engine):
         State.__init__(self, engine)
@@ -137,32 +162,6 @@ class GameState(State):
         display.clear_screen(screen)
         for group, _, _ in self.scenes:
             group.draw(screen)
-
-class StartState(State):
-    def __init__(self, engine):
-        State.__init__(self, engine)
-
-        self.scenes = [display.render_scene(scene, engine.vars) for scene in ["game", "level1", "ready"]]
-
-        # Lives
-        for life in range(engine.vars["lives"], 7):
-            key = "life%d" % life
-            self.scenes[0][1][key].kill()
-
-        self.sound = audio.play_sound("Ready")
-
-    def update(self):
-        for group, _, _ in self.scenes:
-            group.update()
-
-        if not self.sound.get_busy():
-            self.engine.set_state(GameState)
-
-    def draw(self, screen):
-        display.clear_screen(screen)
-        for group, _, _ in self.scenes:
-            group.draw(screen)
-
 
 class Engine(object):
     def __init__(self):
