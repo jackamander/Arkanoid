@@ -175,6 +175,7 @@ class GameState(State):
         for scene in self.scenes.values():
             scene.group.update()
 
+        # Ball-Wall collisions
         ball = self.ball
         if ball.rect.left < self.playspace.left or ball.rect.right > self.playspace.right:
             ball.action.delta[0] *= -1
@@ -182,6 +183,24 @@ class GameState(State):
             ball.action.delta[1] *= -1
         if ball.rect.top > self.playspace.bottom:
             ball.kill()
+
+        # Ball-Paddle collisions
+        if pygame.sprite.collide_rect(self.paddle, ball):
+            if ball.rect.left < self.paddle.rect.left:
+                vel = [-2,-1]
+            elif ball.rect.left < self.paddle.rect.left + 8:
+                vel = [-2,-2]
+            elif ball.rect.centerx <= self.paddle.rect.centerx:
+                vel = [-1,-2]
+            elif ball.rect.right < self.paddle.rect.right - 8:
+                vel = [1,-2]
+            elif ball.rect.right < self.paddle.rect.right:
+                vel = [2,-2]
+            else:
+                vel = [2,-1]
+
+            ball.set_action(display.Move(vel))
+
 
     def draw(self, screen):
         display.clear_screen(screen)
