@@ -25,7 +25,7 @@ class TitleState(State):
     def __init__(self, engine):
         State.__init__(self, engine)
 
-        self.group, self.names, self.data = display.render_scene("title", engine.vars)
+        self.scene = display.Scene("title", engine.vars)
 
     def input(self, event):
         if event.type == pygame.MOUSEMOTION:
@@ -41,46 +41,48 @@ class TitleState(State):
             elif event.key == pygame.K_RETURN:
                 self.engine.set_state(BlinkState)
 
-    def draw(self, screen):
-        display.clear_screen(screen)
-
         # Update cursor position
         index = self.engine.vars["players"] - 1
-        pos = self.data[index]
-        self.names["cursor"].set_pos(pos)
+        pos = self.scene.data[index]
+        self.scene.names["cursor"].set_pos(pos)
 
-        self.group.draw(screen)
+    def draw(self, screen):
+        display.clear_screen(screen)
+        self.scene.group.draw(screen)
 
 class BlinkState(State):
     def __init__(self, engine):
         State.__init__(self, engine)
 
-        self.group, self.names, self.data = display.render_scene("title", engine.vars)
+        self.scene = display.Scene("title", engine.vars)
 
         self.sound = audio.play_sound("Intro")
 
         # Blink the chosen option
-        key = {1 : "p1", 2 : "p2"}[engine.vars["players"]]
-        self.names[key].set_action(display.Blink(1.0))
+        if engine.vars["players"] == 1:
+            key = "p1"
+        else:
+            key = "p2"
+        self.scene.names[key].set_action(display.Blink(1.0))
 
         # Get rid of the cursor
-        self.names["cursor"].kill()
+        self.scene.names["cursor"].kill()
 
     def update(self):
-        self.group.update()
+        self.scene.group.update()
 
         if not self.sound.get_busy():
             self.engine.set_state(RoundState)
 
     def draw(self, screen):
         display.clear_screen(screen)
-        self.group.draw(screen)
+        self.scene.group.draw(screen)
 
 class RoundState(State):
     def __init__(self, engine):
         State.__init__(self, engine)
 
-        self.group, self.names, self.data = display.render_scene("round", engine.vars)
+        self.scene = display.Scene("round", engine.vars)
 
         self.counter = 0
         self.limit = 2 * utils.config["frame_rate"]
@@ -93,48 +95,50 @@ class RoundState(State):
 
     def draw(self, screen):
         display.clear_screen(screen)
-        self.group.draw(screen)
+        self.scene.group.draw(screen)
 
 class StartState(State):
     def __init__(self, engine):
         State.__init__(self, engine)
 
-        self.scenes = [display.render_scene(scene, engine.vars) for scene in ["game", "level1", "ready"]]
+        level_key ="level%d" % engine.vars["level"]
+        self.scenes = {scene : display.Scene(scene, engine.vars) for scene in ["hud", level_key, "ready"]}
 
         # Lives
         for life in range(engine.vars["lives"], 7):
             key = "life%d" % life
-            self.scenes[0][1][key].kill()
+            self.scenes["hud"].names[key].kill()
 
         self.sound = audio.play_sound("Ready")
 
     def update(self):
-        for group, _, _ in self.scenes:
-            group.update()
+        for scene in self.scenes.values():
+            scene.group.update()
 
         if not self.sound.get_busy():
             self.engine.set_state(GameState)
 
     def draw(self, screen):
         display.clear_screen(screen)
-        for group, _, _ in self.scenes:
-            group.draw(screen)
+        for scene in self.scenes.values():
+            scene.group.draw(screen)
 
 class GameState(State):
     def __init__(self, engine):
         State.__init__(self, engine)
 
-        self.scenes = [display.render_scene(scene, engine.vars) for scene in ["game", "level1", "paddle_ball"]]
+        level_key ="level%d" % engine.vars["level"]
+        self.scenes = {scene : display.Scene(scene, engine.vars) for scene in ["hud", level_key, "tools"]}
 
         # Lives
         for life in range(engine.vars["lives"], 7):
             key = "life%d" % life
-            self.scenes[0][1][key].kill()
+            self.scenes["hud"].names[key].kill()
 
         self.playspace = pygame.Rect(*utils.config["playspace"])
 
-        self.balls = [self.scenes[2][1]["ball"]]
-        self.paddle = self.scenes[2][1]["paddle"]
+        self.balls = [self.scenes["tools"].names["ball"]]
+        self.paddle = self.scenes["tools"].names["paddle"]
 
         self.balls[0].set_action(display.Follow(self.paddle))
 
@@ -147,8 +151,8 @@ class GameState(State):
                 self.balls[0].set_action(display.Move([1,-2]))
 
     def update(self):
-        for group, _, _ in self.scenes:
-            group.update()
+        for scene in self.scenes.values():
+            scene.group.update()
 
         ball = self.balls[0]
         if ball.rect.left < self.playspace.left or ball.rect.right > self.playspace.right:
@@ -160,8 +164,8 @@ class GameState(State):
 
     def draw(self, screen):
         display.clear_screen(screen)
-        for group, _, _ in self.scenes:
-            group.draw(screen)
+        for scene in self.scenes.values():
+            scene.group.draw(screen)
 
 class Engine(object):
     def __init__(self):

@@ -291,7 +291,7 @@
             ],
             "data" : []
         },
-        "game" : {
+        "hud" : {
             "sprites" : [
                 [      "", "text",  "HIGH",                     [200,  24]],
                 [      "", "text",  "SCORE",                    [208,  32]],
@@ -309,7 +309,7 @@
             ],
             "data" : []
         },
-        "paddle_ball" : {
+        "tools" : {
             "sprites" : [
                 ["paddle", "image", "paddle",                   [ 80, 201]],
                 [  "ball", "image", "ball",                     [ 96, 197]]

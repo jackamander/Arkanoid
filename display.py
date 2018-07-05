@@ -157,33 +157,26 @@ class Sprite(pygame.sprite.DirtySprite):
         if self.action:
             self.action.update(self)
 
-def render_scene(name, vars={}):
-    cfg = utils.config["scenes"][name]
+class Scene:
+    def __init__(self, name, vars={}):
+        cfg = utils.config["scenes"][name]
 
-    surf = pygame.Surface(utils.config["screen_size"])
+        self.group = pygame.sprite.LayeredDirty()
+        self.names = {}
+        self.data = cfg["data"]
 
-    surf.fill(utils.color(utils.config["bg_color"]))
+        for name, type_, key, pos in cfg["sprites"]:
+            if type_ == "text":
+                image = draw_text(key)
+            elif type_ == "var":
+                text = str(vars[key])
+                image = draw_text(text)
+            elif type_ == "image":
+                image = get_image(key)
 
-    group = pygame.sprite.LayeredDirty()
+            sprite = Sprite(image)
+            sprite.set_pos(pos)
+            self.group.add(sprite)
 
-    names = {}
-
-    for name, type_, key, pos in cfg["sprites"]:
-        if type_ == "text":
-            image = draw_text(key)
-        elif type_ == "var":
-            text = str(vars[key])
-            image = draw_text(text)
-        elif type_ == "image":
-            image = get_image(key)
-
-        sprite = Sprite(image)
-        sprite.set_pos(pos)
-        group.add(sprite)
-
-        if name:
-            names[name] = sprite
-
-    return group, names, cfg["data"]
-
-
+            if name:
+                self.names[name] = sprite
