@@ -35,9 +35,9 @@ class TitleState(State):
                 return "blink"
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP:
-                self.engine.players = 1
+                self.engine.vars["players"] = 1
             elif event.key == pygame.K_DOWN:
-                self.engine.players = 2
+                self.engine.vars["players"] = 2
             elif event.key == pygame.K_RETURN:
                 return "blink"
 
@@ -45,7 +45,7 @@ class TitleState(State):
         display.clear_screen(screen)
 
         # Update cursor position
-        index = self.engine.players - 1
+        index = self.engine.vars["players"] - 1
         pos = self.data[index]
         self.names["cursor"].set_pos(pos)
 
@@ -60,7 +60,7 @@ class BlinkState(State):
         self.sound = audio.play_sound("Intro")
 
         # Blink the chosen option
-        key = {1 : "p1", 2 : "p2"}[engine.players]
+        key = {1 : "p1", 2 : "p2"}[engine.vars["players"]]
         self.names[key].set_action(display.Blink(1.0))
 
         # Get rid of the cursor
@@ -166,8 +166,7 @@ class GameStartState(State):
 
 class Engine(object):
     def __init__(self):
-        self.vars = {"high":0, "score1":0, "level":1, "player":1, "lives":3}
-        self.players = 1
+        self.vars = {"high":0, "score1":0, "level":1, "player":1, "lives":3, "players":1}
         self.state = TitleState(self)
 
     def set_state(self, next_state):
