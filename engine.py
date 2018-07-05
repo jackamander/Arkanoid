@@ -13,7 +13,7 @@ class State(object):
         self.engine = engine
 
     def input(self, event):
-        return ""
+        pass
 
     def update(self):
         pass
@@ -32,14 +32,14 @@ class TitleState(State):
             pass
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
-                return "blink"
+                self.engine.set_state(BlinkState)
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP:
                 self.engine.vars["players"] = 1
             elif event.key == pygame.K_DOWN:
                 self.engine.vars["players"] = 2
             elif event.key == pygame.K_RETURN:
-                return "blink"
+                self.engine.set_state(BlinkState)
 
     def draw(self, screen):
         display.clear_screen(screen)
@@ -70,7 +70,7 @@ class BlinkState(State):
         self.group.update()
 
         if not self.sound.get_busy():
-            return "round"
+            self.engine.set_state(RoundState)
 
     def draw(self, screen):
         display.clear_screen(screen)
@@ -89,7 +89,7 @@ class RoundState(State):
         self.counter += 1
 
         if self.counter > self.limit:
-            return "start"
+            self.engine.set_state(StartState)
 
     def draw(self, screen):
         display.clear_screen(screen)
@@ -138,7 +138,7 @@ class GameState(State):
         for group, _, _ in self.scenes:
             group.draw(screen)
 
-class GameStartState(State):
+class StartState(State):
     def __init__(self, engine):
         State.__init__(self, engine)
 
@@ -156,7 +156,7 @@ class GameStartState(State):
             group.update()
 
         if not self.sound.get_busy():
-            return "game"
+            self.engine.set_state(GameState)
 
     def draw(self, screen):
         display.clear_screen(screen)
@@ -169,23 +169,14 @@ class Engine(object):
         self.vars = {"high":0, "score1":0, "level":1, "player":1, "lives":3, "players":1}
         self.state = TitleState(self)
 
-    def set_state(self, next_state):
-        if next_state == "blink":
-            self.state = BlinkState(self)
-        elif next_state == "round":
-            self.state = RoundState(self)
-        elif next_state == "game":
-            self.state = GameState(self)
-        elif next_state == "start":
-            self.state = GameStartState(self)
+    def set_state(self, state):
+        self.state = state(self)
 
     def input(self, event):
-        next_state = self.state.input(event)
-        self.set_state(next_state)
+        self.state.input(event)
 
     def update(self):
-        next_state = self.state.update()
-        self.set_state(next_state)
+        self.state.update()
 
     def draw(self, screen):
         self.state.draw(screen)
