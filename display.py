@@ -57,15 +57,14 @@ def draw_text(text):
 
     return surf
 
-image_cache = {}
+_image_cache = {}
 
 def _load_image(fname, rect=None, scaled=[]):
-    if fname in image_cache:
-        image = image_cache[fname]
-    else:
+    image = _image_cache.get(fname)
+    if image is None:
         image = pygame.image.load(fname)
         image = image.convert_alpha()
-        image_cache[fname] = image
+        _image_cache[fname] = image
 
     if rect:
         image = image.subsurface(rect)
