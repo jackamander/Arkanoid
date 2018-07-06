@@ -27,13 +27,10 @@ class TitleState(State):
 
         self.scene = display.Scene("title", engine.vars)
 
-        self.events = utils.Events()
-        self.events.register(pygame.MOUSEBUTTONDOWN, self.on_click)
-        self.events.register(pygame.KEYDOWN, self.on_keydown)
+        self.engine.events.register(pygame.MOUSEBUTTONDOWN, self.on_click)
+        self.engine.events.register(pygame.KEYDOWN, self.on_keydown)
 
     def input(self, event):
-        self.events.input(event)
-
         # Update cursor position
         index = self.engine.vars["players"] - 1
         pos = self.scene.data[index]
@@ -89,11 +86,7 @@ class RoundState(State):
 
         self.scene = display.Scene("round", engine.vars)
 
-        self.timer = utils.Timer()
-        self.timer.start(2.0, self.engine.set_state, StartState)
-
-    def update(self):
-        self.timer.update()
+        self.engine.timer.start(2.0, self.engine.set_state, StartState)
 
     def draw(self, screen):
         display.clear_screen(screen)
@@ -142,9 +135,7 @@ class GameState(State):
         self.ball = self.scenes["tools"].names["ball"]
         self.paddle = self.scenes["tools"].names["paddle"]
 
-        self.events = utils.Events()
-        self.timer = utils.Timer()
-        self.events.register(pygame.MOUSEMOTION, self.on_mousemove)
+        self.engine.events.register(pygame.MOUSEMOTION, self.on_mousemove)
 
         self.enable_stuck(self.ball)
 
@@ -153,35 +144,35 @@ class GameState(State):
         ball.set_action(display.Follow(self.paddle))
 
         # Listen for release
-        self.events.register(pygame.MOUSEBUTTONDOWN, lambda event: self.disable_stuck(ball))
+        self.engine.events.register(pygame.MOUSEBUTTONDOWN, lambda event: self.disable_stuck(ball))
 
         # Set up the auto release timer
-        self.timer.start(3.0, self.disable_stuck, ball)
+        self.engine.timer.start(3.0, self.disable_stuck, ball)
 
     def disable_stuck(self, ball):
-        self.timer.cancel(self.disable_stuck)
+        self.engine.timer.cancel(self.disable_stuck)
         ball.set_action(display.Move([1,-2]))
+        audio.play_sound("Low")
 
     def on_mousemove(self, event):
         self.paddle.move([event.rel[0],0])
         self.paddle.rect.clamp_ip(self.playspace)
 
-    def input(self, event):
-        self.events.input(event)
-
     def update(self):
-        self.timer.update()
-
         for scene in self.scenes.values():
             scene.group.update()
 
         # Ball-Wall collisions
+        # Don't just flip the velocity sign - the ball can get stuck in the wall!
         ball = self.ball
-        if ball.rect.left < self.playspace.left or ball.rect.right > self.playspace.right:
-            ball.action.delta[0] *= -1
+        if ball.rect.left < self.playspace.left:
+            ball.action.delta[0] = abs(ball.action.delta[0])
+        elif ball.rect.right > self.playspace.right:
+            ball.action.delta[0] = -abs(ball.action.delta[0])
+
         if ball.rect.top < self.playspace.top:
-            ball.action.delta[1] *= -1
-        if ball.rect.top > self.playspace.bottom:
+            ball.action.delta[1] = abs(ball.action.delta[1])
+        elif ball.rect.top > self.playspace.bottom:
             ball.kill()
 
         # Ball-Paddle collisions
@@ -200,7 +191,14 @@ class GameState(State):
                 vel = [2,-1]
 
             ball.set_action(display.Move(vel))
+            audio.play_sound("Low")
 
+        # Ball-Brick collisions
+        bricks = pygame.sprite.spritecollide(ball, self.scenes["level1"].group, False)
+        if len(bricks) > 1:
+            bricks.remove(self.scenes["level1"].names["bg"])
+            ball.action.delta[1] *= -1
+            audio.play_sound("Med")
 
     def draw(self, screen):
         display.clear_screen(screen)
@@ -210,15 +208,22 @@ class GameState(State):
 class Engine(object):
     def __init__(self):
         self.vars = {"high":0, "score1":0, "level":1, "player":1, "lives":3, "players":1}
+        self.events = utils.Events()
+        self.timer = utils.Timer()
+
         self.state = TitleState(self)
 
     def set_state(self, state):
+        self.events.clear()
+        self.timer.clear()
         self.state = state(self)
 
     def input(self, event):
+        self.events.input(event)
         self.state.input(event)
 
     def update(self):
+        self.timer.update()
         self.state.update()
 
     def draw(self, screen):

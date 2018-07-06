@@ -53,7 +53,7 @@ def blend(color1, color2, ratio):
 
 class Events:
     def __init__(self):
-        self.handlers = {}
+        self.clear()
 
     def register(self, eventtype, handler):
         """Register a handler method for the given event"""
@@ -70,9 +70,12 @@ class Events:
         for handler in handlers:
             handler(event)
 
+    def clear(self):
+        self.handlers = {}
+
 class Timer:
     def __init__(self):
-        self.timers = {}
+        self.clear()
 
     def update(self):
         for handler, [frames, args, kwargs] in self.timers.items():
@@ -91,6 +94,9 @@ class Timer:
 
     def cancel(self, handler):
         self.timers.pop(handler, None)
+
+    def clear(self):
+        self.timers = {}
 
 # Global config file - initialized in main
 config = {}
