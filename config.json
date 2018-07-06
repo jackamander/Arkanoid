@@ -256,6 +256,15 @@
         },
         "Ready" : {
             "filename" : "resources\\sounds\\Ready.wav"
+        },
+        "High" : {
+            "filename" : "resources\\sounds\\PingHigh.wav"
+        },
+        "Low" : {
+            "filename" : "resources\\sounds\\PingLow.wav"
+        },
+        "Med" : {
+            "filename" : "resources\\sounds\\PingMed.wav"
         }
     },
     "scenes": {
