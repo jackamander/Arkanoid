@@ -1,6 +1,7 @@
 {
     "title" : "Arkanoid",
-    "screen_size" : [256, 232],
+    "world_size" : [256, 232],
+    "screen_size" : [1024, 928],
     "full_screen" : false,
     "frame_rate" : 60,
     "bg_color" : "black",

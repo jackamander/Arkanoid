@@ -17,7 +17,7 @@ def main():
     utils.config = utils.get_config("config.json")
     pygame.init()
 
-    screen = display.init_screen()
+    window = display.Window()
 
     clock = pygame.time.Clock()
 
@@ -36,13 +36,14 @@ def main():
 
         eng.update()
 
-        eng.draw(screen)
+        window.clear()
+        eng.draw(window.screen)
 
         fps = str(int(clock.get_fps()))
-        screen.blit(display.draw_text(fps), (0, 0))
+        window.screen.blit(display.draw_text(fps), (0, 0))
 
         clock.tick(utils.config["frame_rate"])
-        pygame.display.flip()
+        window.flip()
 
 if __name__ == '__main__':
     utils.setup_logging("logging.json")

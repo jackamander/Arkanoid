@@ -10,24 +10,29 @@ import pygame
 
 import utils
 
-def init_screen():
-    size = utils.config['screen_size']
+class Window:
+    def __init__(self):
+        world_size = utils.config['world_size']
+        screen_size = utils.config['screen_size']
 
-    flags = 0
-    if utils.config['full_screen']:
-        flags = pygame.FULLSCREEN | pygame.HWSURFACE | pygame.DOUBLEBUF
+        flags = 0
+        if utils.config['full_screen']:
+            flags = pygame.FULLSCREEN | pygame.HWSURFACE | pygame.DOUBLEBUF
 
-    screen = pygame.display.set_mode(size, flags)
+        self.main = pygame.display.set_mode(screen_size, flags)
+        self.screen = pygame.Surface(world_size)
 
-    logging.info("Driver: %s", pygame.display.get_driver())
-    logging.info("Display Info:\n    %s", pygame.display.Info())
+        logging.info("Driver: %s", pygame.display.get_driver())
+        logging.info("Display Info:\n    %s", pygame.display.Info())
 
-    pygame.display.set_caption(utils.config["title"])
+        pygame.display.set_caption(utils.config["title"])
 
-    return screen
+    def flip(self):
+        pygame.transform.scale(self.screen, self.main.get_size(), self.main)
+        pygame.display.flip()
 
-def clear_screen(screen):
-    screen.fill(utils.color(utils.config["bg_color"]))
+    def clear(self):
+        self.screen.fill(utils.color(utils.config["bg_color"]))
 
 def _find_char_offset(char, characters):
     for row, data in enumerate(characters):

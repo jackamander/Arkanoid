@@ -49,7 +49,6 @@ class TitleState(State):
             self.engine.set_state(BlinkState)
 
     def draw(self, screen):
-        display.clear_screen(screen)
         self.scene.group.draw(screen)
 
 class BlinkState(State):
@@ -77,7 +76,6 @@ class BlinkState(State):
             self.engine.set_state(RoundState)
 
     def draw(self, screen):
-        display.clear_screen(screen)
         self.scene.group.draw(screen)
 
 class RoundState(State):
@@ -89,7 +87,6 @@ class RoundState(State):
         self.engine.timer.start(2.0, self.engine.set_state, StartState)
 
     def draw(self, screen):
-        display.clear_screen(screen)
         self.scene.group.draw(screen)
 
 class StartState(State):
@@ -114,7 +111,6 @@ class StartState(State):
             self.engine.set_state(GameState)
 
     def draw(self, screen):
-        display.clear_screen(screen)
         for scene in self.scenes.values():
             scene.group.draw(screen)
 
@@ -201,7 +197,6 @@ class GameState(State):
             audio.play_sound("Med")
 
     def draw(self, screen):
-        display.clear_screen(screen)
         for scene in self.scenes.values():
             scene.group.draw(screen)
 
