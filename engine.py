@@ -47,6 +47,8 @@ class TitleState(State):
             self.engine.vars["players"] = 2
         elif event.key == pygame.K_RETURN:
             self.engine.set_state(BlinkState)
+        elif event.key == pygame.K_SPACE:
+            self.engine.set_state(GameState)
 
     def draw(self, screen):
         for scene in self.scenes.values():
