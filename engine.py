@@ -202,7 +202,7 @@ class GameState(State):
         # Ball-Wall collisions
         sprites = pygame.sprite.spritecollide(ball, self.scenes["walls"].group, False)
         for sprite in sprites:
-            side = utils.collision_side(ball, sprite)
+            side = collision_side(ball, sprite)
 
             if side == "top":
                 ball.action.delta[1] = abs(ball.action.delta[1])
@@ -216,7 +216,7 @@ class GameState(State):
         # Ball-Brick collisions
         sprites = pygame.sprite.spritecollide(ball, self.scenes["level1"].group, False)
         for sprite in sprites:
-            side = utils.collision_side(ball, sprite)
+            side = collision_side(ball, sprite)
 
             if side == "top":
                 ball.action.delta[1] = abs(ball.action.delta[1])
@@ -283,7 +283,7 @@ class DebugState(State):
         self.scenes["debug"].names["ball"].move(delta)
 
         if pygame.sprite.collide_rect(self.ball, self.brick):
-            side = utils.collision_side(self.ball, self.brick)
+            side = collision_side(self.ball, self.brick)
             print side
         else:
             print
