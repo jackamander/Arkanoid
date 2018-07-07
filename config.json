@@ -284,12 +284,17 @@
         }
     },
     "scenes": {
-        "title" : {
+        "banner" : {
             "sprites" : [
                 [      "", "text",  "1UP",                      [ 32,   8]],
                 [      "", "text",  "HIGH SCORE",               [ 88,   8]],
                 [      "", "var",   "score1",                   [ 48,  16]],
-                [      "", "var",   "high",                     [112,  16]],
+                [      "", "var",   "high",                     [112,  16]]
+            ],
+            "data" : []
+        },
+        "title" : {
+            "sprites" : [
                 [    "p1", "text",  "1 PLAYER",                 [ 96, 120]],
                 [    "p2", "text",  "2 PLAYERS",                [ 96, 136]],
                 [      "", "text",  "TAITO CORPORATION 1987",   [ 48, 192]],
@@ -307,10 +312,6 @@
         },
         "round" : {
             "sprites" : [
-                [      "", "text",  "1UP",                      [ 32,   8]],
-                [      "", "text",  "HIGH SCORE",               [ 88,   8]],
-                [      "", "var",   "score1",                   [ 48,  16]],
-                [      "", "var",   "high",                     [112,  16]],
                 [      "", "text",  "ROUND ",                   [ 96, 108]],
                 [      "", "var",   "level",                    [144, 108]]
             ],

@@ -25,7 +25,7 @@ class TitleState(State):
     def __init__(self, engine):
         State.__init__(self, engine)
 
-        self.scene = display.Scene("title", engine.vars)
+        self.scenes = {scene : display.Scene(scene, engine.vars) for scene in ["title", "banner"]}
 
         self.engine.events.register(pygame.MOUSEBUTTONDOWN, self.on_click)
         self.engine.events.register(pygame.KEYDOWN, self.on_keydown)
@@ -33,8 +33,8 @@ class TitleState(State):
     def input(self, event):
         # Update cursor position
         index = self.engine.vars["players"] - 1
-        pos = self.scene.data[index]
-        self.scene.names["cursor"].set_pos(pos)
+        pos = self.scenes["title"].data[index]
+        self.scenes["title"].names["cursor"].set_pos(pos)
 
     def on_click(self, event):
         if event.button == 1:
@@ -49,13 +49,14 @@ class TitleState(State):
             self.engine.set_state(BlinkState)
 
     def draw(self, screen):
-        self.scene.group.draw(screen)
+        for scene in self.scenes.values():
+            scene.group.draw(screen)
 
 class BlinkState(State):
     def __init__(self, engine):
         State.__init__(self, engine)
 
-        self.scene = display.Scene("title", engine.vars)
+        self.scenes = {scene : display.Scene(scene, engine.vars) for scene in ["title", "banner"]}
 
         self.sound = audio.play_sound("Intro")
 
@@ -64,30 +65,34 @@ class BlinkState(State):
             key = "p1"
         else:
             key = "p2"
-        self.scene.names[key].set_action(display.Blink(1.0))
+        self.scenes["title"].names[key].set_action(display.Blink(1.0))
 
         # Get rid of the cursor
-        self.scene.names["cursor"].kill()
+        self.scenes["title"].names["cursor"].kill()
 
     def update(self):
-        self.scene.group.update()
+        for scene in self.scenes.values():
+            scene.group.update()
 
         if not self.sound.get_busy():
             self.engine.set_state(RoundState)
 
     def draw(self, screen):
-        self.scene.group.draw(screen)
+        for scene in self.scenes.values():
+            scene.group.draw(screen)
+
 
 class RoundState(State):
     def __init__(self, engine):
         State.__init__(self, engine)
 
-        self.scene = display.Scene("round", engine.vars)
+        self.scenes = {scene : display.Scene(scene, engine.vars) for scene in ["round", "banner"]}
 
         self.engine.timer.start(2.0, self.engine.set_state, StartState)
 
     def draw(self, screen):
-        self.scene.group.draw(screen)
+        for scene in self.scenes.values():
+            scene.group.draw(screen)
 
 class StartState(State):
     def __init__(self, engine):
