@@ -63,6 +63,21 @@
             "size" : [192, 232],
             "offsets" : [[768, 0]]
         },
+        "wall_left" : {
+            "filename" : "resources\\images\\fields.png",
+            "size" : [8, 232],
+            "offsets" : [[0, 0]]
+        },
+        "wall_right" : {
+            "filename" : "resources\\images\\fields.png",
+            "size" : [8, 232],
+            "offsets" : [[184, 0]]
+        },
+        "wall_top" : {
+            "filename" : "resources\\images\\fields.png",
+            "size" : [192, 8],
+            "offsets" : [[0, 0]]
+        },
         "cornl" : {
             "filename" : "resources\\images\\blocks and backgrounds.png",
             "size" : [8, 8],
@@ -334,9 +349,16 @@
             ],
             "data" : []
         },
+        "walls" : {
+            "sprites" : [
+                [  "left", "image",  "wall_left",               [  8,   0]],
+                [ "right", "image",  "wall_right",              [192,   0]],
+                [   "top", "image",  "wall_top",                [  8,   0]]
+            ],
+            "data" : []
+        },
         "level1" : {
             "sprites" : [
-                [      "", "image",  "bg1",                     [  8,   0]],
                 [      "", "image",  "s",                       [ 16,   40]],
                 [      "", "image",  "s",                       [ 32,   40]],
                 [      "", "image",  "s",                       [ 48,   40]],
@@ -406,7 +428,7 @@
             ],
             "data" : []
         }
-    },
+   },
     "font" : {
         "filename" : "resources\\images\\nesfont8.png",
         "size" : [8,8],

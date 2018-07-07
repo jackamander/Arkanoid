@@ -135,6 +135,7 @@ class Sprite(pygame.sprite.DirtySprite):
 
         self.image = image
         self.rect = image.get_rect()
+        self.last = self.rect
         self.dirty = 2
         self.blendmode = 0
         self.source_rect = None
@@ -158,6 +159,7 @@ class Sprite(pygame.sprite.DirtySprite):
         self.action = action
 
     def update(self):
+        self.last = self.rect.copy()
         if self.action:
             self.action.update(self)
 
@@ -169,7 +171,7 @@ class Scene:
         self.names = {}
         self.data = cfg["data"]
 
-        for name, type_, key, pos in cfg["sprites"]:
+        for sname, type_, key, pos in cfg["sprites"]:
             if type_ == "text":
                 image = draw_text(key)
             elif type_ == "var":
@@ -182,5 +184,6 @@ class Scene:
             sprite.set_pos(pos)
             self.group.add(sprite)
 
-            if name:
-                self.names[name] = sprite
+            if sname:
+                self.names[sname] = sprite
+            sprite.name = sname

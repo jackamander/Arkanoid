@@ -94,7 +94,7 @@ class StartState(State):
         State.__init__(self, engine)
 
         level_key ="level%d" % engine.vars["level"]
-        self.scenes = {scene : display.Scene(scene, engine.vars) for scene in ["hud", level_key, "ready"]}
+        self.scenes = {scene : display.Scene(scene, engine.vars) for scene in ["hud", level_key, "ready", "walls"]}
 
         # Lives
         for life in range(engine.vars["lives"], 7):
@@ -119,7 +119,7 @@ class GameState(State):
         State.__init__(self, engine)
 
         level_key ="level%d" % engine.vars["level"]
-        self.scenes = {scene : display.Scene(scene, engine.vars) for scene in ["hud", level_key, "tools"]}
+        self.scenes = {scene : display.Scene(scene, engine.vars) for scene in ["hud", level_key, "tools", "walls"]}
 
         # Lives
         for life in range(engine.vars["lives"], 7):
@@ -132,6 +132,7 @@ class GameState(State):
         self.paddle = self.scenes["tools"].names["paddle"]
 
         self.engine.events.register(pygame.MOUSEMOTION, self.on_mousemove)
+        self.engine.events.register(pygame.KEYDOWN, self.on_keydown)
 
         self.enable_stuck(self.ball)
 
@@ -154,6 +155,10 @@ class GameState(State):
         self.paddle.move([event.rel[0],0])
         self.paddle.rect.clamp_ip(self.playspace)
 
+    def on_keydown(self, event):
+        if event.key == pygame.K_SPACE:
+            self.engine.set_state(StartState)
+
     def update(self):
         for scene in self.scenes.values():
             scene.group.update()
@@ -173,15 +178,17 @@ class GameState(State):
 
         # Ball-Paddle collisions
         if pygame.sprite.collide_rect(self.paddle, ball):
-            if ball.rect.left < self.paddle.rect.left:
+            delta = ball.rect.centerx - self.paddle.rect.centerx
+
+            if delta < -13:
                 vel = [-2,-1]
-            elif ball.rect.left < self.paddle.rect.left + 8:
+            elif delta < -8:
                 vel = [-2,-2]
-            elif ball.rect.centerx <= self.paddle.rect.centerx:
+            elif delta < 0:
                 vel = [-1,-2]
-            elif ball.rect.right < self.paddle.rect.right - 8:
+            elif delta < 8:
                 vel = [1,-2]
-            elif ball.rect.right < self.paddle.rect.right:
+            elif delta < 13:
                 vel = [2,-2]
             else:
                 vel = [2,-1]
@@ -189,12 +196,41 @@ class GameState(State):
             ball.set_action(display.Move(vel))
             audio.play_sound("Low")
 
+        # Ball-Wall collisions
+        sprites = pygame.sprite.spritecollide(ball, self.scenes["walls"].group, False)
+        for sprite in sprites:
+            side = utils.collision_side(ball, sprite)
+
+            if side == "top":
+                ball.action.delta[1] = abs(ball.action.delta[1])
+            elif side == "bottom":
+                ball.action.delta[1] = -abs(ball.action.delta[1])
+            elif side == "left":
+                ball.action.delta[0] = abs(ball.action.delta[0])
+            elif side == "right":
+                ball.action.delta[0] = -abs(ball.action.delta[0])
+            print sprite.name, side,
+
+        if len(sprites):
+            print
+
         # Ball-Brick collisions
-        bricks = pygame.sprite.spritecollide(ball, self.scenes["level1"].group, False)
-        if len(bricks) > 1:
-            bricks.remove(self.scenes["level1"].names["bg"])
-            ball.action.delta[1] *= -1
+        sprites = pygame.sprite.spritecollide(ball, self.scenes["level1"].group, False)
+        for sprite in sprites:
+            side = utils.collision_side(ball, sprite)
+
+            if side == "top":
+                ball.action.delta[1] = abs(ball.action.delta[1])
+            elif side == "bottom":
+                ball.action.delta[1] = -abs(ball.action.delta[1])
+            elif side == "left":
+                ball.action.delta[0] = abs(ball.action.delta[0])
+            elif side == "right":
+                ball.action.delta[0] = -abs(ball.action.delta[0])
+
             audio.play_sound("Med")
+
+            sprite.kill()
 
     def draw(self, screen):
         for scene in self.scenes.values():
