@@ -166,22 +166,9 @@ class GameState(State):
         for scene in self.scenes.values():
             scene.group.update()
 
-        # Ball-Wall collisions
-        # Don't just flip the velocity sign - the ball can get stuck in the wall!
-        ball = self.ball
-        if ball.rect.left < self.playspace.left:
-            ball.action.delta[0] = abs(ball.action.delta[0])
-        elif ball.rect.right > self.playspace.right:
-            ball.action.delta[0] = -abs(ball.action.delta[0])
-
-        if ball.rect.top < self.playspace.top:
-            ball.action.delta[1] = abs(ball.action.delta[1])
-        elif ball.rect.top > self.playspace.bottom:
-            ball.kill()
-
         # Ball-Paddle collisions
-        if pygame.sprite.collide_rect(self.paddle, ball):
-            delta = ball.rect.centerx - self.paddle.rect.centerx
+        if pygame.sprite.collide_rect(self.paddle, self.ball):
+            delta = self.ball.rect.centerx - self.paddle.rect.centerx
 
             if delta < -13:
                 vel = [-2,-1]
@@ -196,36 +183,36 @@ class GameState(State):
             else:
                 vel = [2,-1]
 
-            ball.set_action(display.Move(vel))
+            self.ball.set_action(display.Move(vel))
             audio.play_sound("Low")
 
         # Ball-Wall collisions
-        sprites = pygame.sprite.spritecollide(ball, self.scenes["walls"].group, False)
+        sprites = pygame.sprite.spritecollide(self.ball, self.scenes["walls"].group, False)
         for sprite in sprites:
-            side = collision_side(ball, sprite)
+            side = collision_side(self.ball, sprite)
 
             if side == "top":
-                ball.action.delta[1] = abs(ball.action.delta[1])
+                self.ball.action.delta[1] = abs(self.ball.action.delta[1])
             elif side == "bottom":
-                ball.action.delta[1] = -abs(ball.action.delta[1])
+                self.ball.action.delta[1] = -abs(self.ball.action.delta[1])
             elif side == "left":
-                ball.action.delta[0] = abs(ball.action.delta[0])
+                self.ball.action.delta[0] = abs(self.ball.action.delta[0])
             elif side == "right":
-                ball.action.delta[0] = -abs(ball.action.delta[0])
+                self.ball.action.delta[0] = -abs(self.ball.action.delta[0])
 
         # Ball-Brick collisions
-        sprites = pygame.sprite.spritecollide(ball, self.scenes["level1"].group, False)
+        sprites = pygame.sprite.spritecollide(self.ball, self.scenes["level1"].group, False)
         for sprite in sprites:
-            side = collision_side(ball, sprite)
+            side = collision_side(self.ball, sprite)
 
             if side == "top":
-                ball.action.delta[1] = abs(ball.action.delta[1])
+                self.ball.action.delta[1] = abs(self.ball.action.delta[1])
             elif side == "bottom":
-                ball.action.delta[1] = -abs(ball.action.delta[1])
+                self.ball.action.delta[1] = -abs(self.ball.action.delta[1])
             elif side == "left":
-                ball.action.delta[0] = abs(ball.action.delta[0])
+                self.ball.action.delta[0] = abs(self.ball.action.delta[0])
             elif side == "right":
-                ball.action.delta[0] = -abs(ball.action.delta[0])
+                self.ball.action.delta[0] = -abs(self.ball.action.delta[0])
 
             audio.play_sound("Med")
 
