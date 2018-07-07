@@ -120,9 +120,4 @@ def collision_side(sprite1, sprite2):
         else:
             side = "bottom"
 
-    # print sprite1.name, s1rect, s1rect.center
-    # print sprite2.name, s2rect, s2rect.center
-    # print "wy", wy
-    # print "hx", hx
-
     return side

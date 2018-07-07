@@ -357,6 +357,12 @@
             ],
             "data" : []
         },
+        "bg1" : {
+            "sprites" : [
+                [    "bg", "image",  "bg1",                     [ 8,    0]]
+            ],
+            "data" : []
+        },
         "level1" : {
             "sprites" : [
                 [      "", "image",  "s",                       [ 16,  40]],

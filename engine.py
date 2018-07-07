@@ -94,6 +94,7 @@ class StartState(State):
         State.__init__(self, engine)
 
         level_key ="level%d" % engine.vars["level"]
+        self.bg = display.Scene("bg1", engine.vars)
         self.scenes = {scene : display.Scene(scene, engine.vars) for scene in ["hud", level_key, "ready", "walls"]}
 
         # Lives
@@ -111,6 +112,7 @@ class StartState(State):
             self.engine.set_state(GameState)
 
     def draw(self, screen):
+        self.bg.group.draw(screen)
         for scene in self.scenes.values():
             scene.group.draw(screen)
 
@@ -119,6 +121,7 @@ class GameState(State):
         State.__init__(self, engine)
 
         level_key ="level%d" % engine.vars["level"]
+        self.bg = display.Scene("bg1", engine.vars)
         self.scenes = {scene : display.Scene(scene, engine.vars) for scene in ["hud", level_key, "tools", "walls"]}
 
         # Lives
@@ -209,10 +212,6 @@ class GameState(State):
                 ball.action.delta[0] = abs(ball.action.delta[0])
             elif side == "right":
                 ball.action.delta[0] = -abs(ball.action.delta[0])
-            print sprite.name, side,
-
-        if len(sprites):
-            print
 
         # Ball-Brick collisions
         sprites = pygame.sprite.spritecollide(ball, self.scenes["level1"].group, False)
@@ -233,6 +232,7 @@ class GameState(State):
             sprite.kill()
 
     def draw(self, screen):
+        self.bg.group.draw(screen)
         for scene in self.scenes.values():
             scene.group.draw(screen)
 
