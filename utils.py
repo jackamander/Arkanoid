@@ -100,24 +100,3 @@ class Timer:
 
 # Global config file - initialized in main
 config = {}
-
-def collision_side(sprite1, sprite2):
-    # Expand to include velocity
-    s1rect = sprite1.rect.union(sprite1.last)
-    s2rect = sprite2.rect.union(sprite2.last)
-
-    wy = (s1rect.width + s2rect.width) * (s1rect.centery - s2rect.centery)
-    hx = (s1rect.height + s2rect.height) * (s1rect.centerx - s2rect.centerx)
-
-    if wy > hx:
-        if wy > -hx:
-            side = "top"
-        else:
-            side = "right"
-    else:
-        if wy > -hx:
-            side = "left"
-        else:
-            side = "bottom"
-
-    return side
