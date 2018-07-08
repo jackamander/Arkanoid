@@ -83,14 +83,11 @@ def get_image(name):
     cfg = utils.config["images"][name]
 
     fname = cfg["filename"]
-    size = cfg.get("size")
-    offsets = cfg.get("offsets")
+    size = cfg["size"]
+    offset = cfg["offset"]
     scaled = cfg.get("scaled")
 
-    if size and offsets:
-        rect = pygame.Rect(offsets[0], size)
-    else:
-        rect = None
+    rect = pygame.Rect(offset, size)
 
     image = _load_image(fname, rect, scaled)
 
@@ -145,8 +142,26 @@ class Blink:
             sprite.visible ^= 1
             self.frames = 0
 
+class Animate:
+    def __init__(self, name):
+        cfg = utils.config["animations"][name]
+        self.images = [get_image(name) for name in cfg["images"]]
+        self.speed = cfg["speed"]
+        self.frame = 0
+        self.count = 0
+
+    def update(self, sprite):
+        if self.frame < len(self.images):
+            if self.count == 0:
+                sprite.image = self.images[self.frame]
+
+            self.count += 1
+            if self.count >= self.speed:
+                self.frame += 1
+                self.count = 0
+
 class Sprite(pygame.sprite.DirtySprite):
-    def __init__(self, image, **kwargs):
+    def __init__(self, image, cfg={}):
         pygame.sprite.DirtySprite.__init__(self)
 
         self.image = image
@@ -160,8 +175,7 @@ class Sprite(pygame.sprite.DirtySprite):
 
         self.action = None
 
-        for key, value in kwargs.items():
-            setattr(self, key, value)
+        self.cfg = cfg
 
     def get_pos(self):
         return self.rect.topleft
@@ -204,7 +218,7 @@ class Scene:
 
             position = cfg.pop("position")
 
-            sprite = Sprite(image, **cfg)
+            sprite = Sprite(image, cfg)
             sprite.set_pos(position)
 
             self.group.add(sprite)

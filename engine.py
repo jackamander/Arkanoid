@@ -34,7 +34,7 @@ class TitleState(State):
         # Update cursor position
         index = self.engine.vars["players"] - 1
         cursor = self.scenes["title"].names["cursor"]
-        pos = cursor.locations[index]
+        pos = cursor.cfg["locations"][index]
         cursor.set_pos(pos)
 
     def on_click(self, event):
@@ -194,37 +194,35 @@ class GameState(State):
             self.ball.set_action(display.Move(vel))
             audio.play_sound("Low")
 
-        # Ball-Wall collisions
-        sprites = pygame.sprite.spritecollide(self.ball, self.scenes["walls"].group, False)
-        for sprite in sprites:
-            side = collision_side(self.ball, sprite)
+        # Ball collisions
+        for scene in ["walls", "level1"]:
+            sprites = pygame.sprite.spritecollide(self.ball, self.scenes[scene].group, False)
+            for sprite in sprites:
+                side = collision_side(self.ball, sprite)
 
-            if side == "top":
-                self.ball.action.delta[1] = abs(self.ball.action.delta[1])
-            elif side == "bottom":
-                self.ball.action.delta[1] = -abs(self.ball.action.delta[1])
-            elif side == "left":
-                self.ball.action.delta[0] = abs(self.ball.action.delta[0])
-            elif side == "right":
-                self.ball.action.delta[0] = -abs(self.ball.action.delta[0])
+                if side == "top":
+                    self.ball.action.delta[1] = abs(self.ball.action.delta[1])
+                elif side == "bottom":
+                    self.ball.action.delta[1] = -abs(self.ball.action.delta[1])
+                elif side == "left":
+                    self.ball.action.delta[0] = abs(self.ball.action.delta[0])
+                elif side == "right":
+                    self.ball.action.delta[0] = -abs(self.ball.action.delta[0])
 
-        # Ball-Brick collisions
-        sprites = pygame.sprite.spritecollide(self.ball, self.scenes["level1"].group, False)
-        for sprite in sprites:
-            side = collision_side(self.ball, sprite)
+                sound = sprite.cfg.get("hit_sound")
+                if sound:
+                    audio.play_sound(sound)
 
-            if side == "top":
-                self.ball.action.delta[1] = abs(self.ball.action.delta[1])
-            elif side == "bottom":
-                self.ball.action.delta[1] = -abs(self.ball.action.delta[1])
-            elif side == "left":
-                self.ball.action.delta[0] = abs(self.ball.action.delta[0])
-            elif side == "right":
-                self.ball.action.delta[0] = -abs(self.ball.action.delta[0])
+                animation = sprite.cfg.get("hit_animation")
+                if animation:
+                    sprite.set_action(display.Animate(animation))
 
-            audio.play_sound("Med")
-
-            sprite.kill()
+                hits = sprite.cfg.get("hits")
+                if hits:
+                    hits -= 1
+                    sprite.cfg["hits"] = hits
+                    if hits == 0:
+                        sprite.kill()
 
     def draw(self, screen):
         self.bg.group.draw(screen)
