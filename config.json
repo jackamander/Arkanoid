@@ -177,32 +177,32 @@
             "size" : [16, 8],
             "offset" : [80, 80]
         },
-        "yellow" : {
+        "gold" : {
             "filename" : "resources\\images\\blocks and backgrounds.png",
             "size" : [16, 8],
             "offset" : [0, 88]
         },
-        "yellow1" : {
+        "gold1" : {
             "filename" : "resources\\images\\blocks and backgrounds.png",
             "size" : [16, 8],
             "offset" : [16, 88]
         },
-        "yellow2" : {
+        "gold2" : {
             "filename" : "resources\\images\\blocks and backgrounds.png",
             "size" : [16, 8],
             "offset" : [32, 88]
         },
-        "yellow3" : {
+        "gold3" : {
             "filename" : "resources\\images\\blocks and backgrounds.png",
             "size" : [16, 8],
             "offset" : [48, 88]
         },
-        "yellow4" : {
+        "gold4" : {
             "filename" : "resources\\images\\blocks and backgrounds.png",
             "size" : [16, 8],
             "offset" : [64, 88]
         },
-        "yellow5" : {
+        "gold5" : {
             "filename" : "resources\\images\\blocks and backgrounds.png",
             "size" : [16, 8],
             "offset" : [80, 88]
@@ -606,6 +606,10 @@
     "animations" : {
         "silver" : {
             "images" : ["silver1", "silver2", "silver3", "silver4", "silver5", "silver"],
+            "speed" : 4
+        },
+        "gold" : {
+            "images" : ["gold1", "gold2", "gold3", "gold4", "gold5", "gold"],
             "speed" : 4
         }
     },

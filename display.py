@@ -147,6 +147,7 @@ class Animate:
         cfg = utils.config["animations"][name]
         self.images = [get_image(name) for name in cfg["images"]]
         self.speed = cfg["speed"]
+        self.loop = cfg["loop"]
         self.frame = 0
         self.count = 0
 
@@ -159,6 +160,9 @@ class Animate:
             if self.count >= self.speed:
                 self.frame += 1
                 self.count = 0
+
+            if self.loop and self.frame >= len(self.images):
+                self.frame = 0
 
 class Sprite(pygame.sprite.DirtySprite):
     def __init__(self, image, cfg={}):
