@@ -5,7 +5,6 @@
     "full_screen" : false,
     "frame_rate" : 60,
     "bg_color" : "black",
-    "playspace"  : [16,8,176,224],
     "images" : {
         "paddle" : {
             "filename" : "resources\\images\\vaus.png",

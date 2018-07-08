@@ -136,12 +136,16 @@ class GameState(State):
             key = "life%d" % life
             self.scenes["hud"].names[key].kill()
 
-        self.playspace = pygame.Rect(*utils.config["playspace"])
-
         self.ball = self.scenes["tools"].names["ball"]
+
+        # Set up the paddle behavior
         self.paddle = self.scenes["tools"].names["paddle"]
 
-        self.engine.events.register(pygame.MOUSEMOTION, self.on_mousemove)
+        playspace = self.paddle.rect.copy()
+        playspace.left = self.scenes["walls"].names["left"].rect.right
+        playspace.width = self.scenes["walls"].names["right"].rect.left - playspace.left
+        self.paddle.set_action(display.MouseMove(self.engine, playspace, [1,0]))
+
         self.engine.events.register(pygame.KEYDOWN, self.on_keydown)
 
         self.enable_stuck(self.ball)
@@ -160,10 +164,6 @@ class GameState(State):
         self.engine.timer.cancel(self.disable_stuck)
         ball.set_action(display.Move([1,-2]))
         audio.play_sound("Low")
-
-    def on_mousemove(self, event):
-        self.paddle.move([event.rel[0],0])
-        self.paddle.rect.clamp_ip(self.playspace)
 
     def on_keydown(self, event):
         if event.key == pygame.K_SPACE:

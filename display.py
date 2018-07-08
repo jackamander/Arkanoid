@@ -96,6 +96,22 @@ def get_image(name):
 
     return image
 
+class MouseMove:
+    def __init__(self, engine, region, sensitivity):
+        self.rect = region.copy()
+        self.delta = [0, 0]
+        self.sensitivity = sensitivity
+
+        engine.events.register(pygame.MOUSEMOTION, self.on_mousemove)
+
+    def on_mousemove(self, event):
+        self.delta = [self.delta[i] + self.sensitivity[i] * event.rel[i] for i in range(2)]
+
+    def update(self, sprite):
+        sprite.move(self.delta)
+        sprite.rect.clamp_ip(self.rect)
+        self.delta = [0, 0]
+
 class Move:
     def __init__(self, delta):
         self.delta = delta
