@@ -250,52 +250,16 @@ def collision_side(sprite1, sprite2):
 
     return side
 
-class DebugState(State):
-    def __init__(self, engine):
-        State.__init__(self, engine)
-
-        self.scenes = {scene : display.Scene(scene, engine.vars) for scene in ["debug"]}
-
-        self.ball = self.scenes["debug"].names["ball"]
-        self.brick = self.scenes["debug"].names["brick"]
-
-        self.engine.events.register(pygame.KEYDOWN, self.on_keydown)
-
-    def on_keydown(self, event):
-        delta = [0,0]
-
-        if event.key == pygame.K_UP:
-            delta = [0,-1]
-        elif event.key == pygame.K_DOWN:
-            delta = [0,1]
-        elif event.key == pygame.K_LEFT:
-            delta = [-1,0]
-        elif event.key == pygame.K_RIGHT:
-            delta = [1,0]
-
-        self.scenes["debug"].names["ball"].move(delta)
-
-        if pygame.sprite.collide_rect(self.ball, self.brick):
-            side = collision_side(self.ball, self.brick)
-            print side
-        else:
-            print
-
-    def update(self):
-        for scene in self.scenes.values():
-            scene.group.update()
-
-    def draw(self, screen):
-        for scene in self.scenes.values():
-            scene.group.draw(screen)
-
 class Engine(object):
+    
+    INITIAL_STATE = TitleState
+
     def __init__(self):
         self.vars = {"high":0, "score1":0, "level":1, "player":1, "lives":3, "players":1}
         self.events = utils.Events()
         self.timer = utils.Timer()
 
-        self.state = TitleState(self)
+        self.state = self.INITIAL_STATE(self)
 
     def set_state(self, state):
         self.events.clear()
