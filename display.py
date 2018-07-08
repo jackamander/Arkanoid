@@ -146,7 +146,7 @@ class Blink:
             self.frames = 0
 
 class Sprite(pygame.sprite.DirtySprite):
-    def __init__(self, image):
+    def __init__(self, image, **kwargs):
         pygame.sprite.DirtySprite.__init__(self)
 
         self.image = image
@@ -159,6 +159,9 @@ class Sprite(pygame.sprite.DirtySprite):
         self.layer = 0
 
         self.action = None
+
+        for key, value in kwargs.items():
+            setattr(self, key, value)
 
     def get_pos(self):
         return self.rect.topleft
@@ -181,25 +184,31 @@ class Sprite(pygame.sprite.DirtySprite):
 
 class Scene:
     def __init__(self, name, vars={}):
-        cfg = utils.config["scenes"][name]
+        sprites = utils.config["scenes"][name]
 
         self.group = pygame.sprite.LayeredDirty()
         self.names = {}
-        self.data = cfg["data"]
 
-        for sname, type_, key, pos in cfg["sprites"]:
-            if type_ == "text":
-                image = draw_text(key)
-            elif type_ == "var":
-                text = str(vars[key])
+        for cfg in sprites:
+            cfg = cfg.copy()
+
+            if "text" in cfg:
+                image = draw_text(cfg.pop("text"))
+
+            if "var" in cfg:
+                text = str(vars[cfg.pop("var")])
                 image = draw_text(text)
-            elif type_ == "image":
-                image = get_image(key)
 
-            sprite = Sprite(image)
-            sprite.set_pos(pos)
+            if "image" in cfg:
+                image = get_image(cfg.pop("image"))
+
+            position = cfg.pop("position")
+
+            sprite = Sprite(image, **cfg)
+            sprite.set_pos(position)
+
             self.group.add(sprite)
 
-            if sname:
-                self.names[sname] = sprite
-            sprite.name = sname
+            sprite_name = cfg.get("name")
+            if sprite_name:
+                self.names[sprite_name] = sprite

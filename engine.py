@@ -33,8 +33,9 @@ class TitleState(State):
     def input(self, event):
         # Update cursor position
         index = self.engine.vars["players"] - 1
-        pos = self.scenes["title"].data[index]
-        self.scenes["title"].names["cursor"].set_pos(pos)
+        cursor = self.scenes["title"].names["cursor"]
+        pos = cursor.locations[index]
+        cursor.set_pos(pos)
 
     def on_click(self, event):
         if event.button == 1:

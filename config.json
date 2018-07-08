@@ -283,164 +283,467 @@
         }
     },
     "scenes": {
-        "banner" : {
-            "sprites" : [
-                [      "", "text",  "1UP",                      [ 32,   8]],
-                [      "", "text",  "HIGH SCORE",               [ 88,   8]],
-                [      "", "var",   "score1",                   [ 48,  16]],
-                [      "", "var",   "high",                     [112,  16]]
-            ],
-            "data" : []
-        },
-        "title" : {
-            "sprites" : [
-                [    "p1", "text",  "1 PLAYER",                 [ 96, 120]],
-                [    "p2", "text",  "2 PLAYERS",                [ 96, 136]],
-                [      "", "text",  "TAITO CORPORATION 1987",   [ 48, 192]],
-                [      "", "text",  "LICENSED BY",              [ 84, 200]],
-                [      "", "text",  "NINTENDO OF AMERICA INC.", [ 32, 208]],
-                [      "", "image", "arkanoid",                 [ 67,  61]],
-                [      "", "image", "taito",                    [ 92, 169]],
-                [      "", "image", "copyright",                [ 32, 192]],
-                ["cursor", "image", "cursor",                   [ 80, 120]]
-            ],
-            "data" : [
-                [80, 120],
-                [80, 136]
-            ]
-        },
-        "round" : {
-            "sprites" : [
-                [      "", "text",  "ROUND ",                   [ 96, 108]],
-                [      "", "var",   "level",                    [144, 108]]
-            ],
-            "data" : []
-        },
-        "hud" : {
-            "sprites" : [
-                [      "", "text",  "HIGH",                     [200,  24]],
-                [      "", "text",  "SCORE",                    [208,  32]],
-                [      "", "var",   "high",                     [208,  40]],
-                [      "", "text",  "1UP",                      [200,  56]],
-                [      "", "var",   "score1",                   [208,  64]],
-                [      "", "text",  "ROUND",                    [208, 192]],
-                [      "", "var",   "level",                    [232, 200]],
-                [ "life1", "image", "life",                     [200, 112]],
-                [ "life2", "image", "life",                     [220, 112]],
-                [ "life3", "image", "life",                     [240, 112]],
-                [ "life4", "image", "life",                     [200, 120]],
-                [ "life5", "image", "life",                     [220, 120]],
-                [ "life6", "image", "life",                     [240, 120]]
-            ],
-            "data" : []
-        },
-        "tools" : {
-            "sprites" : [
-                ["paddle", "image", "paddle",                   [ 80, 201]],
-                [  "ball", "image", "ball",                     [ 96, 197]]
-            ],
-            "data" : []
-        },
-        "ready" : {
-            "sprites" : [
-                ["start1", "text",  "PLAYER ",                  [ 72, 160]],
-                ["start2", "var",   "player",                   [128, 160]],
-                ["start3", "text",  "READY",                    [ 84, 176]]
-            ],
-            "data" : []
-        },
-        "walls" : {
-            "sprites" : [
-                [  "left", "image",  "wall_left",               [  8,   0]],
-                [ "right", "image",  "wall_right",              [192,   0]],
-                [   "top", "image",  "wall_top",                [  8,   0]]
-            ],
-            "data" : []
-        },
-        "bg1" : {
-            "sprites" : [
-                [    "bg", "image",  "bg1",                     [ 8,    0]]
-            ],
-            "data" : []
-        },
-        "level1" : {
-            "sprites" : [
-                [      "", "image",  "s",                       [ 16,  40]],
-                [      "", "image",  "s",                       [ 32,  40]],
-                [      "", "image",  "s",                       [ 48,  40]],
-                [      "", "image",  "s",                       [ 64,  40]],
-                [      "", "image",  "s",                       [ 80,  40]],
-                [      "", "image",  "s",                       [ 96,  40]],
-                [      "", "image",  "s",                       [112,  40]],
-                [      "", "image",  "s",                       [128,  40]],
-                [      "", "image",  "s",                       [144,  40]],
-                [      "", "image",  "s",                       [160,  40]],
-                [      "", "image",  "s",                       [176,  40]],
-                [      "", "image",  "r",                       [ 16,  48]],
-                [      "", "image",  "r",                       [ 32,  48]],
-                [      "", "image",  "r",                       [ 48,  48]],
-                [      "", "image",  "r",                       [ 64,  48]],
-                [      "", "image",  "r",                       [ 80,  48]],
-                [      "", "image",  "r",                       [ 96,  48]],
-                [      "", "image",  "r",                       [112,  48]],
-                [      "", "image",  "r",                       [128,  48]],
-                [      "", "image",  "r",                       [144,  48]],
-                [      "", "image",  "r",                       [160,  48]],
-                [      "", "image",  "r",                       [176,  48]],
-                [      "", "image",  "b",                       [ 16,  56]],
-                [      "", "image",  "b",                       [ 32,  56]],
-                [      "", "image",  "b",                       [ 48,  56]],
-                [      "", "image",  "b",                       [ 64,  56]],
-                [      "", "image",  "b",                       [ 80,  56]],
-                [      "", "image",  "b",                       [ 96,  56]],
-                [      "", "image",  "b",                       [112,  56]],
-                [      "", "image",  "b",                       [128,  56]],
-                [      "", "image",  "b",                       [144,  56]],
-                [      "", "image",  "b",                       [160,  56]],
-                [      "", "image",  "b",                       [176,  56]],
-                [      "", "image",  "o",                       [ 16,  64]],
-                [      "", "image",  "o",                       [ 32,  64]],
-                [      "", "image",  "o",                       [ 48,  64]],
-                [      "", "image",  "o",                       [ 64,  64]],
-                [      "", "image",  "o",                       [ 80,  64]],
-                [      "", "image",  "o",                       [ 96,  64]],
-                [      "", "image",  "o",                       [112,  64]],
-                [      "", "image",  "o",                       [128,  64]],
-                [      "", "image",  "o",                       [144,  64]],
-                [      "", "image",  "o",                       [160,  64]],
-                [      "", "image",  "o",                       [176,  64]],
-                [      "", "image",  "p",                       [ 16,  72]],
-                [      "", "image",  "p",                       [ 32,  72]],
-                [      "", "image",  "p",                       [ 48,  72]],
-                [      "", "image",  "p",                       [ 64,  72]],
-                [      "", "image",  "p",                       [ 80,  72]],
-                [      "", "image",  "p",                       [ 96,  72]],
-                [      "", "image",  "p",                       [112,  72]],
-                [      "", "image",  "p",                       [128,  72]],
-                [      "", "image",  "p",                       [144,  72]],
-                [      "", "image",  "p",                       [160,  72]],
-                [      "", "image",  "p",                       [176,  72]],
-                [      "", "image",  "g",                       [ 16,  80]],
-                [      "", "image",  "g",                       [ 32,  80]],
-                [      "", "image",  "g",                       [ 48,  80]],
-                [      "", "image",  "g",                       [ 64,  80]],
-                [      "", "image",  "g",                       [ 80,  80]],
-                [      "", "image",  "g",                       [ 96,  80]],
-                [      "", "image",  "g",                       [112,  80]],
-                [      "", "image",  "g",                       [128,  80]],
-                [      "", "image",  "g",                       [144,  80]],
-                [      "", "image",  "g",                       [160,  80]],
-                [      "", "image",  "g",                       [176,  80]]
-            ],
-            "data" : []
-        },
-        "debug" : {
-            "sprites" : [
-                [  "ball", "image",  "ball",                    [100,  80]],
-                [ "brick", "image",  "r",                       [100, 100]]
-            ],
-            "data" : []
-        }
+        "banner" : [
+            {
+                "text" : "1UP",
+                "position" : [32, 8]
+            },
+            {
+                "text" : "HIGH SCORE",
+                "position" : [88, 8]
+            },
+            {
+                "var" : "score1",
+                "position" : [48, 16]
+            },
+            {
+                "var" : "high",
+                "position" : [112, 16]
+            }
+        ],
+        "title" : [
+            {
+                "name" : "p1",
+                "text" : "1 PLAYER",
+                "position" : [96, 120]
+            },
+            {
+                "name" : "p2",
+                "text" : "2 PLAYERS",
+                "position" : [96, 136]
+            },
+            {
+                "text" : "TAITO CORPORATION 1987",
+                "position" : [48, 192]
+            },
+            {
+                "text" : "LICENSED BY",
+                "position" : [84, 200]
+            },
+            {
+                "text" : "NINTENDO OF AMERICA INC.",
+                "position" : [32, 208]
+            },
+            {
+                "image" : "arkanoid",
+                "position" : [67, 61]
+            },
+            {
+                "image" : "taito",
+                "position" : [92, 169]
+            },
+            {
+                "image" : "copyright",
+                "position" : [32, 192]
+            },
+            {
+                "name" : "cursor",
+                "image" : "cursor",
+                "position" : [80, 120],
+                "locations" : [[80, 120], [80, 136]]
+            }
+        ],
+        "round" : [
+            {
+                "text" : "ROUND ",
+                "position" : [96, 108]
+            },
+            {
+                "var" : "level",
+                "position" : [144, 108]
+            }
+        ],
+        "hud" : [
+            {
+                "text" : "HIGH",
+                "position" : [200, 24]
+            },
+            {
+                "text" : "SCORE",
+                "position" : [208, 32]
+            },
+            {
+                "var" : "high",
+                "position" : [208, 40]
+            },
+            {
+                "text" : "1UP",
+                "position" : [200, 56]
+            },
+            {
+                "var" : "score1",
+                "position" : [208, 64]
+            },
+            {
+                "text" : "ROUND",
+                "position" : [208, 192]
+            },
+            {
+                "var" : "level",
+                "position" : [232, 200]
+            },
+            {
+                "name" : "life1",
+                "image" : "life",
+                "position" : [200, 112]
+            },
+            {
+                "name" : "life2",
+                "image" : "life",
+                "position" : [220, 112]
+            },
+            {
+                "name" : "life3",
+                "image" : "life",
+                "position" : [240, 112]
+            },
+            {
+                "name" : "life4",
+                "image" : "life",
+                "position" : [200, 120]
+            },
+            {
+                "name" : "life5",
+                "image" : "life",
+                "position" : [220, 120]
+            },
+            {
+                "name" : "life6",
+                "image" : "life",
+                "position" : [240, 120]
+            }
+        ],
+        "tools" : [
+            {
+                "name" : "paddle",
+                "image" : "paddle",
+                "position" : [ 80, 201]
+            },
+            {
+                "name" : "ball",
+                "image" : "ball",
+                "position" : [ 96, 197]
+            }
+        ],
+        "ready" : [
+            {
+                "name" : "start1",
+                "text" : "PLAYER ",
+                "position" : [ 72, 160]
+            },
+            {
+                "name" : "start2",
+                "var" : "player",
+                "position" : [128, 160]
+            },
+            {
+                "name" : "start3",
+                "text" : "READY",
+                "position" : [ 84, 176]
+            }
+        ],
+        "walls" : [
+            {
+                "name" : "left",
+                "image" : "wall_left",
+                "position" : [  8,  0]
+            },
+            {
+                "name" : "right",
+                "image" : "wall_right",
+                "position" : [192,  0]
+            },
+            {
+                "name" : "top",
+                "image" : "wall_top",
+                "position" : [  8,  0]
+            }
+        ],
+        "bg1" : [
+            {
+                "name" : "bg",
+                "image" : "bg1",
+                "position" : [8, 0]
+            }
+        ],
+        "level1" : [
+            {
+                "image" : "s",
+                "position" : [ 16, 40]
+            },
+            {
+                "image" : "s",
+                "position" : [ 32, 40]
+            },
+            {
+                "image" : "s",
+                "position" : [ 48, 40]
+            },
+            {
+                "image" : "s",
+                "position" : [ 64, 40]
+            },
+            {
+                "image" : "s",
+                "position" : [ 80, 40]
+            },
+            {
+                "image" : "s",
+                "position" : [ 96, 40]
+            },
+            {
+                "image" : "s",
+                "position" : [112, 40]
+            },
+            {
+                "image" : "s",
+                "position" : [128, 40]
+            },
+            {
+                "image" : "s",
+                "position" : [144, 40]
+            },
+            {
+                "image" : "s",
+                "position" : [160, 40]
+            },
+            {
+                "image" : "s",
+                "position" : [176, 40]
+            },
+            {
+                "image" : "r",
+                "position" : [ 16, 48]
+            },
+            {
+                "image" : "r",
+                "position" : [ 32, 48]
+            },
+            {
+                "image" : "r",
+                "position" : [ 48, 48]
+            },
+            {
+                "image" : "r",
+                "position" : [ 64, 48]
+            },
+            {
+                "image" : "r",
+                "position" : [ 80, 48]
+            },
+            {
+                "image" : "r",
+                "position" : [ 96, 48]
+            },
+            {
+                "image" : "r",
+                "position" : [112, 48]
+            },
+            {
+                "image" : "r",
+                "position" : [128, 48]
+            },
+            {
+                "image" : "r",
+                "position" : [144, 48]
+            },
+            {
+                "image" : "r",
+                "position" : [160, 48]
+            },
+            {
+                "image" : "r",
+                "position" : [176, 48]
+            },
+            {
+                "image" : "b",
+                "position" : [ 16, 56]
+            },
+            {
+                "image" : "b",
+                "position" : [ 32, 56]
+            },
+            {
+                "image" : "b",
+                "position" : [ 48, 56]
+            },
+            {
+                "image" : "b",
+                "position" : [ 64, 56]
+            },
+            {
+                "image" : "b",
+                "position" : [ 80, 56]
+            },
+            {
+                "image" : "b",
+                "position" : [ 96, 56]
+            },
+            {
+                "image" : "b",
+                "position" : [112, 56]
+            },
+            {
+                "image" : "b",
+                "position" : [128, 56]
+            },
+            {
+                "image" : "b",
+                "position" : [144, 56]
+            },
+            {
+                "image" : "b",
+                "position" : [160, 56]
+            },
+            {
+                "image" : "b",
+                "position" : [176, 56]
+            },
+            {
+                "image" : "o",
+                "position" : [ 16, 64]
+            },
+            {
+                "image" : "o",
+                "position" : [ 32, 64]
+            },
+            {
+                "image" : "o",
+                "position" : [ 48, 64]
+            },
+            {
+                "image" : "o",
+                "position" : [ 64, 64]
+            },
+            {
+                "image" : "o",
+                "position" : [ 80, 64]
+            },
+            {
+                "image" : "o",
+                "position" : [ 96, 64]
+            },
+            {
+                "image" : "o",
+                "position" : [112, 64]
+            },
+            {
+                "image" : "o",
+                "position" : [128, 64]
+            },
+            {
+                "image" : "o",
+                "position" : [144, 64]
+            },
+            {
+                "image" : "o",
+                "position" : [160, 64]
+            },
+            {
+                "image" : "o",
+                "position" : [176, 64]
+            },
+            {
+                "image" : "p",
+                "position" : [ 16, 72]
+            },
+            {
+                "image" : "p",
+                "position" : [ 32, 72]
+            },
+            {
+                "image" : "p",
+                "position" : [ 48, 72]
+            },
+            {
+                "image" : "p",
+                "position" : [ 64, 72]
+            },
+            {
+                "image" : "p",
+                "position" : [ 80, 72]
+            },
+            {
+                "image" : "p",
+                "position" : [ 96, 72]
+            },
+            {
+                "image" : "p",
+                "position" : [112, 72]
+            },
+            {
+                "image" : "p",
+                "position" : [128, 72]
+            },
+            {
+                "image" : "p",
+                "position" : [144, 72]
+            },
+            {
+                "image" : "p",
+                "position" : [160, 72]
+            },
+            {
+                "image" : "p",
+                "position" : [176, 72]
+            },
+            {
+                "image" : "g",
+                "position" : [ 16, 80]
+            },
+            {
+                "image" : "g",
+                "position" : [ 32, 80]
+            },
+            {
+                "image" : "g",
+                "position" : [ 48, 80]
+            },
+            {
+                "image" : "g",
+                "position" : [ 64, 80]
+            },
+            {
+                "image" : "g",
+                "position" : [ 80, 80]
+            },
+            {
+                "image" : "g",
+                "position" : [ 96, 80]
+            },
+            {
+                "image" : "g",
+                "position" : [112, 80]
+            },
+            {
+                "image" : "g",
+                "position" : [128, 80]
+            },
+            {
+                "image" : "g",
+                "position" : [144, 80]
+            },
+            {
+                "image" : "g",
+                "position" : [160, 80]
+            },
+            {
+                "image" : "g",
+                "position" : [176, 80]
+            }
+        ],
+        "debug" : [
+            {
+                "name" : "ball",
+                "image" : "ball",
+                "position" : [100, 80]
+            },
+            {
+                "name" : "brick",
+                "image" : "r",
+                "position" : [100, 100]
+            }
+        ]
    },
     "font" : {
         "filename" : "resources\\images\\nesfont8.png",
