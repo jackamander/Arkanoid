@@ -224,6 +224,21 @@ class GameState(State):
                     if hits == 0:
                         sprite.kill()
 
+        # Ball exit detection
+        sprites = pygame.sprite.spritecollide(self.ball, self.bg.group, False)
+        if self.ball.alive() and len(sprites) == 0:
+            self.ball.kill()
+            self.paddle.set_action(display.Animate("explode").then(display.Die()))
+            self.sound = audio.play_sound("Death")
+
+        if not self.paddle.alive() and not self.sound.get_busy():
+            self.engine.vars["lives"] -= 1
+
+            if self.engine.vars["lives"] > 0:
+                self.engine.set_state(RoundState)
+            else:
+                self.engine.set_state(TitleState)
+
     def draw(self, screen):
         self.bg.group.draw(screen)
         for scene in self.scenes.values():

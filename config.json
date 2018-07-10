@@ -11,6 +11,21 @@
             "size" : [32, 8],
             "offset" : [0, 0]
         },
+        "explode1" : {
+            "filename" : "resources\\images\\vaus.png",
+            "size" : [32, 8],
+            "offset" : [0, 40]
+        },
+        "explode2" : {
+            "filename" : "resources\\images\\vaus.png",
+            "size" : [42, 17],
+            "offset" : [40, 36]
+        },
+        "explode3" : {
+            "filename" : "resources\\images\\vaus.png",
+            "size" : [44, 23],
+            "offset" : [91, 34]
+        },
         "life" : {
             "filename" : "resources\\images\\vaus.png",
             "size" : [32, 8],
@@ -611,6 +626,10 @@
         "gold" : {
             "images" : ["gold1", "gold2", "gold3", "gold4", "gold5", "gold"],
             "speed" : 4
+        },
+        "explode" : {
+            "images" : ["explode1", "explode2", "explode3"],
+            "speed" : 20
         }
     },
     "sounds" : {
@@ -629,6 +648,9 @@
         },
         "Med" : {
             "filename" : "resources\\sounds\\PingMed.wav"
+        },
+        "Death" : {
+            "filename" : "resources\\sounds\\Death.wav"
         }
     },
     "scenes": {

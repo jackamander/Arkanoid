@@ -142,27 +142,51 @@ class Blink:
             sprite.visible ^= 1
             self.frames = 0
 
-class Animate:
+class Action:
+    def __init__(self):
+        self._next_action = None
+
+    def then(self, action):
+        self._next_action = action
+        return self
+
+    def finish(self, sprite):
+        sprite.set_action(self._next_action)
+
+class Animate(Action):
     def __init__(self, name):
+        Action.__init__(self)
+
         cfg = utils.config["animations"][name]
         self.images = [get_image(name) for name in cfg["images"]]
         self.speed = cfg["speed"]
-        self.loop = cfg["loop"]
+        self.loop = cfg.get("loop")
         self.frame = 0
         self.count = 0
 
     def update(self, sprite):
         if self.frame < len(self.images):
             if self.count == 0:
+                old_rect = sprite.rect.copy()
                 sprite.image = self.images[self.frame]
+                sprite.rect.size = self.images[self.frame].get_size()
+                sprite.rect.center = old_rect.center
 
             self.count += 1
             if self.count >= self.speed:
                 self.frame += 1
                 self.count = 0
 
-            if self.loop and self.frame >= len(self.images):
-                self.frame = 0
+            if self.frame >= len(self.images):
+                if self.loop:
+                    self.frame = 0
+                else:
+                    self.finish(sprite)
+
+class Die(Action):
+    def update(self, sprite):
+        sprite.kill()
+        self.finish(sprite)
 
 class Sprite(pygame.sprite.DirtySprite):
     def __init__(self, image, cfg={}):
