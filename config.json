@@ -800,17 +800,20 @@
             {
                 "name" : "start1",
                 "text" : "PLAYER ",
-                "position" : [ 72, 160]
+                "position" : [ 72, 160],
+                "layer" : 20
             },
             {
                 "name" : "start2",
                 "var" : "player",
-                "position" : [128, 160]
+                "position" : [128, 160],
+                "layer" : 20
             },
             {
                 "name" : "start3",
                 "text" : "READY",
-                "position" : [ 84, 176]
+                "position" : [ 84, 176],
+                "layer" : 20
             }
         ],
         "walls" : [
@@ -834,7 +837,8 @@
             {
                 "name" : "bg",
                 "image" : "bg1",
-                "position" : [8, 0]
+                "position" : [8, 0],
+                "layer" : 0
             }
         ],
         "level1" : [

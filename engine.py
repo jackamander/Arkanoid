@@ -101,9 +101,9 @@ class StartState(State):
     def __init__(self, engine):
         State.__init__(self, engine)
 
-        level_key ="level%d" % engine.vars["level"]
-        self.bg = display.Scene("bg1", engine.vars)
-        self.scenes = {scene : display.Scene(scene, engine.vars) for scene in ["hud", level_key, "ready", "walls"]}
+        self.scenes = {scene : display.Scene(scene, engine.vars) for scene in ["hud", "ready"]}
+        self.scenes["level"] = engine.scenes["levels"][engine.vars["level"]]
+        self.scenes["bg"] = engine.scenes["bgs"][engine.vars["level"]]
 
         # Lives
         for life in range(engine.vars["lives"], 7):
@@ -120,7 +120,6 @@ class StartState(State):
             self.engine.set_state(GameState)
 
     def draw(self, screen):
-        self.bg.group.draw(screen)
         for scene in self.scenes.values():
             scene.group.draw(screen)
 
@@ -128,9 +127,9 @@ class GameState(State):
     def __init__(self, engine):
         State.__init__(self, engine)
 
-        level_key ="level%d" % engine.vars["level"]
-        self.bg = display.Scene("bg1", engine.vars)
-        self.scenes = {scene : display.Scene(scene, engine.vars) for scene in ["hud", level_key, "tools", "walls"]}
+        self.scenes = {scene : display.Scene(scene, engine.vars) for scene in ["hud", "tools", "walls"]}
+        self.scenes["level"] = engine.scenes["levels"][engine.vars["level"]]
+        self.scenes["bg"] = engine.scenes["bgs"][engine.vars["level"]]
 
         # Lives
         for life in range(engine.vars["lives"], 7):
@@ -195,7 +194,7 @@ class GameState(State):
             audio.play_sound("Low")
 
         # Ball collisions
-        for scene in ["walls", "level1"]:
+        for scene in ["walls", "level"]:
             sprites = pygame.sprite.spritecollide(self.ball, self.scenes[scene].group, False)
             for sprite in sprites:
                 side = collision_side(self.ball, sprite)
@@ -225,7 +224,7 @@ class GameState(State):
                         sprite.kill()
 
         # Ball exit detection
-        sprites = pygame.sprite.spritecollide(self.ball, self.bg.group, False)
+        sprites = pygame.sprite.spritecollide(self.ball, self.scenes["bg"].group, False)
         if self.ball.alive() and len(sprites) == 0:
             self.ball.kill()
             self.paddle.set_action(display.Animate("explode").then(display.Die()))
@@ -240,7 +239,6 @@ class GameState(State):
                 self.engine.set_state(TitleState)
 
     def draw(self, screen):
-        self.bg.group.draw(screen)
         for scene in self.scenes.values():
             scene.group.draw(screen)
 
@@ -270,7 +268,20 @@ class Engine(object):
     INITIAL_STATE = TitleState
 
     def __init__(self):
-        self.vars = {"high":0, "score1":0, "level":1, "player":1, "lives":3, "players":1}
+        self.vars = {
+            "high":0, 
+            "score1":0, 
+            "level":1, 
+            "player":1, 
+            "lives":3, 
+            "players":1,
+        }
+
+        self.scenes = {
+            "levels" : {level : display.Scene("level%d" % level, self.vars) for level in range(1,2)},
+            "bgs" : {level : display.Scene("bg%d" % level, self.vars) for level in range(1,2)},
+        }
+
         self.events = utils.Events()
         self.timer = utils.Timer()
 

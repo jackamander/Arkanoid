@@ -199,7 +199,8 @@ class Sprite(pygame.sprite.DirtySprite):
         self.blendmode = 0
         self.source_rect = None
         self.visible = 1
-        self.layer = 0
+        
+        self._layer = cfg.pop("layer", 10)
 
         self.action = None
 
