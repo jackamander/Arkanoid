@@ -64,16 +64,16 @@ class Events:
         handlers = self.handlers.setdefault(eventtype, set())
         handlers.remove(handler)
 
-    def input(self, event):
-        """Process an incoming event"""
-        handlers = self.handlers.get(event.type, [])
+    def fire(self, event):
+        """Handle an incoming event"""
+        handlers = self.handlers.get(event.type, set())
         for handler in handlers:
             handler(event)
 
     def clear(self):
         self.handlers = {}
 
-class Timer:
+class Timers:
     def __init__(self):
         self.clear()
 
@@ -98,5 +98,7 @@ class Timer:
     def clear(self):
         self.timers = {}
 
-# Global config file - initialized in main
-config = {}
+# Globals
+config = {}     # initialized in main
+events = Events()
+timers = Timers()

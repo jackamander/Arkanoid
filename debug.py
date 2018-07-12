@@ -20,7 +20,7 @@ class CollisionTest(engine.State):
         self.ball = self.scenes["debug"].names["ball"]
         self.brick = self.scenes["debug"].names["brick"]
 
-        self.engine.events.register(pygame.KEYDOWN, self.on_keydown)
+        utils.events.register(pygame.KEYDOWN, self.on_keydown)
 
     def on_keydown(self, event):
         delta = [0,0]

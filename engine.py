@@ -29,8 +29,8 @@ class TitleState(State):
 
         self.scene = display.Scene(["title", "banner"], engine.vars)
 
-        self.engine.events.register(pygame.MOUSEBUTTONDOWN, self.on_click)
-        self.engine.events.register(pygame.KEYDOWN, self.on_keydown)
+        utils.events.register(pygame.MOUSEBUTTONDOWN, self.on_click)
+        utils.events.register(pygame.KEYDOWN, self.on_keydown)
 
     def input(self, event):
         # Update cursor position
@@ -90,7 +90,7 @@ class RoundState(State):
 
         self.scene = display.Scene(["round", "banner"], engine.vars)
 
-        self.engine.timer.start(2.0, self.engine.set_state, StartState)
+        utils.timers.start(2.0, self.engine.set_state, StartState)
 
     def draw(self, screen):
         self.scene.groups["all"].draw(screen)
@@ -138,9 +138,9 @@ class GameState(State):
         playspace = self.paddle.rect.copy()
         playspace.left = self.scene.names["left"].rect.right
         playspace.width = self.scene.names["right"].rect.left - playspace.left
-        self.paddle.set_action(display.MouseMove(self.engine, playspace, [1,0]))
+        self.paddle.set_action(display.MouseMove(playspace, [1,0]))
 
-        self.engine.events.register(pygame.KEYDOWN, self.on_keydown)
+        utils.events.register(pygame.KEYDOWN, self.on_keydown)
 
         self.enable_stuck(self.ball)
 
@@ -149,13 +149,13 @@ class GameState(State):
         ball.set_action(display.Follow(self.paddle))
 
         # Listen for release
-        self.engine.events.register(pygame.MOUSEBUTTONDOWN, lambda event: self.disable_stuck(ball))
+        utils.events.register(pygame.MOUSEBUTTONDOWN, lambda event: self.disable_stuck(ball))
 
         # Set up the auto release timer
-        self.engine.timer.start(3.0, self.disable_stuck, ball)
+        utils.timers.start(3.0, self.disable_stuck, ball)
 
     def disable_stuck(self, ball):
-        self.engine.timer.cancel(self.disable_stuck)
+        utils.timers.cancel(self.disable_stuck)
         ball.set_action(display.Move([1,-2]))
         audio.play_sound("Low")
 
@@ -286,22 +286,19 @@ class Engine(object):
 
         self.scenes = {level : display.Scene([key], self.vars) for level, key in levels.items()}
 
-        self.events = utils.Events()
-        self.timer = utils.Timer()
-
         self.state = self.INITIAL_STATE(self)
 
     def set_state(self, state):
-        self.events.clear()
-        self.timer.clear()
+        utils.events.clear()
+        utils.timers.clear()
         self.state = state(self)
 
     def input(self, event):
-        self.events.input(event)
+        utils.events.fire(event)
         self.state.input(event)
 
     def update(self):
-        self.timer.update()
+        utils.timers.update()
         self.state.update()
 
     def draw(self, screen):
