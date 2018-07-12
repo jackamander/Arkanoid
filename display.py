@@ -227,15 +227,14 @@ class Sprite(pygame.sprite.DirtySprite):
 
 # Scene requirements:
 # - named Sprites for specific processing - paddle, ball, bg, etc
-# - groups for collision handling
-# - single group for rendering
+# - multiple groups for things like collision handling and ball tracking
+# - single group for rendering everything
 # - share definitions for block reuse
 # - control persistence - some need to be reinstantiated, others need persistence
 class Scene:
     Group = pygame.sprite.LayeredDirty
     def __init__(self, names, vars={}):
-        self.collisions = {}
-        self.all = Scene.Group()
+        self.groups = {}
         self.names = {}
 
         for name in names:
@@ -256,23 +255,22 @@ class Scene:
 
                 position = cfg.pop("position")
 
-                collision_name = cfg.pop("collision", None)
-
+                group_names = cfg.pop("groups", [])
+                group_names.append("all")
+                
                 sprite = Sprite(image, cfg)
                 sprite.set_pos(position)
 
-                self.all.add(sprite)
-
-                collision = self.collisions.setdefault(collision_name, Scene.Group())
-                collision.add(sprite)
+                for group_name in group_names:
+                    group = self.groups.setdefault(group_name, Scene.Group())
+                    group.add(sprite)
 
                 sprite_name = cfg.get("name")
                 if sprite_name:
                     self.names[sprite_name] = sprite
 
     def merge(self, scene):
-        for key, source in scene.collisions.items():
-            dest = self.collisions.setdefault(key, Scene.Group())
+        for key, source in scene.groups.items():
+            dest = self.groups.setdefault(key, Scene.Group())
             dest.add(source)
         self.names.update(scene.names)
-        self.all.add(scene.all)

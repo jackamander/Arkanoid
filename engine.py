@@ -52,7 +52,7 @@ class TitleState(State):
             self.engine.set_state(StartState)
 
     def draw(self, screen):
-        self.scene.all.draw(screen)
+        self.scene.groups["all"].draw(screen)
 
 class BlinkState(State):
     def __init__(self, engine):
@@ -73,13 +73,13 @@ class BlinkState(State):
         self.scene.names["cursor"].kill()
 
     def update(self):
-        self.scene.all.update()
+        self.scene.groups["all"].update()
 
         if not self.sound.get_busy():
             self.engine.set_state(RoundState)
 
     def draw(self, screen):
-        self.scene.all.draw(screen)
+        self.scene.groups["all"].draw(screen)
 
 
 class RoundState(State):
@@ -91,7 +91,7 @@ class RoundState(State):
         self.engine.timer.start(2.0, self.engine.set_state, StartState)
 
     def draw(self, screen):
-        self.scene.all.draw(screen)
+        self.scene.groups["all"].draw(screen)
 
 class StartState(State):
     def __init__(self, engine):
@@ -108,13 +108,13 @@ class StartState(State):
         self.sound = audio.play_sound("Ready")
 
     def update(self):
-        self.scene.all.update()
+        self.scene.groups["all"].update()
 
         if not self.sound.get_busy():
             self.engine.set_state(GameState)
 
     def draw(self, screen):
-        self.scene.all.draw(screen)
+        self.scene.groups["all"].draw(screen)
 
 class GameState(State):
     def __init__(self, engine):
@@ -162,7 +162,7 @@ class GameState(State):
             self.engine.set_state(StartState)
 
     def update(self):
-        self.scene.all.update()
+        self.scene.groups["all"].update()
 
         # Ball-Paddle collisions
         if pygame.sprite.collide_rect(self.paddle, self.ball):
@@ -185,7 +185,7 @@ class GameState(State):
             audio.play_sound("Low")
 
         # Ball collisions
-        sprites = pygame.sprite.spritecollide(self.ball, self.scene.collisions["ball"], False)
+        sprites = pygame.sprite.spritecollide(self.ball, self.scene.groups["ball"], False)
         for sprite in sprites:
             side = collision_side(self.ball, sprite)
 
@@ -214,7 +214,7 @@ class GameState(State):
                     sprite.kill()
 
         # Ball exit detection
-        sprites = pygame.sprite.spritecollide(self.ball, self.scene.collisions["bg"], False)
+        sprites = pygame.sprite.spritecollide(self.ball, self.scene.groups["bg"], False)
         if self.ball.alive() and len(sprites) == 0:
             self.ball.kill()
             self.paddle.set_action(display.Animate("explode").then(display.Die()))
@@ -229,7 +229,7 @@ class GameState(State):
                 self.engine.set_state(TitleState)
 
     def draw(self, screen):
-        self.scene.all.draw(screen)
+        self.scene.groups["all"].draw(screen)
 
 def collision_side(sprite1, sprite2):
     # Expand to include velocity
