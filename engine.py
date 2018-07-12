@@ -2,6 +2,8 @@
 Main game engine for Arkanoid
 """
 
+import re
+
 import pygame
 
 import audio
@@ -228,6 +230,11 @@ class GameState(State):
             else:
                 self.engine.set_state(TitleState)
 
+        # Level completion detection
+        if len(self.scene.groups["bricks"]) == 0:
+            self.engine.vars["level"] += 1
+            self.engine.set_state(RoundState)
+
     def draw(self, screen):
         self.scene.groups["all"].draw(screen)
 
@@ -266,7 +273,15 @@ class Engine(object):
             "players":1,
         }
 
-        self.scenes = {level : display.Scene(["level%d" % level], self.vars) for level in range(1,2)}
+        # Pre-allocate all level scenes
+        levels = {}
+        for key in utils.config["scenes"]:
+            mobj = re.match("level(\d+)", key)
+            if mobj:
+                level = int(mobj.group(1))
+                levels[level] = key
+
+        self.scenes = {level : display.Scene([key], self.vars) for level, key in levels.items()}
 
         self.events = utils.Events()
         self.timer = utils.Timer()
