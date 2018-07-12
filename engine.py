@@ -29,10 +29,11 @@ class TitleState(State):
 
         self.scene = display.Scene(["title", "banner"], engine.vars)
 
-        utils.events.register(pygame.MOUSEBUTTONDOWN, self.on_click)
-        utils.events.register(pygame.KEYDOWN, self.on_keydown)
+        utils.events.register(utils.EVT_MOUSEBUTTONDOWN, self.on_click)
+        utils.events.register(utils.EVT_KEYDOWN, self.on_keydown)
+        utils.events.register(utils.EVT_VAR_CHANGE, self.on_var_change)
 
-    def input(self, event):
+    def on_var_change(self, event):
         # Update cursor position
         index = self.engine.vars["players"] - 1
         cursor = self.scene.names["cursor"]
@@ -140,7 +141,7 @@ class GameState(State):
         playspace.width = self.scene.names["right"].rect.left - playspace.left
         self.paddle.set_action(display.MouseMove(playspace, [1,0]))
 
-        utils.events.register(pygame.KEYDOWN, self.on_keydown)
+        utils.events.register(utils.EVT_KEYDOWN, self.on_keydown)
 
         self.enable_stuck(self.ball)
 
@@ -149,7 +150,7 @@ class GameState(State):
         ball.set_action(display.Follow(self.paddle))
 
         # Listen for release
-        utils.events.register(pygame.MOUSEBUTTONDOWN, lambda event: self.disable_stuck(ball))
+        utils.events.register(utils.EVT_MOUSEBUTTONDOWN, lambda event: self.disable_stuck(ball))
 
         # Set up the auto release timer
         utils.timers.start(3.0, self.disable_stuck, ball)
@@ -262,19 +263,30 @@ def collision_side(sprite1, sprite2):
 
     return side
 
+class Vars:
+    def __init__(self, initial={}):
+        self.data = initial
+
+    def __getitem__(self, key):
+        return self.data[key]
+
+    def __setitem__(self, key, value):
+        self.data[key] = value
+        utils.events.generate(utils.EVT_VAR_CHANGE, name=key, value=value)
+
 class Engine(object):
     
     INITIAL_STATE = TitleState
 
     def __init__(self):
-        self.vars = {
+        self.vars = Vars({
             "high":0, 
             "score1":0, 
             "level":1, 
             "player":1, 
             "lives":3, 
             "players":1,
-        }
+        })
 
         # Pre-allocate all level scenes
         levels = {}
@@ -294,7 +306,7 @@ class Engine(object):
         self.state = state(self)
 
     def input(self, event):
-        utils.events.fire(event)
+        utils.events.handle(event)
         self.state.input(event)
 
     def update(self):

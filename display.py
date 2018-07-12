@@ -99,7 +99,7 @@ class MouseMove:
         self.delta = [0, 0]
         self.sensitivity = sensitivity
 
-        utils.events.register(pygame.MOUSEMOTION, self.on_mousemove)
+        utils.events.register(utils.EVT_MOUSEMOTION, self.on_mousemove)
 
     def on_mousemove(self, event):
         self.delta = [self.delta[i] + self.sensitivity[i] * event.rel[i] for i in range(2)]
@@ -187,14 +187,23 @@ class Die(Action):
         self.finish(sprite)
 
 class UpdateVar:
-    def __init__(self, vars, key):
-        self.vars = vars
-        self.key = key
-    
+    def __init__(self, name):
+        self.name = name
+        self.text = ""
+        self.dirty = False
+
+        utils.events.register(utils.EVT_VAR_CHANGE, self.on_var_change)
+
+    def on_var_change(self, event):
+        if event.name == self.name:
+            self.dirty = True
+            self.text = str(event.value)
+
     def update(self, sprite):
-        text = str(self.vars[self.key])
-        image = draw_text(text)
-        sprite.set_image(image)
+        if self.dirty:
+            self.dirty = False
+            image = draw_text(self.text)
+            sprite.set_image(image)
 
 class Sprite(pygame.sprite.DirtySprite):
     def __init__(self, image, cfg={}):
@@ -267,7 +276,7 @@ class Scene:
                 if key:
                     text = str(var_dict[key])
                     image = draw_text(text)
-                    action = UpdateVar(var_dict, key)
+                    action = UpdateVar(key)
 
                 key = cfg.pop("image", "")
                 if key:

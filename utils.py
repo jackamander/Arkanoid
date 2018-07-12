@@ -51,6 +51,12 @@ def blend(color1, color2, ratio):
     final = lerp(color1, color2, ratio)
     return final
 
+# Events:
+EVT_KEYDOWN = pygame.KEYDOWN
+EVT_MOUSEBUTTONDOWN = pygame.MOUSEBUTTONDOWN
+EVT_MOUSEMOTION = pygame.MOUSEMOTION
+EVT_VAR_CHANGE = pygame.USEREVENT 
+
 class Events:
     def __init__(self):
         self.clear()
@@ -64,11 +70,15 @@ class Events:
         handlers = self.handlers.setdefault(eventtype, set())
         handlers.remove(handler)
 
-    def fire(self, event):
+    def handle(self, event):
         """Handle an incoming event"""
         handlers = self.handlers.get(event.type, set())
         for handler in handlers:
             handler(event)
+
+    def generate(self, event_type, **kwargs):
+        event = pygame.event.Event(event_type, **kwargs)
+        self.handle(event)
 
     def clear(self):
         self.handlers = {}
