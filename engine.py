@@ -25,7 +25,7 @@ class TitleState(State):
     def __init__(self, engine):
         State.__init__(self, engine)
 
-        self.scenes = {scene : display.Scene(scene, engine.vars) for scene in ["title", "banner"]}
+        self.scene = display.Scene(["title", "banner"], engine.vars)
 
         self.engine.events.register(pygame.MOUSEBUTTONDOWN, self.on_click)
         self.engine.events.register(pygame.KEYDOWN, self.on_keydown)
@@ -33,7 +33,7 @@ class TitleState(State):
     def input(self, event):
         # Update cursor position
         index = self.engine.vars["players"] - 1
-        cursor = self.scenes["title"].names["cursor"]
+        cursor = self.scene.names["cursor"]
         pos = cursor.cfg["locations"][index]
         cursor.set_pos(pos)
 
@@ -52,14 +52,13 @@ class TitleState(State):
             self.engine.set_state(StartState)
 
     def draw(self, screen):
-        for scene in self.scenes.values():
-            scene.group.draw(screen)
+        self.scene.all.draw(screen)
 
 class BlinkState(State):
     def __init__(self, engine):
         State.__init__(self, engine)
 
-        self.scenes = {scene : display.Scene(scene, engine.vars) for scene in ["title", "banner"]}
+        self.scene = display.Scene(["title", "banner"], engine.vars)
 
         self.sound = audio.play_sound("Intro")
 
@@ -68,82 +67,75 @@ class BlinkState(State):
             key = "p1"
         else:
             key = "p2"
-        self.scenes["title"].names[key].set_action(display.Blink(1.0))
+        self.scene.names[key].set_action(display.Blink(1.0))
 
         # Get rid of the cursor
-        self.scenes["title"].names["cursor"].kill()
+        self.scene.names["cursor"].kill()
 
     def update(self):
-        for scene in self.scenes.values():
-            scene.group.update()
+        self.scene.all.update()
 
         if not self.sound.get_busy():
             self.engine.set_state(RoundState)
 
     def draw(self, screen):
-        for scene in self.scenes.values():
-            scene.group.draw(screen)
+        self.scene.all.draw(screen)
 
 
 class RoundState(State):
     def __init__(self, engine):
         State.__init__(self, engine)
 
-        self.scenes = {scene : display.Scene(scene, engine.vars) for scene in ["round", "banner"]}
+        self.scene = display.Scene(["round", "banner"], engine.vars)
 
         self.engine.timer.start(2.0, self.engine.set_state, StartState)
 
     def draw(self, screen):
-        for scene in self.scenes.values():
-            scene.group.draw(screen)
+        self.scene.all.draw(screen)
 
 class StartState(State):
     def __init__(self, engine):
         State.__init__(self, engine)
 
-        self.scenes = {scene : display.Scene(scene, engine.vars) for scene in ["hud", "ready"]}
-        self.scenes["level"] = engine.scenes["levels"][engine.vars["level"]]
-        self.scenes["bg"] = engine.scenes["bgs"][engine.vars["level"]]
+        self.scene = display.Scene(["hud", "ready"], engine.vars)
+        self.scene.merge(engine.scenes[engine.vars["level"]])
 
         # Lives
         for life in range(engine.vars["lives"], 7):
             key = "life%d" % life
-            self.scenes["hud"].names[key].kill()
+            self.scene.names[key].kill()
 
         self.sound = audio.play_sound("Ready")
 
     def update(self):
-        for scene in self.scenes.values():
-            scene.group.update()
+        self.scene.all.update()
 
         if not self.sound.get_busy():
             self.engine.set_state(GameState)
 
     def draw(self, screen):
-        for scene in self.scenes.values():
-            scene.group.draw(screen)
+        self.scene.all.draw(screen)
 
 class GameState(State):
     def __init__(self, engine):
         State.__init__(self, engine)
 
-        self.scenes = {scene : display.Scene(scene, engine.vars) for scene in ["hud", "tools", "walls"]}
-        self.scenes["level"] = engine.scenes["levels"][engine.vars["level"]]
-        self.scenes["bg"] = engine.scenes["bgs"][engine.vars["level"]]
+        self.scene = display.Scene(["hud", "tools"], engine.vars)
+        self.scene.merge(engine.scenes[engine.vars["level"]])
 
         # Lives
         for life in range(engine.vars["lives"], 7):
             key = "life%d" % life
-            self.scenes["hud"].names[key].kill()
+            self.scene.names[key].kill()
 
-        self.ball = self.scenes["tools"].names["ball"]
+        self.ball = self.scene.names["ball"]
 
         # Set up the paddle behavior
-        self.paddle = self.scenes["tools"].names["paddle"]
+        self.paddle = self.scene.names["paddle"]
 
         playspace = self.paddle.rect.copy()
-        playspace.left = self.scenes["walls"].names["left"].rect.right
-        playspace.width = self.scenes["walls"].names["right"].rect.left - playspace.left
+        playspace.left = self.scene.names["left"].rect.right
+        playspace.width = self.scene.names["right"].rect.left - playspace.left
         self.paddle.set_action(display.MouseMove(self.engine, playspace, [1,0]))
 
         self.engine.events.register(pygame.KEYDOWN, self.on_keydown)
@@ -170,8 +162,7 @@ class GameState(State):
             self.engine.set_state(StartState)
 
     def update(self):
-        for scene in self.scenes.values():
-            scene.group.update()
+        self.scene.all.update()
 
         # Ball-Paddle collisions
         if pygame.sprite.collide_rect(self.paddle, self.ball):
@@ -194,37 +185,36 @@ class GameState(State):
             audio.play_sound("Low")
 
         # Ball collisions
-        for scene in ["walls", "level"]:
-            sprites = pygame.sprite.spritecollide(self.ball, self.scenes[scene].group, False)
-            for sprite in sprites:
-                side = collision_side(self.ball, sprite)
+        sprites = pygame.sprite.spritecollide(self.ball, self.scene.collisions["ball"], False)
+        for sprite in sprites:
+            side = collision_side(self.ball, sprite)
 
-                if side == "top":
-                    self.ball.action.delta[1] = abs(self.ball.action.delta[1])
-                elif side == "bottom":
-                    self.ball.action.delta[1] = -abs(self.ball.action.delta[1])
-                elif side == "left":
-                    self.ball.action.delta[0] = abs(self.ball.action.delta[0])
-                elif side == "right":
-                    self.ball.action.delta[0] = -abs(self.ball.action.delta[0])
+            if side == "top":
+                self.ball.action.delta[1] = abs(self.ball.action.delta[1])
+            elif side == "bottom":
+                self.ball.action.delta[1] = -abs(self.ball.action.delta[1])
+            elif side == "left":
+                self.ball.action.delta[0] = abs(self.ball.action.delta[0])
+            elif side == "right":
+                self.ball.action.delta[0] = -abs(self.ball.action.delta[0])
 
-                sound = sprite.cfg.get("hit_sound")
-                if sound:
-                    audio.play_sound(sound)
+            sound = sprite.cfg.get("hit_sound")
+            if sound:
+                audio.play_sound(sound)
 
-                animation = sprite.cfg.get("hit_animation")
-                if animation:
-                    sprite.set_action(display.Animate(animation))
+            animation = sprite.cfg.get("hit_animation")
+            if animation:
+                sprite.set_action(display.Animate(animation))
 
-                hits = sprite.cfg.get("hits")
-                if hits:
-                    hits -= 1
-                    sprite.cfg["hits"] = hits
-                    if hits == 0:
-                        sprite.kill()
+            hits = sprite.cfg.get("hits")
+            if hits:
+                hits -= 1
+                sprite.cfg["hits"] = hits
+                if hits == 0:
+                    sprite.kill()
 
         # Ball exit detection
-        sprites = pygame.sprite.spritecollide(self.ball, self.scenes["bg"].group, False)
+        sprites = pygame.sprite.spritecollide(self.ball, self.scene.collisions["bg"], False)
         if self.ball.alive() and len(sprites) == 0:
             self.ball.kill()
             self.paddle.set_action(display.Animate("explode").then(display.Die()))
@@ -239,8 +229,7 @@ class GameState(State):
                 self.engine.set_state(TitleState)
 
     def draw(self, screen):
-        for scene in self.scenes.values():
-            scene.group.draw(screen)
+        self.scene.all.draw(screen)
 
 def collision_side(sprite1, sprite2):
     # Expand to include velocity
@@ -277,10 +266,7 @@ class Engine(object):
             "players":1,
         }
 
-        self.scenes = {
-            "levels" : {level : display.Scene("level%d" % level, self.vars) for level in range(1,2)},
-            "bgs" : {level : display.Scene("bg%d" % level, self.vars) for level in range(1,2)},
-        }
+        self.scenes = {level : display.Scene(["level%d" % level], self.vars) for level in range(1,2)}
 
         self.events = utils.Events()
         self.timer = utils.Timer()

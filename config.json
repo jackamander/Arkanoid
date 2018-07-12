@@ -794,6 +794,24 @@
                 "name" : "ball",
                 "image" : "ball",
                 "position" : [ 96, 197]
+            },
+            {
+                "name" : "left",
+                "image" : "wall_left",
+                "position" : [  8,  0],
+                "collision" : "ball"
+            },
+            {
+                "name" : "right",
+                "image" : "wall_right",
+                "position" : [192,  0],
+                "collision" : "ball"
+            },
+            {
+                "name" : "top",
+                "image" : "wall_top",
+                "position" : [  8,  0],
+                "collision" : "ball"
             }
         ],
         "ready" : [
@@ -816,438 +834,486 @@
                 "layer" : 20
             }
         ],
-        "walls" : [
-            {
-                "name" : "left",
-                "image" : "wall_left",
-                "position" : [  8,  0]
-            },
-            {
-                "name" : "right",
-                "image" : "wall_right",
-                "position" : [192,  0]
-            },
-            {
-                "name" : "top",
-                "image" : "wall_top",
-                "position" : [  8,  0]
-            }
-        ],
-        "bg1" : [
+        "level1" : [
             {
                 "name" : "bg",
                 "image" : "bg1",
                 "position" : [8, 0],
-                "layer" : 0
-            }
-        ],
-        "level1" : [
+                "layer" : 0,
+                "collision" : "bg"
+            },
             {
                 "image" : "silver",
                 "position" : [ 16, 40],
                 "hit_sound" : "High",
                 "hit_animation" : "silver",
-                "hits" : 2
+                "hits" : 2,
+                "collision" : "ball"
             },
             {
                 "image" : "silver",
                 "position" : [ 32, 40],
                 "hit_sound" : "High",
                 "hit_animation" : "silver",
-                "hits" : 2
+                "hits" : 2,
+                "collision" : "ball"
             },
             {
                 "image" : "silver",
                 "position" : [ 48, 40],
                 "hit_sound" : "High",
                 "hit_animation" : "silver",
-                "hits" : 2
+                "hits" : 2,
+                "collision" : "ball"
             },
             {
                 "image" : "silver",
                 "position" : [ 64, 40],
                 "hit_sound" : "High",
                 "hit_animation" : "silver",
-                "hits" : 2
+                "hits" : 2,
+                "collision" : "ball"
             },
             {
                 "image" : "silver",
                 "position" : [ 80, 40],
                 "hit_sound" : "High",
                 "hit_animation" : "silver",
-                "hits" : 2
+                "hits" : 2,
+                "collision" : "ball"
             },
             {
                 "image" : "silver",
                 "position" : [ 96, 40],
                 "hit_sound" : "High",
                 "hit_animation" : "silver",
-                "hits" : 2
+                "hits" : 2,
+                "collision" : "ball"
             },
             {
                 "image" : "silver",
                 "position" : [112, 40],
                 "hit_sound" : "High",
                 "hit_animation" : "silver",
-                "hits" : 2
+                "hits" : 2,
+                "collision" : "ball"
             },
             {
                 "image" : "silver",
                 "position" : [128, 40],
                 "hit_sound" : "High",
                 "hit_animation" : "silver",
-                "hits" : 2
+                "hits" : 2,
+                "collision" : "ball"
             },
             {
                 "image" : "silver",
                 "position" : [144, 40],
                 "hit_sound" : "High",
                 "hit_animation" : "silver",
-                "hits" : 2
+                "hits" : 2,
+                "collision" : "ball"
             },
             {
                 "image" : "silver",
                 "position" : [160, 40],
                 "hit_sound" : "High",
                 "hit_animation" : "silver",
-                "hits" : 2
+                "hits" : 2,
+                "collision" : "ball"
             },
             {
                 "image" : "silver",
                 "position" : [176, 40],
                 "hit_sound" : "High",
                 "hit_animation" : "silver",
-                "hits" : 2
+                "hits" : 2,
+                "collision" : "ball"
             },
             {
                 "image" : "red",
                 "position" : [ 16, 48],
                 "hit_sound" : "Med",
-                "hits" : 1
+                "hits" : 1,
+                "collision" : "ball"
             },
             {
                 "image" : "red",
                 "position" : [ 32, 48],
                 "hit_sound" : "Med",
-                "hits" : 1
+                "hits" : 1,
+                "collision" : "ball"
             },
             {
                 "image" : "red",
                 "position" : [ 48, 48],
                 "hit_sound" : "Med",
-                "hits" : 1
+                "hits" : 1,
+                "collision" : "ball"
             },
             {
                 "image" : "red",
                 "position" : [ 64, 48],
                 "hit_sound" : "Med",
-                "hits" : 1
+                "hits" : 1,
+                "collision" : "ball"
             },
             {
                 "image" : "red",
                 "position" : [ 80, 48],
                 "hit_sound" : "Med",
-                "hits" : 1
+                "hits" : 1,
+                "collision" : "ball"
             },
             {
                 "image" : "red",
                 "position" : [ 96, 48],
                 "hit_sound" : "Med",
-                "hits" : 1
+                "hits" : 1,
+                "collision" : "ball"
             },
             {
                 "image" : "red",
                 "position" : [112, 48],
                 "hit_sound" : "Med",
-                "hits" : 1
+                "hits" : 1,
+                "collision" : "ball"
             },
             {
                 "image" : "red",
                 "position" : [128, 48],
                 "hit_sound" : "Med",
-                "hits" : 1
+                "hits" : 1,
+                "collision" : "ball"
             },
             {
                 "image" : "red",
                 "position" : [144, 48],
                 "hit_sound" : "Med",
-                "hits" : 1
+                "hits" : 1,
+                "collision" : "ball"
             },
             {
                 "image" : "red",
                 "position" : [160, 48],
                 "hit_sound" : "Med",
-                "hits" : 1
+                "hits" : 1,
+                "collision" : "ball"
             },
             {
                 "image" : "red",
                 "position" : [176, 48],
                 "hit_sound" : "Med",
-                "hits" : 1
+                "hits" : 1,
+                "collision" : "ball"
             },
             {
                 "image" : "blue",
                 "position" : [ 16, 56],
                 "hit_sound" : "Med",
-                "hits" : 1
+                "hits" : 1,
+                "collision" : "ball"
             },
             {
                 "image" : "blue",
                 "position" : [ 32, 56],
                 "hit_sound" : "Med",
-                "hits" : 1
+                "hits" : 1,
+                "collision" : "ball"
             },
             {
                 "image" : "blue",
                 "position" : [ 48, 56],
                 "hit_sound" : "Med",
-                "hits" : 1
+                "hits" : 1,
+                "collision" : "ball"
             },
             {
                 "image" : "blue",
                 "position" : [ 64, 56],
                 "hit_sound" : "Med",
-                "hits" : 1
+                "hits" : 1,
+                "collision" : "ball"
             },
             {
                 "image" : "blue",
                 "position" : [ 80, 56],
                 "hit_sound" : "Med",
-                "hits" : 1
+                "hits" : 1,
+                "collision" : "ball"
             },
             {
                 "image" : "blue",
                 "position" : [ 96, 56],
                 "hit_sound" : "Med",
-                "hits" : 1
+                "hits" : 1,
+                "collision" : "ball"
             },
             {
                 "image" : "blue",
                 "position" : [112, 56],
                 "hit_sound" : "Med",
-                "hits" : 1
+                "hits" : 1,
+                "collision" : "ball"
             },
             {
                 "image" : "blue",
                 "position" : [128, 56],
                 "hit_sound" : "Med",
-                "hits" : 1
+                "hits" : 1,
+                "collision" : "ball"
             },
             {
                 "image" : "blue",
                 "position" : [144, 56],
                 "hit_sound" : "Med",
-                "hits" : 1
+                "hits" : 1,
+                "collision" : "ball"
             },
             {
                 "image" : "blue",
                 "position" : [160, 56],
                 "hit_sound" : "Med",
-                "hits" : 1
+                "hits" : 1,
+                "collision" : "ball"
             },
             {
                 "image" : "blue",
                 "position" : [176, 56],
                 "hit_sound" : "Med",
-                "hits" : 1
+                "hits" : 1,
+                "collision" : "ball"
             },
             {
                 "image" : "orange",
                 "position" : [ 16, 64],
                 "hit_sound" : "Med",
-                "hits" : 1
+                "hits" : 1,
+                "collision" : "ball"
             },
             {
                 "image" : "orange",
                 "position" : [ 32, 64],
                 "hit_sound" : "Med",
-                "hits" : 1
+                "hits" : 1,
+                "collision" : "ball"
             },
             {
                 "image" : "orange",
                 "position" : [ 48, 64],
                 "hit_sound" : "Med",
-                "hits" : 1
+                "hits" : 1,
+                "collision" : "ball"
             },
             {
                 "image" : "orange",
                 "position" : [ 64, 64],
                 "hit_sound" : "Med",
-                "hits" : 1
+                "hits" : 1,
+                "collision" : "ball"
             },
             {
                 "image" : "orange",
                 "position" : [ 80, 64],
                 "hit_sound" : "Med",
-                "hits" : 1
+                "hits" : 1,
+                "collision" : "ball"
             },
             {
                 "image" : "orange",
                 "position" : [ 96, 64],
                 "hit_sound" : "Med",
-                "hits" : 1
+                "hits" : 1,
+                "collision" : "ball"
             },
             {
                 "image" : "orange",
                 "position" : [112, 64],
                 "hit_sound" : "Med",
-                "hits" : 1
+                "hits" : 1,
+                "collision" : "ball"
             },
             {
                 "image" : "orange",
                 "position" : [128, 64],
                 "hit_sound" : "Med",
-                "hits" : 1
+                "hits" : 1,
+                "collision" : "ball"
             },
             {
                 "image" : "orange",
                 "position" : [144, 64],
                 "hit_sound" : "Med",
-                "hits" : 1
+                "hits" : 1,
+                "collision" : "ball"
             },
             {
                 "image" : "orange",
                 "position" : [160, 64],
                 "hit_sound" : "Med",
-                "hits" : 1
+                "hits" : 1,
+                "collision" : "ball"
             },
             {
                 "image" : "orange",
                 "position" : [176, 64],
                 "hit_sound" : "Med",
-                "hits" : 1
+                "hits" : 1,
+                "collision" : "ball"
             },
             {
                 "image" : "pink",
                 "position" : [ 16, 72],
                 "hit_sound" : "Med",
-                "hits" : 1
+                "hits" : 1,
+                "collision" : "ball"
             },
             {
                 "image" : "pink",
                 "position" : [ 32, 72],
                 "hit_sound" : "Med",
-                "hits" : 1
+                "hits" : 1,
+                "collision" : "ball"
             },
             {
                 "image" : "pink",
                 "position" : [ 48, 72],
                 "hit_sound" : "Med",
-                "hits" : 1
+                "hits" : 1,
+                "collision" : "ball"
             },
             {
                 "image" : "pink",
                 "position" : [ 64, 72],
                 "hit_sound" : "Med",
-                "hits" : 1
+                "hits" : 1,
+                "collision" : "ball"
             },
             {
                 "image" : "pink",
                 "position" : [ 80, 72],
                 "hit_sound" : "Med",
-                "hits" : 1
+                "hits" : 1,
+                "collision" : "ball"
             },
             {
                 "image" : "pink",
                 "position" : [ 96, 72],
                 "hit_sound" : "Med",
-                "hits" : 1
+                "hits" : 1,
+                "collision" : "ball"
             },
             {
                 "image" : "pink",
                 "position" : [112, 72],
                 "hit_sound" : "Med",
-                "hits" : 1
+                "hits" : 1,
+                "collision" : "ball"
             },
             {
                 "image" : "pink",
                 "position" : [128, 72],
                 "hit_sound" : "Med",
-                "hits" : 1
+                "hits" : 1,
+                "collision" : "ball"
             },
             {
                 "image" : "pink",
                 "position" : [144, 72],
                 "hit_sound" : "Med",
-                "hits" : 1
+                "hits" : 1,
+                "collision" : "ball"
             },
             {
                 "image" : "pink",
                 "position" : [160, 72],
                 "hit_sound" : "Med",
-                "hits" : 1
+                "hits" : 1,
+                "collision" : "ball"
             },
             {
                 "image" : "pink",
                 "position" : [176, 72],
                 "hit_sound" : "Med",
-                "hits" : 1
+                "hits" : 1,
+                "collision" : "ball"
             },
             {
                 "image" : "green",
                 "position" : [ 16, 80],
                 "hit_sound" : "Med",
-                "hits" : 1
+                "hits" : 1,
+                "collision" : "ball"
             },
             {
                 "image" : "green",
                 "position" : [ 32, 80],
                 "hit_sound" : "Med",
-                "hits" : 1
+                "hits" : 1,
+                "collision" : "ball"
             },
             {
                 "image" : "green",
                 "position" : [ 48, 80],
                 "hit_sound" : "Med",
-                "hits" : 1
+                "hits" : 1,
+                "collision" : "ball"
             },
             {
                 "image" : "green",
                 "position" : [ 64, 80],
                 "hit_sound" : "Med",
-                "hits" : 1
+                "hits" : 1,
+                "collision" : "ball"
             },
             {
                 "image" : "green",
                 "position" : [ 80, 80],
                 "hit_sound" : "Med",
-                "hits" : 1
+                "hits" : 1,
+                "collision" : "ball"
             },
             {
                 "image" : "green",
                 "position" : [ 96, 80],
                 "hit_sound" : "Med",
-                "hits" : 1
+                "hits" : 1,
+                "collision" : "ball"
             },
             {
                 "image" : "green",
                 "position" : [112, 80],
                 "hit_sound" : "Med",
-                "hits" : 1
+                "hits" : 1,
+                "collision" : "ball"
             },
             {
                 "image" : "green",
                 "position" : [128, 80],
                 "hit_sound" : "Med",
-                "hits" : 1
+                "hits" : 1,
+                "collision" : "ball"
             },
             {
                 "image" : "green",
                 "position" : [144, 80],
                 "hit_sound" : "Med",
-                "hits" : 1
+                "hits" : 1,
+                "collision" : "ball"
             },
             {
                 "image" : "green",
                 "position" : [160, 80],
                 "hit_sound" : "Med",
-                "hits" : 1
+                "hits" : 1,
+                "collision" : "ball"
             },
             {
                 "image" : "green",
                 "position" : [176, 80],
                 "hit_sound" : "Med",
-                "hits" : 1
+                "hits" : 1,
+                "collision" : "ball"
             }
         ],
         "debug" : [

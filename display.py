@@ -225,33 +225,54 @@ class Sprite(pygame.sprite.DirtySprite):
         if self.action:
             self.action.update(self)
 
+# Scene requirements:
+# - named Sprites for specific processing - paddle, ball, bg, etc
+# - groups for collision handling
+# - single group for rendering
+# - share definitions for block reuse
+# - control persistence - some need to be reinstantiated, others need persistence
 class Scene:
-    def __init__(self, name, vars={}):
-        sprites = utils.config["scenes"][name]
-
-        self.group = pygame.sprite.LayeredDirty()
+    Group = pygame.sprite.LayeredDirty
+    def __init__(self, names, vars={}):
+        self.collisions = {}
+        self.all = Scene.Group()
         self.names = {}
 
-        for cfg in sprites:
-            cfg = cfg.copy()
+        for name in names:
+            sprites = utils.config["scenes"][name]
 
-            if "text" in cfg:
-                image = draw_text(cfg.pop("text"))
+            for cfg in sprites:
+                cfg = cfg.copy()
 
-            if "var" in cfg:
-                text = str(vars[cfg.pop("var")])
-                image = draw_text(text)
+                if "text" in cfg:
+                    image = draw_text(cfg.pop("text"))
 
-            if "image" in cfg:
-                image = get_image(cfg.pop("image"))
+                if "var" in cfg:
+                    text = str(vars[cfg.pop("var")])
+                    image = draw_text(text)
 
-            position = cfg.pop("position")
+                if "image" in cfg:
+                    image = get_image(cfg.pop("image"))
 
-            sprite = Sprite(image, cfg)
-            sprite.set_pos(position)
+                position = cfg.pop("position")
 
-            self.group.add(sprite)
+                collision_name = cfg.pop("collision", None)
 
-            sprite_name = cfg.get("name")
-            if sprite_name:
-                self.names[sprite_name] = sprite
+                sprite = Sprite(image, cfg)
+                sprite.set_pos(position)
+
+                self.all.add(sprite)
+
+                collision = self.collisions.setdefault(collision_name, Scene.Group())
+                collision.add(sprite)
+
+                sprite_name = cfg.get("name")
+                if sprite_name:
+                    self.names[sprite_name] = sprite
+
+    def merge(self, scene):
+        for key, source in scene.collisions.items():
+            dest = self.collisions.setdefault(key, Scene.Group())
+            dest.add(source)
+        self.names.update(scene.names)
+        self.all.add(scene.all)
