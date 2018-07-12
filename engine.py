@@ -215,6 +215,9 @@ class GameState(State):
                 if hits == 0:
                     sprite.kill()
 
+                    points = sprite.cfg.get("points", 0)
+                    self.engine.vars["score1"] += points
+
         # Ball exit detection
         sprites = pygame.sprite.spritecollide(self.ball, self.scene.groups["bg"], False)
         if self.ball.alive() and len(sprites) == 0:

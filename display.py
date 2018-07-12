@@ -167,10 +167,8 @@ class Animate(Action):
     def update(self, sprite):
         if self.frame < len(self.images):
             if self.count == 0:
-                old_rect = sprite.rect.copy()
-                sprite.image = self.images[self.frame]
-                sprite.rect.size = self.images[self.frame].get_size()
-                sprite.rect.center = old_rect.center
+                image = self.images[self.frame]
+                sprite.set_image(image)
 
             self.count += 1
             if self.count >= self.speed:
@@ -187,6 +185,16 @@ class Die(Action):
     def update(self, sprite):
         sprite.kill()
         self.finish(sprite)
+
+class UpdateVar:
+    def __init__(self, vars, key):
+        self.vars = vars
+        self.key = key
+    
+    def update(self, sprite):
+        text = str(self.vars[self.key])
+        image = draw_text(text)
+        sprite.set_image(image)
 
 class Sprite(pygame.sprite.DirtySprite):
     def __init__(self, image, cfg={}):
@@ -225,6 +233,12 @@ class Sprite(pygame.sprite.DirtySprite):
         if self.action:
             self.action.update(self)
 
+    def set_image(self, image):
+        old_rect = self.rect.copy()
+        self.image = image
+        self.rect.size = image.get_size()
+        self.rect.center = old_rect.center
+
 # Scene requirements:
 # - named Sprites for specific processing - paddle, ball, bg, etc
 # - multiple groups for things like collision handling and ball tracking
@@ -233,7 +247,7 @@ class Sprite(pygame.sprite.DirtySprite):
 # - control persistence - some need to be reinstantiated, others need persistence
 class Scene:
     Group = pygame.sprite.LayeredDirty
-    def __init__(self, names, vars={}):
+    def __init__(self, names, var_dict={}):
         self.groups = {}
         self.names = {}
 
@@ -243,25 +257,31 @@ class Scene:
             for cfg in sprites:
                 cfg = cfg.copy()
 
-                if "text" in cfg:
-                    image = draw_text(cfg.pop("text"))
+                action = None
 
-                if "var" in cfg:
-                    text = str(vars[cfg.pop("var")])
+                key = cfg.pop("text", "")
+                if key:
+                    image = draw_text(key)
+
+                key = cfg.pop("var", "")
+                if key:
+                    text = str(var_dict[key])
                     image = draw_text(text)
+                    action = UpdateVar(var_dict, key)
 
-                if "image" in cfg:
-                    image = get_image(cfg.pop("image"))
+                key = cfg.pop("image", "")
+                if key:
+                    image = get_image(key)
 
                 position = cfg.pop("position")
 
                 group_names = cfg.pop("groups", [])
-                group_names.append("all")
-                
+
                 sprite = Sprite(image, cfg)
                 sprite.set_pos(position)
+                sprite.set_action(action)
 
-                for group_name in group_names:
+                for group_name in group_names + ["all"]:
                     group = self.groups.setdefault(group_name, Scene.Group())
                     group.add(sprite)
 
