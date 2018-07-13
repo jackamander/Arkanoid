@@ -54,28 +54,28 @@
         },
         "bg1" : {
             "filename" : "resources\\images\\fields.png",
-            "size" : [192, 232],
-            "offset" : [0, 0]
+            "size" : [176, 224],
+            "offset" : [8, 8]
         },
         "bg2" : {
             "filename" : "resources\\images\\fields.png",
-            "size" : [192, 232],
-            "offset" : [192, 0]
+            "size" : [176, 224],
+            "offset" : [200, 8]
         },
         "bg3" : {
             "filename" : "resources\\images\\fields.png",
-            "size" : [192, 232],
-            "offset" : [384, 0]
+            "size" : [176, 224],
+            "offset" : [392, 8]
         },
         "bg4" : {
             "filename" : "resources\\images\\fields.png",
-            "size" : [192, 232],
-            "offset" : [576, 0]
+            "size" : [176, 224],
+            "offset" : [584, 8]
         },
         "bg5" : {
             "filename" : "resources\\images\\fields.png",
-            "size" : [192, 232],
-            "offset" : [768, 0]
+            "size" : [176, 224],
+            "offset" : [776, 8]
         },
         "wall_left" : {
             "filename" : "resources\\images\\fields.png",
@@ -794,7 +794,9 @@
                 "name" : "ball",
                 "image" : "ball",
                 "position" : [ 96, 197]
-            },
+            }
+        ],
+        "walls" : [
             {
                 "name" : "left",
                 "image" : "wall_left",
@@ -838,9 +840,8 @@
             {
                 "name" : "bg",
                 "image" : "bg1",
-                "position" : [8, 0],
-                "layer" : 0,
-                "groups" : ["bg"]
+                "position" : [16, 8],
+                "layer" : 0
             },
             {
                 "image" : "silver",

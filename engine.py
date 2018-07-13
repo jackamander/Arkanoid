@@ -108,7 +108,7 @@ class StartState(State):
     def __init__(self, engine):
         State.__init__(self, engine)
 
-        self.scene = display.Scene(["hud", "ready"], engine.vars)
+        self.scene = display.Scene(["hud", "walls", "ready"], engine.vars)
         self.scene.merge(engine.scenes[engine.vars["level"]])
 
         show_lives(self)
@@ -128,20 +128,18 @@ class GameState(State):
     def __init__(self, engine):
         State.__init__(self, engine)
 
-        self.scene = display.Scene(["hud", "tools"], engine.vars)
+        self.scene = display.Scene(["hud", "walls", "tools"], engine.vars)
         self.scene.merge(engine.scenes[engine.vars["level"]])
 
         show_lives(self)
 
         self.ball = self.scene.names["ball"]
 
-        # Set up the paddle behavior
         self.paddle = self.scene.names["paddle"]
 
-        playspace = self.paddle.rect.copy()
-        playspace.left = self.scene.names["left"].rect.right
-        playspace.width = self.scene.names["right"].rect.left - playspace.left
-        self.paddle.set_action(display.MouseMove(playspace, [1,0]))
+        self.playspace = self.scene.names["bg"].rect
+
+        self.paddle.set_action(display.MouseMove(self.playspace, [1,0]))
 
         utils.events.register(utils.EVT_KEYDOWN, self.on_keydown)
 
@@ -222,8 +220,7 @@ class GameState(State):
                     self.engine.vars["score1"] += points
 
         # Ball exit detection
-        sprites = pygame.sprite.spritecollide(self.ball, self.scene.groups["bg"], False)
-        if self.ball.alive() and len(sprites) == 0:
+        if self.ball.alive() and not self.ball.rect.colliderect(self.playspace):
             self.ball.kill()
             self.paddle.set_action(display.Animate("explode").then(display.Die()))
             self.sound = audio.play_sound("Death")
