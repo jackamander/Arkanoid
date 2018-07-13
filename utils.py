@@ -73,7 +73,7 @@ class Events:
     def handle(self, event):
         """Handle an incoming event"""
         handlers = self.handlers.get(event.type, set())
-        for handler in handlers:
+        for handler in handlers.copy():
             handler(event)
 
     def generate(self, event_type, **kwargs):

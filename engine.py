@@ -124,6 +124,54 @@ class StartState(State):
     def draw(self, screen):
         self.scene.groups["all"].draw(screen)
 
+class Paddle:
+    def __init__(self, sprite, playspace):
+        self.sprite = sprite
+        self.stuck_ball = None
+        self.sound = None
+
+        self.sprite.set_action(display.MouseMove(playspace, [1,0]))
+
+    def stick_ball(self, ball):
+        if self.stuck_ball is None:
+            self.stuck_ball = ball
+            self.stuck_ball.set_action(display.Follow(self.sprite))
+            utils.events.register(utils.EVT_MOUSEBUTTONDOWN, self.unstick_ball)
+            utils.timers.start(3.0, self.unstick_ball)
+            
+    def unstick_ball(self, event=None):
+        if self.stuck_ball is not None:
+            utils.events.unregister(utils.EVT_MOUSEBUTTONDOWN, self.unstick_ball)
+            utils.timers.cancel(self.unstick_ball)
+            self.hit_ball(self.stuck_ball)
+            self.stuck_ball = None
+
+    def hit_ball(self, ball):
+        delta = ball.rect.centerx - self.sprite.rect.centerx
+
+        if delta < -13:
+            vel = [-2,-1]
+        elif delta < -8:
+            vel = [-2,-2]
+        elif delta < 0:
+            vel = [-1,-2]
+        elif delta < 8:
+            vel = [1,-2]
+        elif delta < 13:
+            vel = [2,-2]
+        else:
+            vel = [2,-1]
+
+        ball.set_action(display.Move(vel))
+        audio.play_sound("Low")
+
+    def kill(self):
+        self.sprite.set_action(display.Animate("explode").then(display.Die()))
+        self.sound = audio.play_sound("Death")
+
+    def alive(self):
+        return self.sprite.alive() or self.sound.get_busy()
+
 class GameState(State):
     def __init__(self, engine):
         State.__init__(self, engine)
@@ -133,32 +181,12 @@ class GameState(State):
 
         show_lives(self)
 
-        self.ball = self.scene.names["ball"]
-
-        self.paddle = self.scene.names["paddle"]
-
         self.playspace = self.scene.names["bg"].rect
-
-        self.paddle.set_action(display.MouseMove(self.playspace, [1,0]))
+        self.ball = self.scene.names["ball"]
+        self.paddle = Paddle(self.scene.names["paddle"], self.playspace)
+        self.paddle.stick_ball(self.ball)
 
         utils.events.register(utils.EVT_KEYDOWN, self.on_keydown)
-
-        self.enable_stuck(self.ball)
-
-    def enable_stuck(self, ball):
-        # Stick the ball to the paddle
-        ball.set_action(display.Follow(self.paddle))
-
-        # Listen for release
-        utils.events.register(utils.EVT_MOUSEBUTTONDOWN, lambda event: self.disable_stuck(ball))
-
-        # Set up the auto release timer
-        utils.timers.start(3.0, self.disable_stuck, ball)
-
-    def disable_stuck(self, ball):
-        utils.timers.cancel(self.disable_stuck)
-        ball.set_action(display.Move([1,-2]))
-        audio.play_sound("Low")
 
     def on_keydown(self, event):
         if event.key == pygame.K_SPACE:
@@ -168,24 +196,8 @@ class GameState(State):
         self.scene.groups["all"].update()
 
         # Ball-Paddle collisions
-        if pygame.sprite.collide_rect(self.paddle, self.ball):
-            delta = self.ball.rect.centerx - self.paddle.rect.centerx
-
-            if delta < -13:
-                vel = [-2,-1]
-            elif delta < -8:
-                vel = [-2,-2]
-            elif delta < 0:
-                vel = [-1,-2]
-            elif delta < 8:
-                vel = [1,-2]
-            elif delta < 13:
-                vel = [2,-2]
-            else:
-                vel = [2,-1]
-
-            self.ball.set_action(display.Move(vel))
-            audio.play_sound("Low")
+        if pygame.sprite.collide_rect(self.paddle.sprite, self.ball):
+            self.paddle.hit_ball(self.ball)
 
         # Ball collisions
         sprites = pygame.sprite.spritecollide(self.ball, self.scene.groups["ball"], False)
@@ -222,10 +234,9 @@ class GameState(State):
         # Ball exit detection
         if self.ball.alive() and not self.ball.rect.colliderect(self.playspace):
             self.ball.kill()
-            self.paddle.set_action(display.Animate("explode").then(display.Die()))
-            self.sound = audio.play_sound("Death")
+            self.paddle.kill()
 
-        if not self.paddle.alive() and not self.sound.get_busy():
+        if not self.paddle.alive():
             self.engine.vars["lives"] -= 1
 
             if self.engine.vars["lives"] > 0:
