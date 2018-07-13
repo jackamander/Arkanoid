@@ -85,7 +85,6 @@ class BlinkState(State):
     def draw(self, screen):
         self.scene.groups["all"].draw(screen)
 
-
 class RoundState(State):
     def __init__(self, engine):
         State.__init__(self, engine)
@@ -97,6 +96,14 @@ class RoundState(State):
     def draw(self, screen):
         self.scene.groups["all"].draw(screen)
 
+def show_lives(state):
+    for name, sprite in state.scene.names.items():
+        mobj = re.match("life(\\d+)", name)
+        if mobj:
+            num = int(mobj.group(1))
+            if state.engine.vars["lives"] <= num:
+                sprite.kill()
+
 class StartState(State):
     def __init__(self, engine):
         State.__init__(self, engine)
@@ -104,10 +111,7 @@ class StartState(State):
         self.scene = display.Scene(["hud", "ready"], engine.vars)
         self.scene.merge(engine.scenes[engine.vars["level"]])
 
-        # Lives
-        for life in range(engine.vars["lives"], 7):
-            key = "life%d" % life
-            self.scene.names[key].kill()
+        show_lives(self)
 
         self.sound = audio.play_sound("Ready")
 
@@ -127,10 +131,7 @@ class GameState(State):
         self.scene = display.Scene(["hud", "tools"], engine.vars)
         self.scene.merge(engine.scenes[engine.vars["level"]])
 
-        # Lives
-        for life in range(engine.vars["lives"], 7):
-            key = "life%d" % life
-            self.scene.names[key].kill()
+        show_lives(self)
 
         self.ball = self.scene.names["ball"]
 
@@ -281,7 +282,7 @@ class Engine(object):
 
     def __init__(self):
         self.vars = Vars({
-            "high":0, 
+            "high":50000, 
             "score1":0, 
             "level":1, 
             "player":1, 
