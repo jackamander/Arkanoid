@@ -35,10 +35,11 @@ class TitleState(State):
 
     def on_var_change(self, event):
         # Update cursor position
-        index = self.engine.vars["players"] - 1
-        cursor = self.scene.names["cursor"]
-        pos = cursor.cfg["locations"][index]
-        cursor.set_pos(pos)
+        if event.name == "players":
+            index = event.value - 1
+            cursor = self.scene.names["cursor"]
+            pos = cursor.cfg["locations"][index]
+            cursor.set_pos(pos)
 
     def on_click(self, event):
         if event.button == 1:
