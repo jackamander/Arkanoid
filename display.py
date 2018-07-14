@@ -8,6 +8,7 @@ import os
 
 import pygame
 
+import audio
 import utils
 
 class Window:
@@ -93,7 +94,36 @@ def get_image(name):
 
     return image
 
-class MouseMove:
+class Action:
+    def then(self, next):
+        return Series([self, next])
+    
+    def plus(self, action):
+        return Parallel([self, action])
+
+class Series(Action):
+    def __init__(self, actions):
+        self.actions = list(actions)
+        self.action = self.actions.pop(0)
+    
+    def update(self, sprite):
+        done = self.action.update(sprite)
+        if done:
+            self.action = None
+            if self.actions:
+                self.action = self.actions.pop(0)
+        return self.action is None
+
+class Parallel(Action):
+    def __init__(self, actions):
+        self.actions = list(actions)
+
+    def update(self, sprite):
+        self.actions = filter(lambda action: not action.update(sprite), self.actions)
+        done = len(self.actions) == 0
+        return done
+
+class MouseMove(Action):
     def __init__(self, region, sensitivity):
         self.rect = region.copy()
         self.delta = [0, 0]
@@ -109,14 +139,14 @@ class MouseMove:
         sprite.rect.clamp_ip(self.rect)
         self.delta = [0, 0]
 
-class Move:
+class Move(Action):
     def __init__(self, delta):
         self.delta = delta
 
     def update(self, sprite):
         sprite.move(self.delta)
 
-class Follow:
+class Follow(Action):
     def __init__(self, target):
         self.target = target
         self.last = target.get_pos()
@@ -128,7 +158,7 @@ class Follow:
             sprite.move(delta)
             self.last = pos
 
-class Blink:
+class Blink(Action):
     def __init__(self, rate):
         # Convert rate from seconds to frames per half cycle
         fps = utils.config["frame_rate"]
@@ -142,21 +172,8 @@ class Blink:
             sprite.visible ^= 1
             self.frames = 0
 
-class Action:
-    def __init__(self):
-        self._next_action = None
-
-    def then(self, action):
-        self._next_action = action
-        return self
-
-    def finish(self, sprite):
-        sprite.set_action(self._next_action)
-
 class Animate(Action):
     def __init__(self, name):
-        Action.__init__(self)
-
         cfg = utils.config["animations"][name]
         self.images = [get_image(name) for name in cfg["images"]]
         self.speed = cfg["speed"]
@@ -175,17 +192,35 @@ class Animate(Action):
                 self.frame += 1
                 self.count = 0
 
-            if self.frame >= len(self.images):
-                if self.loop:
-                    self.frame = 0
-                else:
-                    self.finish(sprite)
+        if self.frame >= len(self.images):
+            if self.loop:
+                self.frame = 0
+            else:
+                return True
 
 class Die(Action):
     def update(self, sprite):
         sprite.kill()
-        self.finish(sprite)
+        return True
 
+class PlaySound(Action):
+    def __init__(self, sound):
+        self.sound = audio.play_sound(sound)
+
+    def update(self, sprite):
+        return not self.sound.get_busy()
+
+class FireEvent(Action):
+    def __init__(self, event, **kwargs):
+        self.event = event
+        self.kwargs = kwargs
+
+    def update(self, sprite):
+        if self.event:
+            utils.events.generate(self.event, **self.kwargs)
+            self.event = None
+        return True
+        
 class UpdateVar:
     def __init__(self, name):
         self.name = name
