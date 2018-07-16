@@ -2,6 +2,7 @@
 Main game engine for Arkanoid
 """
 
+import random
 import re
 
 import pygame
@@ -173,6 +174,41 @@ class Paddle:
     def alive(self):
         return self.sprite.alive() or self.sound.get_busy()
 
+class Capsules:
+    def __init__(self, scene):
+        self.scene = scene
+
+        for capsule in self.scene.groups["capsules"]:
+            capsule.kill()
+            self.scene.groups["capsules"].add(capsule)
+
+        self.enable()
+
+    def disable(self):
+        self.count = 0
+
+    def enable(self):
+        self.count = random.randint(1, 10)
+
+    def kill(self, capsule):
+        capsule.set_pos([0,0])
+        capsule.set_action(None)
+        capsule.kill()
+        self.scene.groups["capsules"].add(capsule)
+
+        self.enable()
+
+    def on_brick(self, sprite):
+        if self.count > 0:
+            self.count -= 1
+
+            if self.count == 0:
+                capsule = random.choice(self.scene.groups["capsules"].sprites())
+                capsule.set_pos(sprite.get_pos())
+                capsule.set_action(display.Move([0,1]).plus(display.Animate(capsule.cfg["animation"])))
+                self.scene.groups["paddle"].add(capsule)
+                self.scene.groups["all"].add(capsule)
+
 class GameState(State):
     def __init__(self, engine):
         State.__init__(self, engine)
@@ -186,6 +222,8 @@ class GameState(State):
         self.ball = self.scene.names["ball"]
         self.paddle = Paddle(self.scene.names["paddle"], self.playspace)
         self.paddle.stick_ball(self.ball)
+
+        self.capsules = Capsules(self.scene)
 
         utils.events.register(utils.EVT_KEYDOWN, self.on_keydown)
         utils.events.register(utils.EVT_POINTS, self.on_points)
@@ -205,6 +243,15 @@ class GameState(State):
         # Ball-Paddle collisions
         if pygame.sprite.collide_rect(self.paddle.sprite, self.ball):
             self.paddle.hit_ball(self.ball)
+
+        # Capsules
+        sprites = pygame.sprite.spritecollide(self.paddle.sprite, self.scene.groups["paddle"], False)
+        for sprite in sprites:
+            self.capsules.kill(sprite)
+
+        for sprite in self.scene.groups["paddle"]:
+            if sprite.alive() and not sprite.rect.colliderect(self.playspace):
+                self.capsules.kill(sprite)
 
         # Ball collisions
         sprites = pygame.sprite.spritecollide(self.ball, self.scene.groups["ball"], False)
@@ -234,6 +281,7 @@ class GameState(State):
                 sprite.cfg["hits"] = hits
                 if hits == 0:
                     sprite.kill()
+                    self.capsules.on_brick(sprite)
 
                     points = sprite.cfg.get("points", 0)
                     utils.events.generate(utils.EVT_POINTS, points=points)

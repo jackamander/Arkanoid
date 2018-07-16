@@ -97,7 +97,7 @@ def get_image(name):
 class Action:
     def then(self, next):
         return Series([self, next])
-    
+
     def plus(self, action):
         return Parallel([self, action])
 
@@ -105,7 +105,7 @@ class Series(Action):
     def __init__(self, actions):
         self.actions = list(actions)
         self.action = self.actions.pop(0)
-    
+
     def update(self, sprite):
         done = self.action.update(sprite)
         if done:
@@ -220,7 +220,7 @@ class FireEvent(Action):
             utils.events.generate(self.event, **self.kwargs)
             self.event = None
         return True
-        
+
 class UpdateVar:
     def __init__(self, name):
         self.name = name
@@ -251,7 +251,7 @@ class Sprite(pygame.sprite.DirtySprite):
         self.blendmode = 0
         self.source_rect = None
         self.visible = 1
-        
+
         self._layer = cfg.pop("layer", 10)
 
         self.action = None
@@ -317,7 +317,7 @@ class Scene:
                 if key:
                     image = get_image(key)
 
-                position = cfg.pop("position")
+                position = cfg.pop("position", [0,0])
 
                 group_names = cfg.pop("groups", [])
 

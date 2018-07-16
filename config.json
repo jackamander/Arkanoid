@@ -630,6 +630,41 @@
         "explode" : {
             "images" : ["explode1", "explode2", "explode3"],
             "speed" : 20
+        },
+        "B" : {
+            "images" : ["B0", "B1", "B2", "B3", "B4", "B5"],
+            "speed" : 10,
+            "loop" : true
+        },
+        "C" : {
+            "images" : ["C0", "C1", "C2", "C3", "C4", "C5"],
+            "speed" : 10,
+            "loop" : true
+        },
+        "D" : {
+            "images" : ["D0", "D1", "D2", "D3", "D4", "D5"],
+            "speed" : 10,
+            "loop" : true
+        },
+        "E" : {
+            "images" : ["E0", "E1", "E2", "E3", "E4", "E5"],
+            "speed" : 10,
+            "loop" : true
+        },
+        "L" : {
+            "images" : ["L0", "L1", "L2", "L3", "L4", "L5"],
+            "speed" : 10,
+            "loop" : true
+        },
+        "P" : {
+            "images" : ["P0", "P1", "P2", "P3", "P4", "P5"],
+            "speed" : 10,
+            "loop" : true
+        },
+        "S" : {
+            "images" : ["S0", "S1", "S2", "S3", "S4", "S5"],
+            "speed" : 10,
+            "loop" : true
         }
     },
     "sounds" : {
@@ -794,6 +829,55 @@
                 "name" : "ball",
                 "image" : "ball",
                 "position" : [ 96, 197]
+            },
+            {
+                "name" : "capsuleB",
+                "image" : "B0",
+                "layer" : 20,
+                "animation" : "B",
+                "groups" : ["capsules", "paddle"]
+            },
+            {
+                "name" : "capsuleC",
+                "image" : "C0",
+                "layer" : 20,
+                "animation" : "C",
+                "groups" : ["capsules", "paddle"]
+            },
+            {
+                "name" : "capsuleD",
+                "image" : "D0",
+                "layer" : 20,
+                "animation" : "D",
+                "groups" : ["capsules", "paddle"]
+            },
+            {
+                "name" : "capsuleE",
+                "image" : "E0",
+                "layer" : 20,
+                "animation" : "E",
+                "groups" : ["capsules", "paddle"]
+            },
+            {
+                "name" : "capsuleL",
+                "image" : "L0",
+                "layer" : 20,
+                "animation" : "L",
+                "groups" : ["capsules", "paddle"]
+            },
+            {
+                "name" : "capsuleP",
+                "image" : "P0",
+                "layer" : 20,
+                "animation" : "P",
+                "groups" : ["capsules", "paddle"]
+            },
+            {
+                "name" : "capsuleS",
+                "image" : "S0",
+                "layer" : 20,
+                "animation" : "S",
+                "groups" : ["capsules", "paddle"]
             }
         ],
         "walls" : [
