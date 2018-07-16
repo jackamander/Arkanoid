@@ -55,7 +55,8 @@ def blend(color1, color2, ratio):
 EVT_KEYDOWN = pygame.KEYDOWN
 EVT_MOUSEBUTTONDOWN = pygame.MOUSEBUTTONDOWN
 EVT_MOUSEMOTION = pygame.MOUSEMOTION
-EVT_VAR_CHANGE = pygame.USEREVENT 
+EVT_VAR_CHANGE = pygame.USEREVENT
+EVT_POINTS = pygame.USEREVENT + 1
 
 class Events:
     def __init__(self):

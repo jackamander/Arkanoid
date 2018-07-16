@@ -80,6 +80,7 @@ class BlinkState(State):
         self.scene.groups["all"].update()
 
         if not self.sound.get_busy():
+            self.engine.reset(self.engine.vars["high"])
             self.engine.set_state(RoundState)
 
     def draw(self, screen):
@@ -138,7 +139,7 @@ class Paddle:
             self.stuck_ball.set_action(display.Follow(self.sprite))
             utils.events.register(utils.EVT_MOUSEBUTTONDOWN, self.unstick_ball)
             utils.timers.start(3.0, self.unstick_ball)
-            
+
     def unstick_ball(self, event=None):
         if self.stuck_ball is not None:
             utils.events.unregister(utils.EVT_MOUSEBUTTONDOWN, self.unstick_ball)
@@ -187,10 +188,16 @@ class GameState(State):
         self.paddle.stick_ball(self.ball)
 
         utils.events.register(utils.EVT_KEYDOWN, self.on_keydown)
+        utils.events.register(utils.EVT_POINTS, self.on_points)
 
     def on_keydown(self, event):
         if event.key == pygame.K_SPACE:
             self.engine.set_state(StartState)
+
+    def on_points(self, event):
+        self.engine.vars["score1"] += event.points
+        if self.engine.vars["score1"] > self.engine.vars["high"]:
+            self.engine.vars["high"] = self.engine.vars["score1"]
 
     def update(self):
         self.scene.groups["all"].update()
@@ -229,7 +236,7 @@ class GameState(State):
                     sprite.kill()
 
                     points = sprite.cfg.get("points", 0)
-                    self.engine.vars["score1"] += points
+                    utils.events.generate(utils.EVT_POINTS, points=points)
 
         # Ball exit detection
         if self.ball.alive() and not self.ball.rect.colliderect(self.playspace):
@@ -285,30 +292,33 @@ class Vars:
         utils.events.generate(utils.EVT_VAR_CHANGE, name=key, value=value)
 
 class Engine(object):
-    
+
     INITIAL_STATE = TitleState
 
     def __init__(self):
+        self.reset(0)
+
+    def reset(self, high):
         self.vars = Vars({
-            "high":50000, 
-            "score1":0, 
-            "level":1, 
-            "player":1, 
-            "lives":3, 
+            "high":high,
+            "score1":0,
+            "level":1,
+            "player":1,
+            "lives":3,
             "players":1,
         })
 
         # Pre-allocate all level scenes
         levels = {}
         for key in utils.config["scenes"]:
-            mobj = re.match("level(\d+)", key)
+            mobj = re.match("level(\\d+)", key)
             if mobj:
                 level = int(mobj.group(1))
                 levels[level] = key
 
         self.scenes = {level : display.Scene([key], self.vars) for level, key in levels.items()}
 
-        self.state = self.INITIAL_STATE(self)
+        self.set_state(self.INITIAL_STATE)
 
     def set_state(self, state):
         utils.events.clear()
