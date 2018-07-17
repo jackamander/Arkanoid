@@ -168,6 +168,13 @@ class Paddle:
 
         self.sprite.set_action(display.MouseMove(playspace, [1,0]))
 
+    def expand(self):
+        self.sprite.set_image(display.get_image("paddle_ext"))
+        audio.play_sound("Enlarge")
+
+    def deflate(self):
+        self.sprite.set_image(display.get_image("paddle"))
+
     def catch_ball(self, ball):
         if self.stuck_ball is None:
             self.stuck_ball = ball
@@ -271,6 +278,12 @@ class Capsules:
                 sprite.set_action(display.Move(vels.pop()))
 
             self.disable()
+
+        if effect == "enlarge":
+            self.state.paddle.expand()
+        else:
+            self.state.paddle.deflate()
+
         if effect == "catch":
             self.paddle.catch = True
         else:

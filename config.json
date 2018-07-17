@@ -713,6 +713,9 @@
         },
         "Break" : {
             "filename" : "resources\\sounds\\Break.wav"
+        },
+        "Enlarge" : {
+            "filename" : "resources\\sounds\\Enlarge.wav"
         }
     },
     "scenes": {
@@ -896,7 +899,8 @@
                 "image" : "E0",
                 "layer" : 20,
                 "animation" : "E",
-                "groups" : ["capsules", "paddle"]
+                "groups" : ["capsules", "paddle"],
+                "effect" : "enlarge"
             },
             {
                 "name" : "capsuleL",
