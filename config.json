@@ -853,7 +853,17 @@
                 "position" : [ 80, 201]
             },
             {
-                "name" : "ball",
+                "name" : "ball1",
+                "image" : "ball",
+                "position" : [ 96, 197]
+            },
+            {
+                "name" : "ball2",
+                "image" : "ball",
+                "position" : [ 96, 197]
+            },
+            {
+                "name" : "ball3",
                 "image" : "ball",
                 "position" : [ 96, 197]
             },
@@ -878,7 +888,8 @@
                 "image" : "D0",
                 "layer" : 20,
                 "animation" : "D",
-                "groups" : ["capsules", "paddle"]
+                "groups" : ["capsules", "paddle"],
+                "effect" : "disrupt"
             },
             {
                 "name" : "capsuleE",

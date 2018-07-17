@@ -217,14 +217,16 @@ class Paddle:
         return self.sprite.alive() or self.sound.get_busy()
 
 class Capsules:
-    def __init__(self, scene, paddle):
-        self.scene = scene
+    def __init__(self, state, paddle):
+        self.state = state
+        self.scene = state.scene
         self.paddle = paddle
 
         for capsule in self.scene.groups["capsules"]:
             capsule.kill()
             self.scene.groups["capsules"].add(capsule)
 
+        self.disable()
         self.enable()
 
         self._break = self.scene.names["break"]
@@ -236,15 +238,39 @@ class Capsules:
         self.count = 0
 
     def enable(self):
-        #self.count = random.randint(1, 10)
-        self.count = 1
+        if self.count == 0:
+            self.count = random.randint(1, 10)
 
     def apply(self, capsule):
         effect = capsule.cfg.get("effect", "")
         if effect == "break":
             self.scene.groups["all"].add(self._break)
             self.scene.groups["break"].add(self._break)
+        elif effect == "disrupt":
+            active_name = {self.state.balls[0].cfg["name"]}
+            all_names = {"ball1", "ball2", "ball3"}
+            new_names = all_names.difference(active_name)
 
+            pos = self.state.balls[0].get_pos()
+            vel = tuple(self.state.balls[0].action.delta)
+            vel_lookup = {
+                (1,2) : [[2,2], [2,1]], (2,2) : [[1,2], [2,1]], (2,1) : [[2,2], [1,2]],
+                (-1,2) : [[-2,2], [-2,1]], (-2,2) : [[-1,2], [-2,1]], (-2,1) : [[-2,2], [-1,2]],
+                (1,-2) : [[2,-2], [2,-1]], (2,-2) : [[1,-2], [2,-1]], (2,-1) : [[2,-2], [1,-2]],
+                (-1,-2) : [[-2,-2], [-2,-1]], (-2,-2) : [[-1,-2], [-2,-1]], (-2,-1) : [[-2,-2], [-1,-2]],
+                }
+            vels = vel_lookup[vel]
+
+            for name in new_names:
+                sprite = self.scene.names[name]
+
+                sprite.set_pos(pos)
+
+                self.scene.groups["all"].add(sprite)
+                self.state.balls.append(sprite)
+                sprite.set_action(display.Move(vels.pop()))
+
+            self.disable()
         if effect == "catch":
             self.paddle.catch = True
         else:
@@ -279,11 +305,14 @@ class GameState(State):
         show_lives(self)
 
         self.playspace = self.scene.names["bg"].rect
-        self.ball = self.scene.names["ball"]
-        self.paddle = Paddle(self.scene.names["paddle"], self.playspace)
-        self.paddle.catch_ball(self.ball)
+        self.balls = [self.scene.names["ball1"]]
+        self.scene.names["ball2"].kill()
+        self.scene.names["ball3"].kill()
 
-        self.capsules = Capsules(self.scene, self.paddle)
+        self.paddle = Paddle(self.scene.names["paddle"], self.playspace)
+        self.paddle.catch_ball(self.balls[0])
+
+        self.capsules = Capsules(self, self.paddle)
 
         utils.events.register(utils.EVT_KEYDOWN, self.on_keydown)
         utils.events.register(utils.EVT_POINTS, self.on_points)
@@ -301,8 +330,9 @@ class GameState(State):
         self.scene.groups["all"].update()
 
         # Ball-Paddle collisions
-        if pygame.sprite.collide_rect(self.paddle.sprite, self.ball):
-            self.paddle.hit(self.ball)
+        for ball in self.balls:
+            if pygame.sprite.collide_rect(self.paddle.sprite, ball):
+                self.paddle.hit(ball)
 
         # Break support
         for sprite in self.scene.groups["break"]:
@@ -312,50 +342,58 @@ class GameState(State):
         # Capsules
         sprites = pygame.sprite.spritecollide(self.paddle.sprite, self.scene.groups["paddle"], False)
         for sprite in sprites:
-            self.capsules.apply(sprite)
             self.capsules.kill(sprite)
+            self.capsules.apply(sprite)
 
         for sprite in self.scene.groups["paddle"]:
             if sprite.alive() and not sprite.rect.colliderect(self.playspace):
                 self.capsules.kill(sprite)
 
         # Ball collisions
-        sprites = pygame.sprite.spritecollide(self.ball, self.scene.groups["ball"], False)
-        for sprite in sprites:
-            side = collision_side(self.ball, sprite)
+        for ball in self.balls:
+            sprites = pygame.sprite.spritecollide(ball, self.scene.groups["ball"], False)
+            for sprite in sprites:
+                side = collision_side(ball, sprite)
 
-            if side == "top":
-                self.ball.action.delta[1] = abs(self.ball.action.delta[1])
-            elif side == "bottom":
-                self.ball.action.delta[1] = -abs(self.ball.action.delta[1])
-            elif side == "left":
-                self.ball.action.delta[0] = abs(self.ball.action.delta[0])
-            elif side == "right":
-                self.ball.action.delta[0] = -abs(self.ball.action.delta[0])
+                if side == "top":
+                    ball.action.delta[1] = abs(ball.action.delta[1])
+                elif side == "bottom":
+                    ball.action.delta[1] = -abs(ball.action.delta[1])
+                elif side == "left":
+                    ball.action.delta[0] = abs(ball.action.delta[0])
+                elif side == "right":
+                    ball.action.delta[0] = -abs(ball.action.delta[0])
 
-            sound = sprite.cfg.get("hit_sound")
-            if sound:
-                audio.play_sound(sound)
+                sound = sprite.cfg.get("hit_sound")
+                if sound:
+                    audio.play_sound(sound)
 
-            animation = sprite.cfg.get("hit_animation")
-            if animation:
-                sprite.set_action(display.Animate(animation))
+                animation = sprite.cfg.get("hit_animation")
+                if animation:
+                    sprite.set_action(display.Animate(animation))
 
-            hits = sprite.cfg.get("hits")
-            if hits:
-                hits -= 1
-                sprite.cfg["hits"] = hits
-                if hits == 0:
-                    sprite.kill()
-                    self.capsules.on_brick(sprite)
+                hits = sprite.cfg.get("hits")
+                if hits:
+                    hits -= 1
+                    sprite.cfg["hits"] = hits
+                    if hits == 0:
+                        sprite.kill()
+                        self.capsules.on_brick(sprite)
 
-                    points = sprite.cfg.get("points", 0)
-                    utils.events.generate(utils.EVT_POINTS, points=points)
+                        points = sprite.cfg.get("points", 0)
+                        utils.events.generate(utils.EVT_POINTS, points=points)
 
         # Ball exit detection
-        if self.ball.alive() and not self.ball.rect.colliderect(self.playspace):
-            self.ball.kill()
-            self.paddle.kill()
+        for ball in list(self.balls):
+            if ball.alive() and not ball.rect.colliderect(self.playspace):
+                ball.kill()
+                self.balls.remove(ball)
+
+            if len(self.balls) == 1:
+                self.capsules.enable()
+
+            if len(self.balls) == 0:
+                self.paddle.kill()
 
         if not self.paddle.alive():
             self.engine.vars["lives"] -= 1
