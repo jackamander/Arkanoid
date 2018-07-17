@@ -126,28 +126,28 @@ class StartState(State):
     def draw(self, screen):
         self.scene.groups["all"].draw(screen)
 
-class WarpState(State):
+class BreakState(State):
     def __init__(self, engine):
         State.__init__(self, engine)
 
-        self.scene = display.Scene(["hud", "walls", "warp"], engine.vars)
+        self.scene = display.Scene(["hud", "walls", "break"], engine.vars)
         self.scene.merge(engine.scenes[engine.vars["level"]])
 
         show_lives(self)
 
-        self.warp = self.scene.names["warp"]
-        self.warp.set_action(display.Animate(self.warp.cfg["animation"]))
+        self._break = self.scene.names["break"]
+        self._break.set_action(display.Animate(self._break.cfg["animation"]))
 
         self.paddle_shrink = self.scene.names["paddle_shrink"]
         self.paddle_shrink.set_action(display.Animate(self.paddle_shrink.cfg["animation"]).then(display.Die()).plus(display.Move([1,0])))
 
-        self.sound = audio.play_sound("Warp")
+        self.sound = audio.play_sound("Break")
 
         utils.events.register(utils.EVT_KEYDOWN, self.on_keydown)
 
     def on_keydown(self, event):
         if event.key == pygame.K_SPACE:
-            self.engine.set_state(WarpState)
+            self.engine.set_state(BreakState)
 
     def update(self):
         self.scene.groups["all"].update()
@@ -217,21 +217,22 @@ class Capsules:
 
         self.enable()
 
-        self.warp = self.scene.names["warp"]
-        self.warp.set_action(display.Animate(self.warp.cfg["animation"]))
-        self.warp.kill()
+        self._break = self.scene.names["break"]
+        self._break.set_action(display.Animate(self._break.cfg["animation"]))
+        self._break.kill()
         self.scene.names["paddle_shrink"].kill()
 
     def disable(self):
         self.count = 0
 
     def enable(self):
-        self.count = random.randint(1, 10)
+        #self.count = random.randint(1, 10)
+        self.count = 1
 
     def apply(self, capsule):
-        if capsule.cfg.get("effect", "") == "warp":
-            self.scene.groups["all"].add(self.warp)
-            self.scene.groups["warp"].add(self.warp)
+        if capsule.cfg.get("effect", "") == "break":
+            self.scene.groups["all"].add(self._break)
+            self.scene.groups["break"].add(self._break)
 
     def kill(self, capsule):
         capsule.set_pos([0,0])
@@ -256,7 +257,7 @@ class GameState(State):
     def __init__(self, engine):
         State.__init__(self, engine)
 
-        self.scene = display.Scene(["hud", "walls", "tools", "warp"], engine.vars)
+        self.scene = display.Scene(["hud", "walls", "tools", "break"], engine.vars)
         self.scene.merge(engine.scenes[engine.vars["level"]])
 
         show_lives(self)
@@ -287,10 +288,10 @@ class GameState(State):
         if pygame.sprite.collide_rect(self.paddle.sprite, self.ball):
             self.paddle.hit_ball(self.ball)
 
-        # Warp
-        for sprite in self.scene.groups["warp"]:
+        # Break support
+        for sprite in self.scene.groups["break"]:
             if self.paddle.sprite.rect.right + 1 >= sprite.rect.left:
-                self.engine.set_state(WarpState)
+                self.engine.set_state(BreakState)
 
         # Capsules
         sprites = pygame.sprite.spritecollide(self.paddle.sprite, self.scene.groups["paddle"], False)

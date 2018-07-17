@@ -122,17 +122,17 @@
             "size" : [24, 8],
             "offset" : [64, 56]
         },
-        "warp1" : {
+        "break1" : {
             "filename" : "resources\\images\\blocks and backgrounds.png",
             "size" : [8, 24],
             "offset" : [104, 32]
         },
-        "warp2" : {
+        "break2" : {
             "filename" : "resources\\images\\blocks and backgrounds.png",
             "size" : [8, 24],
             "offset" : [112, 32]
         },
-        "warp3" : {
+        "break3" : {
             "filename" : "resources\\images\\blocks and backgrounds.png",
             "size" : [8, 24],
             "offset" : [120, 32]
@@ -681,8 +681,8 @@
             "speed" : 10,
             "loop" : true
         },
-        "warp" : {
-            "images" : ["warp1", "warp2", "warp3", "warp2"],
+        "break" : {
+            "images" : ["break1", "break2", "break3", "break2"],
             "speed" : 3,
             "loop" : true
         },
@@ -711,8 +711,8 @@
         "Death" : {
             "filename" : "resources\\sounds\\Death.wav"
         },
-        "Warp" : {
-            "filename" : "resources\\sounds\\Warp.wav"
+        "Break" : {
+            "filename" : "resources\\sounds\\Break.wav"
         }
     },
     "scenes": {
@@ -863,7 +863,7 @@
                 "layer" : 20,
                 "animation" : "B",
                 "groups" : ["capsules", "paddle"],
-                "effect" : "warp"
+                "effect" : "break"
             },
             {
                 "name" : "capsuleC",
@@ -908,14 +908,14 @@
                 "groups" : ["capsules", "paddle"]
             }
         ],
-        "warp" : [
+        "break" : [
             {
-                "name" : "warp",
-                "image" : "warp1",
+                "name" : "break",
+                "image" : "break1",
                 "position" : [192, 192],
-                "animation" : "warp",
+                "animation" : "break",
                 "layer" : 20,
-                "groups" : ["warp"]
+                "groups" : ["break"]
             },
             {
                 "name" : "paddle_shrink",
