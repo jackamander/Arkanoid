@@ -11,6 +11,21 @@
             "size" : [32, 8],
             "offset" : [0, 0]
         },
+        "paddle_shrink1" : {
+            "filename" : "resources\\images\\vaus.png",
+            "size" : [24, 8],
+            "offset" : [0, 0]
+        },
+        "paddle_shrink2" : {
+            "filename" : "resources\\images\\vaus.png",
+            "size" : [16, 8],
+            "offset" : [0, 0]
+        },
+        "paddle_shrink3" : {
+            "filename" : "resources\\images\\vaus.png",
+            "size" : [8, 8],
+            "offset" : [0, 0]
+        },
         "explode1" : {
             "filename" : "resources\\images\\vaus.png",
             "size" : [32, 8],
@@ -665,6 +680,15 @@
             "images" : ["S0", "S1", "S2", "S3", "S4", "S5"],
             "speed" : 10,
             "loop" : true
+        },
+        "warp" : {
+            "images" : ["warp1", "warp2", "warp3", "warp2"],
+            "speed" : 3,
+            "loop" : true
+        },
+        "paddle_shrink" : {
+            "images" : ["paddle", "paddle_shrink1", "paddle_shrink2", "paddle_shrink3"],
+            "speed" : 6
         }
     },
     "sounds" : {
@@ -686,6 +710,9 @@
         },
         "Death" : {
             "filename" : "resources\\sounds\\Death.wav"
+        },
+        "Warp" : {
+            "filename" : "resources\\sounds\\Warp.wav"
         }
     },
     "scenes": {
@@ -835,7 +862,8 @@
                 "image" : "B0",
                 "layer" : 20,
                 "animation" : "B",
-                "groups" : ["capsules", "paddle"]
+                "groups" : ["capsules", "paddle"],
+                "effect" : "warp"
             },
             {
                 "name" : "capsuleC",
@@ -878,6 +906,23 @@
                 "layer" : 20,
                 "animation" : "S",
                 "groups" : ["capsules", "paddle"]
+            }
+        ],
+        "warp" : [
+            {
+                "name" : "warp",
+                "image" : "warp1",
+                "position" : [192, 192],
+                "animation" : "warp",
+                "layer" : 20,
+                "groups" : ["warp"]
+            },
+            {
+                "name" : "paddle_shrink",
+                "image" : "paddle_shrink1",
+                "animation" : "paddle_shrink",
+                "layer" : 21,
+                "position" : [160, 201]
             }
         ],
         "walls" : [

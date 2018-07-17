@@ -126,6 +126,39 @@ class StartState(State):
     def draw(self, screen):
         self.scene.groups["all"].draw(screen)
 
+class WarpState(State):
+    def __init__(self, engine):
+        State.__init__(self, engine)
+
+        self.scene = display.Scene(["hud", "walls", "warp"], engine.vars)
+        self.scene.merge(engine.scenes[engine.vars["level"]])
+
+        show_lives(self)
+
+        self.warp = self.scene.names["warp"]
+        self.warp.set_action(display.Animate(self.warp.cfg["animation"]))
+
+        self.paddle_shrink = self.scene.names["paddle_shrink"]
+        self.paddle_shrink.set_action(display.Animate(self.paddle_shrink.cfg["animation"]).then(display.Die()).plus(display.Move([1,0])))
+
+        self.sound = audio.play_sound("Warp")
+
+        utils.events.register(utils.EVT_KEYDOWN, self.on_keydown)
+
+    def on_keydown(self, event):
+        if event.key == pygame.K_SPACE:
+            self.engine.set_state(WarpState)
+
+    def update(self):
+        self.scene.groups["all"].update()
+
+        if not self.sound.get_busy():
+            self.engine.vars["level"] += 1
+            self.engine.set_state(RoundState)
+
+    def draw(self, screen):
+        self.scene.groups["all"].draw(screen)
+
 class Paddle:
     def __init__(self, sprite, playspace):
         self.sprite = sprite
@@ -184,11 +217,21 @@ class Capsules:
 
         self.enable()
 
+        self.warp = self.scene.names["warp"]
+        self.warp.set_action(display.Animate(self.warp.cfg["animation"]))
+        self.warp.kill()
+        self.scene.names["paddle_shrink"].kill()
+
     def disable(self):
         self.count = 0
 
     def enable(self):
         self.count = random.randint(1, 10)
+
+    def apply(self, capsule):
+        if capsule.cfg.get("effect", "") == "warp":
+            self.scene.groups["all"].add(self.warp)
+            self.scene.groups["warp"].add(self.warp)
 
     def kill(self, capsule):
         capsule.set_pos([0,0])
@@ -213,7 +256,7 @@ class GameState(State):
     def __init__(self, engine):
         State.__init__(self, engine)
 
-        self.scene = display.Scene(["hud", "walls", "tools"], engine.vars)
+        self.scene = display.Scene(["hud", "walls", "tools", "warp"], engine.vars)
         self.scene.merge(engine.scenes[engine.vars["level"]])
 
         show_lives(self)
@@ -244,9 +287,15 @@ class GameState(State):
         if pygame.sprite.collide_rect(self.paddle.sprite, self.ball):
             self.paddle.hit_ball(self.ball)
 
+        # Warp
+        for sprite in self.scene.groups["warp"]:
+            if self.paddle.sprite.rect.right + 1 >= sprite.rect.left:
+                self.engine.set_state(WarpState)
+
         # Capsules
         sprites = pygame.sprite.spritecollide(self.paddle.sprite, self.scene.groups["paddle"], False)
         for sprite in sprites:
+            self.capsules.apply(sprite)
             self.capsules.kill(sprite)
 
         for sprite in self.scene.groups["paddle"]:
