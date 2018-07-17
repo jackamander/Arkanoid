@@ -164,22 +164,31 @@ class Paddle:
         self.sprite = sprite
         self.stuck_ball = None
         self.sound = None
+        self.catch = False
 
         self.sprite.set_action(display.MouseMove(playspace, [1,0]))
 
-    def stick_ball(self, ball):
+    def catch_ball(self, ball):
         if self.stuck_ball is None:
             self.stuck_ball = ball
             self.stuck_ball.set_action(display.Follow(self.sprite))
-            utils.events.register(utils.EVT_MOUSEBUTTONDOWN, self.unstick_ball)
-            utils.timers.start(3.0, self.unstick_ball)
+            utils.events.register(utils.EVT_MOUSEBUTTONDOWN, self.release_ball)
+            utils.timers.start(3.0, self.release_ball)
 
-    def unstick_ball(self, event=None):
+    def release_ball(self, event=None):
         if self.stuck_ball is not None:
-            utils.events.unregister(utils.EVT_MOUSEBUTTONDOWN, self.unstick_ball)
-            utils.timers.cancel(self.unstick_ball)
+            utils.events.unregister(utils.EVT_MOUSEBUTTONDOWN, self.release_ball)
+            utils.timers.cancel(self.release_ball)
             self.hit_ball(self.stuck_ball)
             self.stuck_ball = None
+
+    def hit(self, ball):
+        if self.catch:
+            self.catch_ball(ball)
+        elif self.stuck_ball:
+            self.release_ball()
+        else:
+            self.hit_ball(ball)
 
     def hit_ball(self, ball):
         delta = ball.rect.centerx - self.sprite.rect.centerx
@@ -208,8 +217,9 @@ class Paddle:
         return self.sprite.alive() or self.sound.get_busy()
 
 class Capsules:
-    def __init__(self, scene):
+    def __init__(self, scene, paddle):
         self.scene = scene
+        self.paddle = paddle
 
         for capsule in self.scene.groups["capsules"]:
             capsule.kill()
@@ -230,9 +240,15 @@ class Capsules:
         self.count = 1
 
     def apply(self, capsule):
-        if capsule.cfg.get("effect", "") == "break":
+        effect = capsule.cfg.get("effect", "")
+        if effect == "break":
             self.scene.groups["all"].add(self._break)
             self.scene.groups["break"].add(self._break)
+
+        if effect == "catch":
+            self.paddle.catch = True
+        else:
+            self.paddle.catch = False
 
     def kill(self, capsule):
         capsule.set_pos([0,0])
@@ -265,9 +281,9 @@ class GameState(State):
         self.playspace = self.scene.names["bg"].rect
         self.ball = self.scene.names["ball"]
         self.paddle = Paddle(self.scene.names["paddle"], self.playspace)
-        self.paddle.stick_ball(self.ball)
+        self.paddle.catch_ball(self.ball)
 
-        self.capsules = Capsules(self.scene)
+        self.capsules = Capsules(self.scene, self.paddle)
 
         utils.events.register(utils.EVT_KEYDOWN, self.on_keydown)
         utils.events.register(utils.EVT_POINTS, self.on_points)
@@ -286,7 +302,7 @@ class GameState(State):
 
         # Ball-Paddle collisions
         if pygame.sprite.collide_rect(self.paddle.sprite, self.ball):
-            self.paddle.hit_ball(self.ball)
+            self.paddle.hit(self.ball)
 
         # Break support
         for sprite in self.scene.groups["break"]:

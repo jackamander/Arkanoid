@@ -870,7 +870,8 @@
                 "image" : "C0",
                 "layer" : 20,
                 "animation" : "C",
-                "groups" : ["capsules", "paddle"]
+                "groups" : ["capsules", "paddle"],
+                "effect" : "catch"
             },
             {
                 "name" : "capsuleD",
