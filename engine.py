@@ -305,6 +305,7 @@ class Capsules:
                 capsule = random.choice(self.scene.groups["capsules"].sprites())
                 capsule.set_pos(sprite.get_pos())
                 capsule.set_action(display.Move([0,1]).plus(display.Animate(capsule.cfg["animation"])))
+                self.scene.groups["capsules"].remove(capsule)
                 self.scene.groups["paddle"].add(capsule)
                 self.scene.groups["all"].add(capsule)
 
