@@ -259,28 +259,21 @@ class Capsules:
             self.scene.groups["all"].add(self._break)
             self.scene.groups["break"].add(self._break)
         elif effect == "disrupt":
-            active_name = {self.state.balls[0].cfg["name"]}
-            all_names = {"ball1", "ball2", "ball3"}
-            new_names = all_names.difference(active_name)
+            pos = self.state.balls[0].rect.topleft
+            last = self.state.balls[0].last.topleft
 
-            pos = self.state.balls[0].get_pos()
-            vel = tuple(self.state.balls[0].action.delta)
-            vel_lookup = {
-                (1,2) : [[2,2], [2,1]], (2,2) : [[1,2], [2,1]], (2,1) : [[2,2], [1,2]],
-                (-1,2) : [[-2,2], [-2,1]], (-2,2) : [[-1,2], [-2,1]], (-2,1) : [[-2,2], [-1,2]],
-                (1,-2) : [[2,-2], [2,-1]], (2,-2) : [[1,-2], [2,-1]], (2,-1) : [[2,-2], [1,-2]],
-                (-1,-2) : [[-2,-2], [-2,-1]], (-2,-2) : [[-1,-2], [-2,-1]], (-2,-1) : [[-2,-2], [-1,-2]],
-                }
-            vels = vel_lookup[vel]
+            signs = [1 if pos[i] - last[i] >= 0 else -1 for i in range(2)]
+            vels = [[1,2], [2,2], [2,1]]
+            vels = [[x * signs[0], y * signs[1]] for x,y in vels]
 
-            for name in new_names:
-                sprite = self.scene.names[name]
+            self.state.balls = [self.scene.names[name] for name in ["ball1", "ball2", "ball3"]]
 
+            for sprite, vel in zip(self.state.balls, vels):
                 sprite.set_pos(pos)
 
                 self.scene.groups["all"].add(sprite)
                 self.state.balls.append(sprite)
-                sprite.set_action(display.Move(vels.pop()))
+                sprite.set_action(display.Move(vel))
 
             self.disable()
 
