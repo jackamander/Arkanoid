@@ -271,8 +271,8 @@ class Capsules:
             for sprite, vel in zip(self.state.balls, vels):
                 sprite.set_pos(pos)
 
+                sprite.kill()
                 self.scene.groups["all"].add(sprite)
-                self.state.balls.append(sprite)
                 sprite.set_action(display.Move(vel))
 
             self.disable()
@@ -402,11 +402,11 @@ class GameState(State):
                 ball.kill()
                 self.balls.remove(ball)
 
-            if len(self.balls) == 1:
-                self.capsules.enable()
+                if len(self.balls) == 1:
+                    self.capsules.enable()
 
-            if len(self.balls) == 0:
-                self.paddle.kill()
+                if len(self.balls) == 0:
+                    self.paddle.kill()
 
         if not self.paddle.alive():
             self.engine.vars["lives"] -= 1
