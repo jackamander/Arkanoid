@@ -300,7 +300,8 @@ class Capsules:
             self.count -= 1
 
             if self.count == 0:
-                capsule = random.choice(self.scene.groups["capsules"].sprites())
+                choices = [capsule for capsule in self.scene.groups["capsules"].sprites() for _ in range(capsule.cfg["weight"])]
+                capsule = random.choice(choices)
                 capsule.set_pos(sprite.get_pos())
                 capsule.set_action(display.Move([0,1]).plus(display.Animate(capsule.cfg["animation"])))
                 self.scene.groups["capsules"].remove(capsule)

@@ -876,7 +876,8 @@
                 "layer" : 20,
                 "animation" : "B",
                 "groups" : ["capsules", "paddle"],
-                "effect" : "break"
+                "effect" : "break",
+                "weight" : 1
             },
             {
                 "name" : "capsuleC",
@@ -884,7 +885,8 @@
                 "layer" : 20,
                 "animation" : "C",
                 "groups" : ["capsules", "paddle"],
-                "effect" : "catch"
+                "effect" : "catch",
+                "weight" : 1
             },
             {
                 "name" : "capsuleD",
@@ -892,7 +894,8 @@
                 "layer" : 20,
                 "animation" : "D",
                 "groups" : ["capsules", "paddle"],
-                "effect" : "disrupt"
+                "effect" : "disrupt",
+                "weight" : 1
             },
             {
                 "name" : "capsuleE",
@@ -900,28 +903,32 @@
                 "layer" : 20,
                 "animation" : "E",
                 "groups" : ["capsules", "paddle"],
-                "effect" : "enlarge"
+                "effect" : "enlarge",
+                "weight" : 1
             },
             {
                 "name" : "capsuleL",
                 "image" : "L0",
                 "layer" : 20,
                 "animation" : "L",
-                "groups" : ["capsules", "paddle"]
+                "groups" : ["capsules", "paddle"],
+                "weight" : 1
             },
             {
                 "name" : "capsuleP",
                 "image" : "P0",
                 "layer" : 20,
                 "animation" : "P",
-                "groups" : ["capsules", "paddle"]
+                "groups" : ["capsules", "paddle"],
+                "weight" : 1
             },
             {
                 "name" : "capsuleS",
                 "image" : "S0",
                 "layer" : 20,
                 "animation" : "S",
-                "groups" : ["capsules", "paddle"]
+                "groups" : ["capsules", "paddle"],
+                "weight" : 1
             }
         ],
         "break" : [
