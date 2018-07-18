@@ -233,6 +233,8 @@ class Capsules:
             capsule.kill()
             self.scene.groups["capsules"].add(capsule)
 
+        self.total = self.available()
+
         self.disable()
         self.enable()
 
@@ -240,6 +242,9 @@ class Capsules:
         self._break.set_action(display.Animate(self._break.cfg["animation"]))
         self._break.kill()
         self.scene.names["paddle_shrink"].kill()
+
+    def available(self):
+        return len(self.scene.groups["capsules"].sprites())
 
     def disable(self):
         self.count = 0
@@ -298,7 +303,7 @@ class Capsules:
         self.enable()
 
     def on_brick(self, sprite):
-        if self.count > 0:
+        if self.total == self.available() and self.count > 0:
             self.count -= 1
 
             if self.count == 0:
