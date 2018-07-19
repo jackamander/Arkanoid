@@ -160,7 +160,8 @@ class BreakState(State):
         self.scene.groups["all"].draw(screen)
 
 class Paddle:
-    def __init__(self, sprite, playspace):
+    def __init__(self, sprite, playspace, state):
+        self.state = state
         self.sprite = sprite
         self.stuck_ball = None
         self.sound = None
@@ -168,12 +169,32 @@ class Paddle:
 
         self.sprite.set_action(display.MouseMove(playspace, [1,0]))
 
+        self.state.scene.names["laser"].kill()
+
     def expand(self):
         self.sprite.set_image(display.get_image("paddle_ext"))
+        utils.events.unregister(utils.EVT_MOUSEBUTTONDOWN, self.fire_laser)
         audio.play_sound("Enlarge")
 
-    def deflate(self):
+    def normal(self):
         self.sprite.set_image(display.get_image("paddle"))
+        utils.events.unregister(utils.EVT_MOUSEBUTTONDOWN, self.fire_laser)
+
+    def laser(self):
+        self.sprite.set_image(display.get_image("paddle_laser"))
+        utils.events.register(utils.EVT_MOUSEBUTTONDOWN, self.fire_laser)
+
+    def fire_laser(self, event):
+        sprite = display.Sprite(display.get_image("laser"))
+
+        sprite.rect.center = self.sprite.rect.center
+        sprite.rect.bottom = self.sprite.rect.top
+
+        sprite.set_action(display.Move([0,-4]))
+        self.state.scene.groups["all"].add(sprite)
+        self.state.scene.groups["lasers"].add(sprite)
+
+        audio.play_sound("Laser")
 
     def catch_ball(self, ball):
         if self.stuck_ball is None:
@@ -277,10 +298,12 @@ class Capsules:
 
             self.disable()
 
-        if effect == "enlarge":
+        if effect == "laser":
+            self.state.paddle.laser()
+        elif effect == "enlarge":
             self.state.paddle.expand()
         else:
-            self.state.paddle.deflate()
+            self.state.paddle.normal()
 
         if effect == "catch":
             self.paddle.catch = True
@@ -322,7 +345,7 @@ class GameState(State):
         self.scene.names["ball2"].kill()
         self.scene.names["ball3"].kill()
 
-        self.paddle = Paddle(self.scene.names["paddle"], self.playspace)
+        self.paddle = Paddle(self.scene.names["paddle"], self.playspace, self)
         self.paddle.catch_ball(self.balls[0])
 
         self.capsules = Capsules(self, self.paddle)
@@ -361,6 +384,27 @@ class GameState(State):
         for sprite in self.scene.groups["paddle"]:
             if sprite.alive() and not sprite.rect.colliderect(self.playspace):
                 self.capsules.kill(sprite)
+
+        # Laser collisions
+        sprite_dict = pygame.sprite.groupcollide(self.scene.groups["lasers"], self.scene.groups["ball"], False, False)
+        for laser, colliders in sprite_dict.items():
+            laser.kill()
+
+            for sprite in colliders:
+                animation = sprite.cfg.get("hit_animation")
+                if animation:
+                    sprite.set_action(display.Animate(animation))
+
+                hits = sprite.cfg.get("hits")
+                if hits:
+                    hits -= 1
+                    sprite.cfg["hits"] = hits
+                    if hits == 0:
+                        sprite.kill()
+                        self.capsules.on_brick(sprite)
+
+                        points = sprite.cfg.get("points", 0)
+                        utils.events.generate(utils.EVT_POINTS, points=points)
 
         # Ball collisions
         for ball in self.balls:

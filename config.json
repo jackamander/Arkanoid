@@ -54,7 +54,7 @@
         },
         "paddle_laser" : {
             "filename" : "resources\\images\\vaus.png",
-            "size" : [32, 32],
+            "size" : [32, 8],
             "offset" : [0, 16]
         },
         "ball" : {
@@ -716,6 +716,9 @@
         },
         "Enlarge" : {
             "filename" : "resources\\sounds\\Enlarge.wav"
+        },
+        "Laser" : {
+            "filename" : "resources\\sounds\\Laser.wav"
         }
     },
     "scenes": {
@@ -871,6 +874,12 @@
                 "position" : [ 96, 197]
             },
             {
+                "name" : "laser",
+                "image" : "laser",
+                "position" : [0, 0],
+                "groups" : ["lasers"]
+            },
+            {
                 "name" : "capsuleB",
                 "image" : "B0",
                 "layer" : 20,
@@ -912,6 +921,7 @@
                 "layer" : 20,
                 "animation" : "L",
                 "groups" : ["capsules", "paddle"],
+                "effect" : "laser",
                 "weight" : 1
             },
             {

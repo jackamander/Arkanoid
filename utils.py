@@ -69,7 +69,8 @@ class Events:
 
     def unregister(self, eventtype, handler):
         handlers = self.handlers.setdefault(eventtype, set())
-        handlers.remove(handler)
+        if handler in handlers:
+            handlers.remove(handler)
 
     def handle(self, event):
         """Handle an incoming event"""
