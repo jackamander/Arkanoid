@@ -141,7 +141,7 @@ class BreakState(State):
         self._break.set_action(display.Animate(self._break.cfg["animation"]))
 
         self.paddle_shrink = self.scene.names["paddle_shrink"]
-        self.paddle_shrink.set_action(display.Animate(self.paddle_shrink.cfg["animation"]).then(display.Die()).plus(display.Move([1,0])))
+        self.paddle_shrink.set_action(display.Animate(self.paddle_shrink.cfg["animation"]).then(display.Die()).plus(display.Move([0.5,0])))
 
         self.sound = audio.play_sound("Break")
 
@@ -226,15 +226,17 @@ class Paddle:
         if delta < -13:
             vel = [-2,-1]
         elif delta < -8:
-            vel = [-2,-2]
+            vel = [-1.6,-1.6]
         elif delta < 0:
             vel = [-1,-2]
         elif delta < 8:
             vel = [1,-2]
         elif delta < 13:
-            vel = [2,-2]
+            vel = [1.6,-1.6]
         else:
             vel = [2,-1]
+
+        vel = [i * self.state.ball_speed for i in vel]
 
         ball.set_action(display.Move(vel))
         audio.play_sound("Low")
@@ -286,8 +288,8 @@ class Capsules:
             last = self.state.balls[0].last.topleft
 
             signs = [1 if pos[i] - last[i] >= 0 else -1 for i in range(2)]
-            vels = [[1,2], [2,2], [2,1]]
-            vels = [[x * signs[0], y * signs[1]] for x,y in vels]
+            vels = [[1,2], [1.6,1.6], [2,1]]
+            vels = [[x * signs[0] * self.state.ball_speed, y * signs[1] * self.state.ball_speed] for x,y in vels]
 
             self.state.balls = [self.scene.names[name] for name in ["ball1", "ball2", "ball3"]]
 
@@ -303,7 +305,13 @@ class Capsules:
             self.state.engine.vars["lives"] += 1
             audio.play_sound("Life")
             show_lives(self.state)
+        elif effect == "slow":
+            if self.state.ball_speed > 1:
+                self.state.ball_speed /= utils.config["ball_speed"]
 
+                for ball in self.state.balls:
+                    if isinstance(ball.action, display.Move):
+                        ball.action.delta = [i / utils.config["ball_speed"] for i in ball.action.delta]
 
         if effect == "laser":
             self.state.paddle.laser()
@@ -352,6 +360,8 @@ class GameState(State):
         self.scene.names["ball2"].kill()
         self.scene.names["ball3"].kill()
 
+        self.ball_speed = 1
+
         self.paddle = Paddle(self.scene.names["paddle"], self.playspace, self)
         self.paddle.catch_ball(self.balls[0])
 
@@ -359,6 +369,18 @@ class GameState(State):
 
         utils.events.register(utils.EVT_KEYDOWN, self.on_keydown)
         utils.events.register(utils.EVT_POINTS, self.on_points)
+
+        utils.timers.start(10.0, self.on_timer)
+
+    def on_timer(self):
+        if self.ball_speed < 4:
+            self.ball_speed *= utils.config["ball_speed"]
+
+            for ball in self.balls:
+                if isinstance(ball.action, display.Move):
+                    ball.action.delta = [i * utils.config["ball_speed"] for i in ball.action.delta]
+
+        utils.timers.start(10.0, self.on_timer)
 
     def on_keydown(self, event):
         if event.key == pygame.K_SPACE:

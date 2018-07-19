@@ -5,6 +5,7 @@
     "full_screen" : false,
     "frame_rate" : 60,
     "bg_color" : "black",
+    "ball_speed" : 1.2,
     "images" : {
         "paddle" : {
             "filename" : "resources\\images\\vaus.png",
@@ -688,7 +689,7 @@
         },
         "paddle_shrink" : {
             "images" : ["paddle", "paddle_shrink1", "paddle_shrink2", "paddle_shrink3"],
-            "speed" : 6
+            "speed" : 12
         }
     },
     "sounds" : {
@@ -942,7 +943,8 @@
                 "layer" : 20,
                 "animation" : "S",
                 "groups" : ["capsules", "paddle"],
-                "weight" : 1
+                "weight" : 1,
+                "effect" : "slow"
             }
         ],
         "break" : [

@@ -94,8 +94,8 @@ class Timers:
             frames -= 1
 
             if frames <= 0:
-                handler(*args, **kwargs)
                 self.cancel(handler)
+                handler(*args, **kwargs)
             else:
                 self.timers[handler] = [frames, args, kwargs]
 

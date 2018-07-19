@@ -142,9 +142,13 @@ class MouseMove(Action):
 class Move(Action):
     def __init__(self, delta):
         self.delta = delta
+        self.total = [0,0]
 
     def update(self, sprite):
-        sprite.move(self.delta)
+        total = [t + d for t,d in zip(self.total, self.delta)]
+        move = [int(i) for i in total]
+        self.total = [t-m for t,m in zip(total, move)]
+        sprite.move(move)
 
 class Follow(Action):
     def __init__(self, target):
