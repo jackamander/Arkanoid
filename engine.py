@@ -105,6 +105,8 @@ def show_lives(state):
             num = int(mobj.group(1))
             if state.engine.vars["lives"] <= num:
                 sprite.kill()
+            else:
+                state.scene.groups["all"].add(sprite)
 
 class StartState(State):
     def __init__(self, engine):
@@ -297,6 +299,11 @@ class Capsules:
                 sprite.set_action(display.Move(vel))
 
             self.disable()
+        elif effect == "player":
+            self.state.engine.vars["lives"] += 1
+            audio.play_sound("Life")
+            show_lives(self.state)
+
 
         if effect == "laser":
             self.state.paddle.laser()
