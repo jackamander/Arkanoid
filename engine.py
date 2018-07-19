@@ -306,12 +306,11 @@ class Capsules:
             audio.play_sound("Life")
             show_lives(self.state)
         elif effect == "slow":
-            if self.state.ball_speed > 1:
-                self.state.ball_speed /= utils.config["ball_speed"]
+            self.state.ball_speed /= utils.config["ball_speed"]
 
-                for ball in self.state.balls:
-                    if isinstance(ball.action, display.Move):
-                        ball.action.delta = [i / utils.config["ball_speed"] for i in ball.action.delta]
+            for ball in self.state.balls:
+                if isinstance(ball.action, display.Move):
+                    ball.action.delta = [i / utils.config["ball_speed"] for i in ball.action.delta]
 
         if effect == "laser":
             self.state.paddle.laser()
@@ -324,6 +323,9 @@ class Capsules:
             self.paddle.catch = True
         else:
             self.paddle.catch = False
+
+        points = capsule.cfg.get("points", 0)
+        utils.events.generate(utils.EVT_POINTS, points=points)
 
     def kill(self, capsule):
         capsule.set_pos([0,0])
@@ -402,6 +404,7 @@ class GameState(State):
         # Break support
         for sprite in self.scene.groups["break"]:
             if self.paddle.sprite.rect.right + 1 >= sprite.rect.left:
+                utils.events.generate(utils.EVT_POINTS, points=10000)
                 self.engine.set_state(BreakState)
 
         # Capsules

@@ -890,7 +890,8 @@
                 "animation" : "B",
                 "groups" : ["capsules", "paddle"],
                 "effect" : "break",
-                "weight" : 1
+                "weight" : 1,
+                "points" : 1000
             },
             {
                 "name" : "capsuleC",
@@ -899,7 +900,8 @@
                 "animation" : "C",
                 "groups" : ["capsules", "paddle"],
                 "effect" : "catch",
-                "weight" : 1
+                "weight" : 1,
+                "points" : 1000
             },
             {
                 "name" : "capsuleD",
@@ -908,7 +910,8 @@
                 "animation" : "D",
                 "groups" : ["capsules", "paddle"],
                 "effect" : "disrupt",
-                "weight" : 1
+                "weight" : 1,
+                "points" : 1000
             },
             {
                 "name" : "capsuleE",
@@ -917,7 +920,8 @@
                 "animation" : "E",
                 "groups" : ["capsules", "paddle"],
                 "effect" : "enlarge",
-                "weight" : 1
+                "weight" : 1,
+                "points" : 1000
             },
             {
                 "name" : "capsuleL",
@@ -926,7 +930,8 @@
                 "animation" : "L",
                 "groups" : ["capsules", "paddle"],
                 "effect" : "laser",
-                "weight" : 1
+                "weight" : 1,
+                "points" : 1000
             },
             {
                 "name" : "capsuleP",
@@ -934,8 +939,9 @@
                 "layer" : 20,
                 "animation" : "P",
                 "groups" : ["capsules", "paddle"],
+                "effect" : "player",
                 "weight" : 1,
-                "effect" : "player"
+                "points" : 1000
             },
             {
                 "name" : "capsuleS",
@@ -943,8 +949,9 @@
                 "layer" : 20,
                 "animation" : "S",
                 "groups" : ["capsules", "paddle"],
+                "effect" : "slow",
                 "weight" : 1,
-                "effect" : "slow"
+                "points" : 1000
             }
         ],
         "break" : [
