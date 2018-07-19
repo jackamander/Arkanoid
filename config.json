@@ -881,7 +881,8 @@
                 "name" : "laser",
                 "image" : "laser",
                 "position" : [0, 0],
-                "groups" : ["lasers"]
+                "groups" : ["lasers"],
+                "hits" : 1
             },
             {
                 "name" : "capsuleB",

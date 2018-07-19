@@ -256,11 +256,14 @@ class Sprite(pygame.sprite.DirtySprite):
         self.source_rect = None
         self.visible = 1
 
-        self._layer = cfg.pop("layer", 10)
+        self._layer = cfg.get("layer", 10)
 
         self.action = None
 
         self.cfg = cfg
+
+    def clone(self):
+        return Sprite(self.image, self.cfg.copy())
 
     def get_pos(self):
         return self.rect.topleft

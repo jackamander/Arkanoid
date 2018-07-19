@@ -187,7 +187,7 @@ class Paddle:
         utils.events.register(utils.EVT_MOUSEBUTTONDOWN, self.fire_laser)
 
     def fire_laser(self, event):
-        sprite = display.Sprite(display.get_image("laser"))
+        sprite = self.state.scene.names["laser"].clone()
 
         sprite.rect.center = self.sprite.rect.center
         sprite.rect.bottom = self.sprite.rect.top
@@ -417,41 +417,27 @@ class GameState(State):
             if sprite.alive() and not sprite.rect.colliderect(self.playspace):
                 self.capsules.kill(sprite)
 
-        # Laser collisions
-        sprite_dict = pygame.sprite.groupcollide(self.scene.groups["lasers"], self.scene.groups["ball"], False, False)
-        for laser, colliders in sprite_dict.items():
-            laser.kill()
-
-            for sprite in colliders:
-                animation = sprite.cfg.get("hit_animation")
-                if animation:
-                    sprite.set_action(display.Animate(animation))
-
-                hits = sprite.cfg.get("hits")
-                if hits:
-                    hits -= 1
-                    sprite.cfg["hits"] = hits
-                    if hits == 0:
-                        sprite.kill()
-                        self.capsules.on_brick(sprite)
-
-                        points = sprite.cfg.get("points", 0)
-                        utils.events.generate(utils.EVT_POINTS, points=points)
-
-        # Ball collisions
-        for ball in self.balls:
+        # Ball and laser collisions
+        for ball in self.balls + self.scene.groups["lasers"].sprites():
             sprites = pygame.sprite.spritecollide(ball, self.scene.groups["ball"], False)
             for sprite in sprites:
-                side = collision_side(ball, sprite)
+                hits = ball.cfg.get("hits")
+                if hits:
+                    hits -= 1
+                    ball.cfg["hits"] = hits
+                    if hits == 0:
+                        ball.kill()
+                else:
+                    side = collision_side(ball, sprite)
 
-                if side == "top":
-                    ball.action.delta[1] = abs(ball.action.delta[1])
-                elif side == "bottom":
-                    ball.action.delta[1] = -abs(ball.action.delta[1])
-                elif side == "left":
-                    ball.action.delta[0] = abs(ball.action.delta[0])
-                elif side == "right":
-                    ball.action.delta[0] = -abs(ball.action.delta[0])
+                    if side == "top":
+                        ball.action.delta[1] = abs(ball.action.delta[1])
+                    elif side == "bottom":
+                        ball.action.delta[1] = -abs(ball.action.delta[1])
+                    elif side == "left":
+                        ball.action.delta[0] = abs(ball.action.delta[0])
+                    elif side == "right":
+                        ball.action.delta[0] = -abs(ball.action.delta[0])
 
                 sound = sprite.cfg.get("hit_sound")
                 if sound:
