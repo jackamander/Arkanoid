@@ -431,13 +431,13 @@ class GameState(State):
                     if isinstance(ball.action, display.Move):
                         side = collision_side(ball, sprite)
 
-                        if side == "top":
+                        if side == "bottom":
                             ball.action.delta[1] = abs(ball.action.delta[1])
-                        elif side == "bottom":
+                        elif side == "top":
                             ball.action.delta[1] = -abs(ball.action.delta[1])
-                        elif side == "left":
-                            ball.action.delta[0] = abs(ball.action.delta[0])
                         elif side == "right":
+                            ball.action.delta[0] = abs(ball.action.delta[0])
+                        elif side == "left":
                             ball.action.delta[0] = -abs(ball.action.delta[0])
 
                 sound = sprite.cfg.get("hit_sound")
@@ -497,14 +497,14 @@ def collision_side(sprite1, sprite2):
 
     if wy > hx:
         if wy > -hx:
-            side = "top"
+            side = "bottom"
         else:
-            side = "right"
+            side = "left"
     else:
         if wy > -hx:
-            side = "left"
+            side = "right"
         else:
-            side = "bottom"
+            side = "top"
 
     return side
 
