@@ -786,6 +786,12 @@
                 "locations" : [[80, 120], [80, 136]]
             }
         ],
+        "victory" : [
+            {
+                "text" : "YOU WIN!",
+                "position" : [96, 108]
+            }
+        ],
         "round" : [
             {
                 "text" : "ROUND ",

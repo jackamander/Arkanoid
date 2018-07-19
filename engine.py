@@ -161,8 +161,7 @@ class BreakState(State):
         self.scene.groups["all"].update()
 
         if not self.sound.get_busy():
-            self.engine.vars["level"] += 1
-            self.engine.set_state(RoundState)
+            next_level(self.engine)
 
     def draw(self, screen):
         self.scene.groups["all"].draw(screen)
@@ -354,6 +353,13 @@ class Capsules:
                 self.scene.groups["paddle"].add(capsule)
                 self.scene.groups["all"].add(capsule)
 
+def next_level(engine):
+    engine.vars["level"] += 1
+    if engine.vars["level"] <= engine.last_level:
+        engine.set_state(RoundState)
+    else:
+        engine.set_state(VictoryState)
+
 class GameState(State):
     def __init__(self, engine):
         State.__init__(self, engine)
@@ -487,8 +493,7 @@ class GameState(State):
 
         # Level completion detection
         if len(self.scene.groups["bricks"]) == 0:
-            self.engine.vars["level"] += 1
-            self.engine.set_state(RoundState)
+            next_level(self.engine)
 
     def draw(self, screen):
         self.scene.groups["all"].draw(screen)
@@ -589,6 +594,17 @@ def GetCollisionSideFromSlopeComparison(potentialSides, velocityRise, velocityRu
                 return CollisionSide_Right
     return CollisionSide_None
 
+class VictoryState(State):
+    def __init__(self, engine):
+        State.__init__(self, engine)
+
+        self.scene = display.Scene(["victory", "banner"], engine.vars)
+
+        utils.timers.start(5.0, self.engine.set_state, TitleState)
+
+    def draw(self, screen):
+        self.scene.groups["all"].draw(screen)
+
 class Vars:
     def __init__(self, initial={}):
         self.data = initial
@@ -624,6 +640,8 @@ class Engine(object):
             if mobj:
                 level = int(mobj.group(1))
                 levels[level] = key
+
+        self.last_level = level
 
         self.scenes = {level : display.Scene([key], self.vars) for level, key in levels.items()}
 
