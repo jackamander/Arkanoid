@@ -23,13 +23,16 @@ def main():
 
     eng = engine.Engine()
 
+    pygame.mouse.set_visible(0)
+    pygame.event.set_grab(1)
+
     while True:
 
         # Event pump
         for event in pygame.event.get():
             logging.debug("Event: %s", pygame.event.event_name(event.type))
 
-            if event.type == pygame.QUIT:
+            if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
                 return
 
             eng.input(event)
