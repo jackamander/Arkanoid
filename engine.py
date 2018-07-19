@@ -11,6 +11,12 @@ import audio
 import display
 import utils
 
+CollisionSide_None = 0
+CollisionSide_Top = 1
+CollisionSide_Bottom = 2
+CollisionSide_Left = 4
+CollisionSide_Right = 8
+
 class State(object):
     def __init__(self, engine):
         self.engine = engine
@@ -431,13 +437,13 @@ class GameState(State):
                     if isinstance(ball.action, display.Move):
                         side = collision_side(ball, sprite)
 
-                        if side == "bottom":
+                        if side == CollisionSide_Bottom:
                             ball.action.delta[1] = abs(ball.action.delta[1])
-                        elif side == "top":
+                        elif side == CollisionSide_Top:
                             ball.action.delta[1] = -abs(ball.action.delta[1])
-                        elif side == "right":
+                        elif side == CollisionSide_Right:
                             ball.action.delta[0] = abs(ball.action.delta[0])
-                        elif side == "left":
+                        elif side == CollisionSide_Left:
                             ball.action.delta[0] = -abs(ball.action.delta[0])
 
                 sound = sprite.cfg.get("hit_sound")
@@ -488,25 +494,100 @@ class GameState(State):
         self.scene.groups["all"].draw(screen)
 
 def collision_side(sprite1, sprite2):
-    # Expand to include velocity
-    s1rect = sprite1.rect.union(sprite1.last)
-    s2rect = sprite2.rect.union(sprite2.last)
+    # Code adapted from https://hopefultoad.blogspot.com/2017/09/code-example-for-2d-aabb-collision.html
 
-    wy = (s1rect.width + s2rect.width) * (s1rect.centery - s2rect.centery)
-    hx = (s1rect.height + s2rect.height) * (s1rect.centerx - s2rect.centerx)
+    cornerSlopeRise = 0
+    cornerSlopeRun = 0
 
-    if wy > hx:
-        if wy > -hx:
-            side = "bottom"
+    velocityRise = sprite1.rect.top - sprite1.last.top
+    velocityRun = sprite1.rect.left - sprite1.last.left
+
+    # Stores what sides might have been collided with
+    potentialCollisionSide = CollisionSide_None
+
+    if sprite1.last.right <= sprite2.rect.left:
+        # Did not collide with right side might have collided with left side
+        potentialCollisionSide |= CollisionSide_Left
+
+        cornerSlopeRun = sprite2.rect.left - sprite1.last.right
+
+        if sprite1.last.bottom <= sprite2.rect.top:
+            # Might have collided with top side
+            potentialCollisionSide |= CollisionSide_Top
+            cornerSlopeRise = sprite2.rect.top - sprite1.last.bottom
+        elif sprite1.last.top >= sprite2.rect.bottom:
+            # Might have collided with bottom side
+            potentialCollisionSide |= CollisionSide_Bottom
+            cornerSlopeRise = sprite2.rect.bottom - sprite1.last.top
         else:
-            side = "left"
+            # Did not collide with top side or bottom side or right side
+            return CollisionSide_Left
+    elif sprite1.last.left >= sprite2.rect.right:
+        # Did not collide with left side might have collided with right side
+        potentialCollisionSide |= CollisionSide_Right
+
+        cornerSlopeRun = sprite1.last.left - sprite2.rect.right
+
+        if sprite1.last.bottom <= sprite2.rect.top:
+            # Might have collided with top side
+            potentialCollisionSide |= CollisionSide_Top
+            cornerSlopeRise = sprite1.last.bottom - sprite2.rect.top
+        elif sprite1.last.top >= sprite2.rect.bottom:
+            # Might have collided with bottom side
+            potentialCollisionSide |= CollisionSide_Bottom
+            cornerSlopeRise = sprite1.last.top - sprite2.rect.bottom
+        else:
+            # Did not collide with top side or bottom side or left side
+            return CollisionSide_Right
     else:
-        if wy > -hx:
-            side = "right"
+        # Did not collide with either left or right side
+        # must be top side, bottom side, or none
+        if sprite1.last.bottom <= sprite2.rect.top:
+            return CollisionSide_Top
+        elif sprite1.last.top >= sprite2.rect.bottom:
+            return CollisionSide_Bottom
         else:
-            side = "top"
+            # Previous hitbox of moving object was already colliding with stationary object
+            return CollisionSide_None
 
-    return side
+    # Corner case might have collided with more than one side
+    # Compare slopes to see which side was collided with
+    return GetCollisionSideFromSlopeComparison(potentialCollisionSide,
+        velocityRise, velocityRun, cornerSlopeRise, cornerSlopeRun)
+
+def GetCollisionSideFromSlopeComparison(potentialSides, velocityRise, velocityRun, nearestCornerRise, nearestCornerRun):
+    if velocityRun == 0:
+        velocityRun = 0.001
+
+    if nearestCornerRun == 0:
+        nearestCornerRun = 0.001
+
+    velocitySlope = velocityRise / velocityRun
+    nearestCornerSlope = nearestCornerRise / nearestCornerRun
+
+    if (potentialSides & CollisionSide_Top) == CollisionSide_Top:
+        if (potentialSides & CollisionSide_Left) == CollisionSide_Left:
+            if velocitySlope < nearestCornerSlope:
+                return CollisionSide_Top
+            else:
+                return CollisionSide_Left
+        elif (potentialSides & CollisionSide_Right) == CollisionSide_Right:
+            if velocitySlope > nearestCornerSlope:
+                return CollisionSide_Top
+            else:
+                return CollisionSide_Right
+    elif (potentialSides & CollisionSide_Bottom) == CollisionSide_Bottom:
+        if (potentialSides & CollisionSide_Left) == CollisionSide_Left:
+            if velocitySlope > nearestCornerSlope:
+                return CollisionSide_Bottom
+            else:
+                return CollisionSide_Left
+        elif (potentialSides & CollisionSide_Right) == CollisionSide_Right:
+            if velocitySlope < nearestCornerSlope:
+                return CollisionSide_Bottom
+            else:
+                return CollisionSide_Right
+    return CollisionSide_None
 
 class Vars:
     def __init__(self, initial={}):
