@@ -641,7 +641,7 @@ class Engine(object):
                 level = int(mobj.group(1))
                 levels[level] = key
 
-        self.last_level = level
+        self.last_level = max(levels.keys())
 
         self.scenes = {level : display.Scene([key], self.vars) for level, key in levels.items()}
 
