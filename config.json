@@ -43,10 +43,9 @@
             "offset" : [91, 34]
         },
         "life" : {
-            "filename" : "resources\\images\\vaus.png",
-            "size" : [32, 8],
-            "offset" : [0, 0],
-            "scaled" : [16, 4]
+            "filename" : "resources\\images\\Arkanoid.png",
+            "size" : [16, 5],
+            "offset" : [247, 1838]
         },
         "paddle_ext" : {
             "filename" : "resources\\images\\vaus.png",
