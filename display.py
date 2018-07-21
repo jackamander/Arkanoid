@@ -107,11 +107,13 @@ class Series(Action):
         self.action = self.actions.pop(0)
 
     def update(self, sprite):
-        done = self.action.update(sprite)
-        if done:
-            self.action = None
-            if self.actions:
-                self.action = self.actions.pop(0)
+        if self.action:
+            done = self.action.update(sprite)
+            if done:
+                self.action = None
+                if self.actions:
+                    self.action = self.actions.pop(0)
+
         return self.action is None
 
 class Parallel(Action):
@@ -282,7 +284,9 @@ class Sprite(pygame.sprite.DirtySprite):
     def update(self):
         self.last = self.rect.copy()
         if self.action:
-            self.action.update(self)
+            done = self.action.update(self)
+            if done:
+                self.action = None
 
     def set_image(self, image):
         old_rect = self.rect.copy()
