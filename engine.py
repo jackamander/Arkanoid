@@ -317,6 +317,8 @@ class Capsules:
                 if isinstance(ball.action, display.Move):
                     ball.action.delta = [i / utils.config["ball_speed"] for i in ball.action.delta]
 
+            self.state.speed_timer()
+
         if effect == "laser":
             self.state.paddle.laser()
         elif effect == "enlarge":
@@ -384,6 +386,9 @@ class GameState(State):
         utils.events.register(utils.EVT_KEYDOWN, self.on_keydown)
         utils.events.register(utils.EVT_POINTS, self.on_points)
 
+        self.speed_timer()
+
+    def speed_timer(self):
         utils.timers.start(10.0, self.on_timer)
 
     def on_timer(self):
@@ -394,7 +399,7 @@ class GameState(State):
                 if isinstance(ball.action, display.Move):
                     ball.action.delta = [i * utils.config["ball_speed"] for i in ball.action.delta]
 
-        utils.timers.start(10.0, self.on_timer)
+        self.speed_timer()
 
     def on_keydown(self, event):
         if event.key == pygame.K_SPACE:
