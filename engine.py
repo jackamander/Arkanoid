@@ -388,6 +388,12 @@ class GameState(State):
 
         self.speed_timer()
 
+        for name in ["inlet_left", "inlet_right"]:
+            inlet = self.scene.names[name]
+            inlet.set_action(display.InletMgr(self.scene))
+
+        self.scene.names["alien"].kill()
+
     def speed_timer(self):
         utils.timers.start(10.0, self.on_timer)
 
@@ -427,11 +433,15 @@ class GameState(State):
         # Capsules
         sprites = pygame.sprite.spritecollide(self.paddle.sprite, self.scene.groups["paddle"], False)
         for sprite in sprites:
-            self.capsules.kill(sprite)
-            self.capsules.apply(sprite)
+
+            sprite.hit(self.scene)
+
+            if sprite.cfg.get("effect"):
+                self.capsules.kill(sprite)
+                self.capsules.apply(sprite)
 
         for sprite in self.scene.groups["paddle"]:
-            if sprite.alive() and not sprite.rect.colliderect(self.playspace):
+            if sprite.alive() and sprite.rect.top > self.playspace.bottom:
                 self.capsules.kill(sprite)
 
         # Ball and laser collisions
@@ -457,28 +467,14 @@ class GameState(State):
                         elif side == CollisionSide_Left:
                             ball.action.delta[0] = -abs(ball.action.delta[0])
 
-                sound = sprite.cfg.get("hit_sound")
-                if sound:
-                    audio.play_sound(sound)
+                sprite.hit(self.scene)
 
-                animation = sprite.cfg.get("hit_animation")
-                if animation:
-                    sprite.set_action(display.Animate(animation))
-
-                hits = sprite.cfg.get("hits")
-                if hits:
-                    hits -= 1
-                    sprite.cfg["hits"] = hits
-                    if hits == 0:
-                        sprite.kill()
-                        self.capsules.on_brick(sprite)
-
-                        points = sprite.cfg.get("points", 0)
-                        utils.events.generate(utils.EVT_POINTS, points=points)
+                if sprite.cfg.get("effect"):
+                    self.capsules.on_brick(sprite)
 
         # Ball exit detection
         for ball in list(self.balls):
-            if ball.alive() and not ball.rect.colliderect(self.playspace):
+            if ball.alive() and ball.rect.top > self.playspace.bottom:
                 ball.kill()
                 self.balls.remove(ball)
 

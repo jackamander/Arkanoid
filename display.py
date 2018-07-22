@@ -227,7 +227,7 @@ class FireEvent(Action):
             self.event = None
         return True
 
-class UpdateVar:
+class UpdateVar(Action):
     def __init__(self, name):
         self.name = name
         self.text = ""
@@ -245,6 +245,47 @@ class UpdateVar:
             self.dirty = False
             image = draw_text(self.text)
             sprite.set_image(image)
+
+class Delay(Action):
+    def __init__(self, delay):
+        fps = utils.config["frame_rate"]
+        self.frames = int(delay * fps)
+
+    def update(self, sprite):
+        if self.frames > 0:
+            self.frames -= 1
+        return self.frames == 0
+
+class Spawn(Action):
+    def __init__(self, name, scene):
+        self.clone = scene.names[name]
+        self.scene = scene
+
+    def update(self, sprite):
+        clone = self.clone.clone()
+
+        clone.rect.center = sprite.rect.center
+        clone.rect.bottom = sprite.rect.top
+
+        action = Move([0,0.25])
+
+        animation = clone.cfg["animation"]
+        if animation:
+            action = action.plus(Animate(animation))
+
+        clone.set_action(action)
+        self.scene.groups["all"].add(clone)
+        self.scene.groups["ball"].add(clone)
+        self.scene.groups["paddle"].add(clone)
+
+        return True
+
+class InletMgr(Action):
+    def __init__(self, scene):
+        self.scene = scene
+
+    def update(self, sprite):
+        sprite.set_action(Animate("inlet_open").then(Spawn("alien", self.scene).then(Delay(1.0).then(Animate("inlet_close").then(InletMgr(self.scene))))))
 
 class Sprite(pygame.sprite.DirtySprite):
     def __init__(self, image, cfg={}):
@@ -293,6 +334,31 @@ class Sprite(pygame.sprite.DirtySprite):
         self.image = image
         self.rect.size = image.get_size()
         self.rect.center = old_rect.center
+
+    def hit(self, scene):
+        sound = self.cfg.get("hit_sound")
+        if sound:
+            audio.play_sound(sound)
+
+        animation = self.cfg.get("hit_animation")
+        if animation:
+            self.set_action(Animate(animation))
+
+        hits = self.cfg.get("hits")
+        if hits:
+            hits -= 1
+            self.cfg["hits"] = hits
+            if hits == 0:
+                self.kill()
+
+                death_animation = self.cfg.get("death_animation")
+                if death_animation:
+                    self.set_action(Animate(death_animation).then(Die()))
+                    scene.groups["all"].add(self)
+
+                points = self.cfg.get("points", 0)
+                if points:
+                    utils.events.generate(utils.EVT_POINTS, points=points)
 
 # Scene requirements:
 # - named Sprites for specific processing - paddle, ball, bg, etc

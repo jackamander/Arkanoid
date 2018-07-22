@@ -110,17 +110,22 @@
         "inlet1" : {
             "filename" : "resources\\images\\blocks and backgrounds.png",
             "size" : [24, 8],
-            "offset" : [64, 56]
+            "offset" : [64, 48]
         },
         "inlet2" : {
             "filename" : "resources\\images\\blocks and backgrounds.png",
             "size" : [24, 8],
-            "offset" : [64, 64]
+            "offset" : [64, 56]
         },
         "inlet3" : {
             "filename" : "resources\\images\\blocks and backgrounds.png",
             "size" : [24, 8],
-            "offset" : [64, 56]
+            "offset" : [64, 64]
+        },
+        "inlet4" : {
+            "filename" : "resources\\images\\blocks and backgrounds.png",
+            "size" : [24, 8],
+            "offset" : [64, 72]
         },
         "break1" : {
             "filename" : "resources\\images\\blocks and backgrounds.png",
@@ -592,22 +597,22 @@
             "size" : [16, 16],
             "offset" : [112, 48]
         },
-        "dead0" : {
+        "dead_0" : {
             "filename" : "resources\\images\\enemies.png",
             "size" : [16, 16],
             "offset" : [0, 64]
         },
-        "dead1" : {
+        "dead_1" : {
             "filename" : "resources\\images\\enemies.png",
             "size" : [16, 16],
             "offset" : [16, 64]
         },
-        "dead2" : {
+        "dead_2" : {
             "filename" : "resources\\images\\enemies.png",
             "size" : [16, 16],
             "offset" : [32, 64]
         },
-        "dead3" : {
+        "dead_3" : {
             "filename" : "resources\\images\\enemies.png",
             "size" : [16, 16],
             "offset" : [48, 64]
@@ -689,6 +694,38 @@
         "paddle_shrink" : {
             "images" : ["paddle", "paddle_shrink1", "paddle_shrink2", "paddle_shrink3"],
             "speed" : 12
+        },
+        "inlet_open" : {
+            "images" : ["inlet2", "inlet3", "inlet4"],
+            "speed" : 30
+        },
+        "inlet_close" : {
+            "images" : ["inlet3", "inlet2", "inlet1"],
+            "speed" : 30
+        },
+        "alien1" : {
+            "images" : ["alien1_0", "alien1_1", "alien1_2", "alien1_3", "alien1_4", "alien1_5", "alien1_6", "alien1_7"],
+            "speed" : 15,
+            "loop" : true
+        },
+        "alien2" : {
+            "images" : ["alien2_0", "alien2_1", "alien2_2", "alien2_3", "alien2_4", "alien2_5", "alien2_6"],
+            "speed" : 15,
+            "loop" : true
+        },
+        "alien3" : {
+            "images" : ["alien3_0", "alien3_1", "alien3_2", "alien3_3", "alien3_4", "alien3_5"],
+            "speed" : 15,
+            "loop" : true
+        },
+        "alien4" : {
+            "images" : ["alien4_0", "alien4_1", "alien4_2", "alien4_3", "alien4_4", "alien4_5", "alien4_6", "alien4_7"],
+            "speed" : 15,
+            "loop" : true
+        },
+        "dead" : {
+            "images" : ["dead_0", "dead_1", "dead_2", "dead_3"],
+            "speed" : 15
         }
     },
     "sounds" : {
@@ -722,6 +759,9 @@
         },
         "Life" : {
             "filename" : "resources\\sounds\\ExtraLife.wav"
+        },
+        "Alien" : {
+            "filename" : "resources\\sounds\\Alien.wav"
         }
     },
     "scenes": {
@@ -958,6 +998,20 @@
                 "effect" : "slow",
                 "weight" : 1,
                 "points" : 1000
+            },
+            {
+                "name" : "inlet_left",
+                "image" : "inlet1",
+                "position" : [48, 0],
+                "layer" : 20,
+                "groups" : ["inlets"]
+            },
+            {
+                "name" : "inlet_right",
+                "image" : "inlet1",
+                "position" : [136, 0],
+                "layer" : 20,
+                "groups" : ["inlets"]
             }
         ],
         "break" : [
@@ -1018,6 +1072,17 @@
             }
         ],
         "level1" : [
+            {
+                "name" : "alien",
+                "image" : "alien1_0",
+                "animation" : "alien1",
+                "hit_sound" : "Alien",
+                "death_animation" : "dead",
+                "position" : [1000, 1000],
+                "layer" : 30,
+                "hits" : 1,
+                "points" : 100
+            },
             {
                 "name" : "bg",
                 "image" : "bg1",
@@ -1565,6 +1630,17 @@
             }
         ],
         "level2" : [
+            {
+                "name" : "alien",
+                "image" : "alien2_0",
+                "hit_sound" : "Alien",
+                "animation" : "alien2",
+                "death_animation" : "dead",
+                "position" : [1000, 1000],
+                "layer" : 30,
+                "hits" : 1,
+                "points" : 100
+            },
             {
                 "name" : "bg",
                 "image" : "bg2",
