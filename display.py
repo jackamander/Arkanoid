@@ -356,6 +356,10 @@ class Sprite(pygame.sprite.DirtySprite):
                     self.set_action(Animate(death_animation).then(Die()))
                     scene.groups["all"].add(self)
 
+                death_action = self.cfg.get("on_death")
+                if death_action == "create_capsule":
+                    utils.events.generate(utils.EVT_CAPSULE, position=self.get_pos())
+
                 points = self.cfg.get("points", 0)
                 if points:
                     utils.events.generate(utils.EVT_POINTS, points=points)

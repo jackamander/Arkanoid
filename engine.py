@@ -273,6 +273,8 @@ class Capsules:
         self._break.kill()
         self.scene.names["paddle_shrink"].kill()
 
+        utils.events.register(utils.EVT_CAPSULE, self.on_brick)
+
     def available(self):
         return len(self.scene.groups["capsules"].sprites())
 
@@ -342,14 +344,14 @@ class Capsules:
 
         self.enable()
 
-    def on_brick(self, sprite):
+    def on_brick(self, event):
         if self.total == self.available() and self.count > 0:
             self.count -= 1
 
             if self.count == 0:
                 choices = [capsule for capsule in self.scene.groups["capsules"].sprites() for _ in range(capsule.cfg["weight"])]
                 capsule = random.choice(choices)
-                capsule.set_pos(sprite.get_pos())
+                capsule.set_pos(event.position)
                 capsule.set_action(display.Move([0,1]).plus(display.Animate(capsule.cfg["animation"])))
                 self.scene.groups["capsules"].remove(capsule)
                 self.scene.groups["paddle"].add(capsule)
@@ -468,9 +470,6 @@ class GameState(State):
                             ball.action.delta[0] = -abs(ball.action.delta[0])
 
                 sprite.hit(self.scene)
-
-                if sprite.cfg.get("effect"):
-                    self.capsules.on_brick(sprite)
 
         # Ball exit detection
         for ball in list(self.balls):
