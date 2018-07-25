@@ -152,6 +152,19 @@ class Move(Action):
         self.total = [t-m for t,m in zip(total, move)]
         sprite.move(move)
 
+class MoveLimited(Move):
+    def __init__(self, delta, frames):
+        Move.__init__(self, delta)
+        self.frames = frames
+
+    def update(self, sprite):
+        Move.update(self, sprite)
+
+        if self.frames > 0:
+            self.frames -= 1
+
+        return self.frames == 0
+
 class Follow(Action):
     def __init__(self, target):
         self.target = target
@@ -267,7 +280,7 @@ class Spawn(Action):
         clone.rect.center = sprite.rect.center
         clone.rect.bottom = sprite.rect.top
 
-        action = Move([0,0.25])
+        action = MoveLimited([0,0.25], 96).then(AlienMove(self.scene))
 
         animation = clone.cfg["animation"]
         if animation:
@@ -280,12 +293,57 @@ class Spawn(Action):
 
         return True
 
+class AlienMove(Move):
+    def __init__(self, scene):
+        self.scene = scene
+        self.states = [("down", "left"), ("left", "up"),  ("down", "right"), ("right", "up")]
+        self.index = 0
+        self.tests = {
+            "up" : [0, -1],
+            "down" : [0, 1],
+            "left" : [-1, 0],
+            "right" : [1, 0],
+        }
+        self.speed = 0.25
+
+        Move.__init__(self, [0,0])
+
+    def attempt(self, sprite, direction):
+        success = False
+        delta = self.tests[direction]
+
+        # Temporarily move in the requested direction
+        sprite.move(delta)
+
+        # if it only collides with itself, we're good
+        others = pygame.sprite.spritecollide(sprite, self.scene.groups["ball"], False)
+        if len(others) == 1:
+            success = True
+
+        # Move back
+        sprite.move([-i for i in delta])
+
+        return success
+
+    def update(self, sprite):
+        first, second = self.states[self.index]
+
+        # Try the preferred directions first
+        for direction in [first, second]:
+            if self.attempt(sprite, direction):
+                self.delta = [i * self.speed for i in self.tests[direction]]
+                Move.update(self, sprite)
+                return
+
+        # If both fail, roll to the next state
+        self.index = (self.index + 1) % len(self.states)
+
 class InletMgr(Action):
     def __init__(self, scene):
         self.scene = scene
 
     def update(self, sprite):
-        sprite.set_action(Animate("inlet_open").then(Spawn("alien", self.scene).then(Delay(1.0).then(Animate("inlet_close").then(InletMgr(self.scene))))))
+        sprite.set_action(Animate("inlet_open").then(Spawn("alien", self.scene).then(Delay(1.0).then(Animate("inlet_close").then(Delay(5.0).then(InletMgr(self.scene)))))))
 
 class Sprite(pygame.sprite.DirtySprite):
     def __init__(self, image, cfg={}):
