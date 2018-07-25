@@ -392,7 +392,7 @@ class GameState(State):
 
         for name in ["inlet_left", "inlet_right"]:
             inlet = self.scene.names[name]
-            inlet.set_action(display.InletMgr(self.scene))
+            inlet.set_action(display.InletMgr(self.scene, inlet))
 
         self.scene.names["alien"].kill()
 

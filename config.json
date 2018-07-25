@@ -1004,14 +1004,18 @@
                 "image" : "inlet1",
                 "position" : [48, 0],
                 "layer" : 20,
-                "groups" : ["inlets"]
+                "groups" : ["inlets"],
+                "max_delay" : 20,
+                "max_aliens" : 3
             },
             {
                 "name" : "inlet_right",
                 "image" : "inlet1",
                 "position" : [136, 0],
                 "layer" : 20,
-                "groups" : ["inlets"]
+                "groups" : ["inlets"],
+                "max_delay" : 20,
+                "max_aliens" : 3
             }
         ],
         "break" : [
@@ -1081,7 +1085,8 @@
                 "position" : [1000, 1000],
                 "layer" : 30,
                 "hits" : 1,
-                "points" : 100
+                "points" : 100,
+                "groups" : ["aliens"]
             },
             {
                 "name" : "bg",
@@ -1705,7 +1710,8 @@
                 "position" : [1000, 1000],
                 "layer" : 30,
                 "hits" : 1,
-                "points" : 100
+                "points" : 100,
+                "groups" : ["aliens"]
             },
             {
                 "name" : "bg",

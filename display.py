@@ -5,6 +5,7 @@ Display functionality
 """
 import logging
 import os
+import random
 
 import pygame
 
@@ -290,6 +291,7 @@ class Spawn(Action):
         self.scene.groups["all"].add(clone)
         self.scene.groups["ball"].add(clone)
         self.scene.groups["paddle"].add(clone)
+        self.scene.groups["aliens"].add(clone)
 
         return True
 
@@ -344,11 +346,22 @@ class AlienMove(Move):
                 break
 
 class InletMgr(Action):
-    def __init__(self, scene):
+    def __init__(self, scene, inlet):
+        self.max_delay = inlet.cfg["max_delay"] * utils.config["frame_rate"]
+        self.max_aliens = inlet.cfg["max_aliens"]
         self.scene = scene
+        self._randomize()
+
+    def _randomize(self):
+        self.frames = random.randrange(self.max_delay)
 
     def update(self, sprite):
-        sprite.set_action(Animate("inlet_open").then(Spawn("alien", self.scene).then(Delay(1.0).then(Animate("inlet_close").then(Delay(5.0).then(InletMgr(self.scene)))))))
+        if self.frames > 0:
+            self.frames -= 1
+        else:
+            if len(self.scene.groups["aliens"].sprites()) < self.max_aliens:
+                sprite.set_action(Animate("inlet_open").then(Spawn("alien", self.scene).then(Delay(1.0).then(Animate("inlet_close").then(InletMgr(self.scene, sprite))))))
+            self._randomize()
 
 class Sprite(pygame.sprite.DirtySprite):
     def __init__(self, image, cfg={}):
