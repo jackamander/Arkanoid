@@ -326,17 +326,22 @@ class AlienMove(Move):
         return success
 
     def update(self, sprite):
-        first, second = self.states[self.index]
+        initial = self.index
+        while True:
+            first, second = self.states[self.index]
 
-        # Try the preferred directions first
-        for direction in [first, second]:
-            if self.attempt(sprite, direction):
-                self.delta = [i * self.speed for i in self.tests[direction]]
-                Move.update(self, sprite)
-                return
+            # Try the preferred directions first
+            for direction in [first, second]:
+                if self.attempt(sprite, direction):
+                    self.delta = [i * self.speed for i in self.tests[direction]]
+                    Move.update(self, sprite)
+                    return
 
-        # If both fail, roll to the next state
-        self.index = (self.index + 1) % len(self.states)
+            # If both fail, roll to the next state
+            self.index = (self.index + 1) % len(self.states)
+
+            if self.index == initial:
+                break
 
 class InletMgr(Action):
     def __init__(self, scene):
