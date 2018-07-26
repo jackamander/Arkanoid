@@ -281,7 +281,7 @@ class Spawn(Action):
         clone.rect.center = sprite.rect.center
         clone.rect.bottom = sprite.rect.top
 
-        action = MoveLimited([0,0.25], 96).then(AlienMove(self.scene))
+        action = MoveLimited([0,0.25], 96).then(AlienEscape(self.scene))
 
         animation = clone.cfg["animation"]
         if animation:
@@ -295,7 +295,7 @@ class Spawn(Action):
 
         return True
 
-class AlienMove(Move):
+class AlienEscape(Move):
     def __init__(self, scene):
         self.scene = scene
         self.states = [("down", "left"), ("left", "up"),  ("down", "right"), ("right", "up")]
@@ -327,7 +327,7 @@ class AlienMove(Move):
 
         return success
 
-    def update(self, sprite):
+    def move(self, sprite):
         initial = self.index
         while True:
             first, second = self.states[self.index]
@@ -342,8 +342,76 @@ class AlienMove(Move):
             # If both fail, roll to the next state
             self.index = (self.index + 1) % len(self.states)
 
+            # Do nothing if we try all the options and can't find an out
             if self.index == initial:
                 break
+
+    def update(self, sprite):
+        self.move(sprite)
+
+        # check whether to change behavior
+        rect = pygame.Rect(0,0,0,0)
+        for brick in self.scene.groups["bricks"].sprites():
+            rect.union_ip(brick.rect)
+
+        if sprite.rect.top > rect.bottom:
+            sprite.set_action(AlienDescend(self.scene))
+
+
+class AlienDescend(MoveLimited):
+    def __init__(self, scene):
+        MoveLimited.__init__(self, [0, 0.25], 60)
+        self.scene = scene
+
+    def update(self, sprite):
+        if MoveLimited.update(self, sprite):
+            actions = [AlienDescend(self.scene)]
+            playspace = self.scene.names["bg"].rect
+
+            if sprite.rect.right < playspace.right - 32:
+                actions += [AlienJuke(self.scene, 1)]
+
+            if sprite.rect.right < playspace.right - 40:
+                actions += [AlienCircle(self.scene, 1)]
+
+            if sprite.rect.left > playspace.left + 32:
+                actions += [AlienJuke(self.scene, -1)]
+
+            if sprite.rect.left > playspace.left + 40:
+                actions += [AlienCircle(self.scene, -1)]
+
+            sprite.set_action(random.choice(actions))
+
+class AlienJuke(MoveLimited):
+    def __init__(self, scene, xdir):
+        self.scene = scene
+        self.init()
+        self.deltas = [[x * xdir, y] for x,y in self.deltas]
+        self.index = 0
+        self.set()
+
+    def init(self):
+        self.deltas = [[0.25, 0.5], [0.5, 0.5], [0.5, 0.25], [0.25, 0.5]]
+        self.frame_counts = [10, 30, 10, 10]
+
+    def set(self):
+        delta = self.deltas[self.index]
+        frames = self.frame_counts[self.index]
+        MoveLimited.__init__(self, delta, frames)
+
+    def update(self, sprite):
+        if MoveLimited.update(self, sprite):
+            self.index += 1
+
+            if self.index < len(self.deltas):
+                self.set()
+            else:
+                sprite.set_action(AlienDescend(self.scene))
+
+class AlienCircle(AlienJuke):
+    def init(self):
+        self.deltas = [[0.25, 0.5], [0.5, 0.5], [0.5, 0.25], [0.5, -0.25], [0.5, -0.5], [0.25, -0.5], [-0.25, -0.5], [-0.5, -0.5], [-0.5, -0.25], [-0.5, 0.25], [-0.5, 0.5], [-0.25, 0.5]]
+        self.frame_counts = [10, 30, 10, 10, 30, 10, 10, 30, 10, 10, 30, 10]
 
 class InletMgr(Action):
     def __init__(self, scene, inlet):
