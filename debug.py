@@ -14,11 +14,11 @@ class CollisionTest(engine.State):
     def __init__(self, eng):
         engine.State.__init__(self, eng)
 
-        self.scenes = {scene : display.Scene(scene, eng.vars) for scene in ["debug"]}
+        self.scene = {scene : display.Scene(scene, eng.vars) for scene in ["debug"]}
         self.engine = eng
 
-        self.ball = self.scenes["debug"].names["ball"]
-        self.brick = self.scenes["debug"].names["brick"]
+        self.ball = self.scene["debug"].names["ball"]
+        self.brick = self.scene["debug"].names["brick"]
 
         utils.events.register(utils.EVT_KEYDOWN, self.on_keydown)
 
@@ -34,7 +34,7 @@ class CollisionTest(engine.State):
         elif event.key == pygame.K_RIGHT:
             delta = [1,0]
 
-        self.scenes["debug"].names["ball"].move(delta)
+        self.scene["debug"].names["ball"].move(delta)
 
         if pygame.sprite.collide_rect(self.ball, self.brick):
             side = engine.collision_side(self.ball, self.brick)
@@ -43,11 +43,11 @@ class CollisionTest(engine.State):
             print
 
     def update(self):
-        for scene in self.scenes.values():
+        for scene in self.scene.values():
             scene.group.update()
 
     def draw(self, screen):
-        for scene in self.scenes.values():
+        for scene in self.scene.values():
             scene.group.draw(screen)
 
 
