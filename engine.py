@@ -36,6 +36,10 @@ class TitleState(State):
 
         self.scene = display.Scene(["title", "banner"], engine.vars)
 
+        if engine.vars["players"] == 1:
+            self.scene.names["2UP"].kill()
+            self.scene.names["score2"].kill()
+
         utils.events.register(utils.EVT_MOUSEBUTTONDOWN, self.on_click)
         utils.events.register(utils.EVT_KEYDOWN, self.on_keydown)
         utils.events.register(utils.EVT_VAR_CHANGE, self.on_var_change)
@@ -83,11 +87,15 @@ class BlinkState(State):
         # Get rid of the cursor
         self.scene.names["cursor"].kill()
 
+        if engine.vars["players"] == 1:
+            self.scene.names["2UP"].kill()
+            self.scene.names["score2"].kill()
+
     def update(self):
         self.scene.groups["all"].update()
 
         if not self.sound.get_busy():
-            self.engine.reset(self.engine.vars["high"])
+            self.engine.reset()
             self.engine.set_state(RoundState)
 
     def draw(self, screen):
@@ -99,6 +107,10 @@ class RoundState(State):
 
         self.scene = display.Scene(["round", "banner"], engine.vars)
 
+        if engine.vars["players"] == 1:
+            self.scene.names["2UP"].kill()
+            self.scene.names["score2"].kill()
+
         utils.timers.start(2.0, self.engine.set_state, StartState)
 
     def draw(self, screen):
@@ -109,7 +121,7 @@ def show_lives(state):
         mobj = re.match("life(\\d+)", name)
         if mobj:
             num = int(mobj.group(1))
-            if state.engine.vars["lives"] <= num:
+            if state.engine.vars["lives1" if state.engine.vars["player"] == 1 else "lives2"] <= num:
                 sprite.kill()
             else:
                 state.scene.groups["all"].add(sprite)
@@ -119,7 +131,14 @@ class StartState(State):
         State.__init__(self, engine)
 
         self.scene = display.Scene(["hud", "walls", "ready"], engine.vars)
-        self.scene.merge(engine.scenes[engine.vars["level"]])
+        self.scene.merge(engine.scenes[engine.vars["player"]][engine.vars["level"]])
+
+        if engine.vars["player"] == 1:
+            self.scene.names["2UP"].kill()
+            self.scene.names["score2"].kill()
+        else:
+            self.scene.names["1UP"].kill()
+            self.scene.names["score1"].kill()
 
         show_lives(self)
 
@@ -139,7 +158,14 @@ class BreakState(State):
         State.__init__(self, engine)
 
         self.scene = display.Scene(["hud", "walls", "break"], engine.vars)
-        self.scene.merge(engine.scenes[engine.vars["level"]])
+        self.scene.merge(engine.scenes[engine.vars["player"]][engine.vars["level"]])
+
+        if engine.vars["player"] == 1:
+            self.scene.names["2UP"].kill()
+            self.scene.names["score2"].kill()
+        else:
+            self.scene.names["1UP"].kill()
+            self.scene.names["score1"].kill()
 
         show_lives(self)
 
@@ -309,7 +335,7 @@ class Capsules:
 
             self.disable()
         elif effect == "player":
-            self.state.engine.vars["lives"] += 1
+            self.state.engine.vars["lives1" if self.state.engine.vars["player"] == 1 else "lives2"] += 1
             audio.play_sound("Life")
             show_lives(self.state)
         elif effect == "slow":
@@ -358,7 +384,9 @@ class Capsules:
                 self.scene.groups["all"].add(capsule)
 
 def next_level(engine):
+    key = "level1" if engine.vars["player"] == 1 else "level2"
     engine.vars["level"] += 1
+    engine.vars[key] += 1
     if engine.vars["level"] <= engine.last_level:
         engine.set_state(RoundState)
     else:
@@ -369,7 +397,14 @@ class GameState(State):
         State.__init__(self, engine)
 
         self.scene = display.Scene(["hud", "walls", "tools", "break"], engine.vars)
-        self.scene.merge(engine.scenes[engine.vars["level"]])
+        self.scene.merge(engine.scenes[engine.vars["player"]][engine.vars["level"]])
+
+        if engine.vars["player"] == 1:
+            self.scene.names["2UP"].kill()
+            self.scene.names["score2"].kill()
+        else:
+            self.scene.names["1UP"].kill()
+            self.scene.names["score1"].kill()
 
         show_lives(self)
 
@@ -414,9 +449,10 @@ class GameState(State):
             self.engine.set_state(StartState)
 
     def on_points(self, event):
-        self.engine.vars["score1"] += event.points
-        if self.engine.vars["score1"] > self.engine.vars["high"]:
-            self.engine.vars["high"] = self.engine.vars["score1"]
+        key = "score1" if self.engine.vars["player"] == 1 else "score2"
+        self.engine.vars[key] += event.points
+        if self.engine.vars[key] > self.engine.vars["high"]:
+            self.engine.vars["high"] = self.engine.vars[key]
 
     def update(self):
         self.scene.groups["all"].update()
@@ -484,10 +520,15 @@ class GameState(State):
                     self.paddle.kill()
 
         if not self.paddle.alive():
-            self.engine.vars["lives"] -= 1
+            self.engine.vars["lives1" if self.engine.vars["player"] == 1 else "lives2"] -= 1
 
-            if self.engine.vars["lives"] > 0:
-                self.engine.set_state(RoundState)
+            for _ in range(self.engine.vars["players"]):
+                self.engine.vars["player"] = self.engine.vars["player"] % self.engine.vars["players"] + 1
+
+                if self.engine.vars["lives1" if self.engine.vars["player"] == 1 else "lives2"] > 0:
+                    self.engine.vars["level"] = self.engine.vars["level1" if self.engine.vars["player"] == 1 else "level2"]
+                    self.engine.set_state(RoundState)
+                    break
             else:
                 self.engine.set_state(TitleState)
 
@@ -600,6 +641,10 @@ class VictoryState(State):
 
         self.scene = display.Scene(["victory", "banner"], engine.vars)
 
+        if engine.vars["players"] == 1:
+            self.scene.names["2UP"].kill()
+            self.scene.names["score2"].kill()
+
         utils.timers.start(5.0, self.engine.set_state, TitleState)
 
     def draw(self, screen):
@@ -621,17 +666,30 @@ class Engine(object):
     INITIAL_STATE = TitleState
 
     def __init__(self):
-        self.reset(0)
-
-    def reset(self, high):
         self.vars = Vars({
-            "high":high,
+            "high":0,
             "score1":0,
+            "score2":0,
             "level":1,
+            "level1":1,
+            "level2":1,
             "player":1,
-            "lives":3,
+            "lives1":3,
+            "lives2":3,
             "players":1,
         })
+
+        self.reset()
+
+    def reset(self):
+        self.vars["score1"] = 0
+        self.vars["score2"] = 0
+        self.vars["level"] = 1
+        self.vars["level1"] = 1
+        self.vars["level2"] = 1
+        self.vars["player"] = 1
+        self.vars["lives1"] = 3
+        self.vars["lives2"] = 3
 
         # Pre-allocate all level scenes
         levels = {}
@@ -643,7 +701,9 @@ class Engine(object):
 
         self.last_level = max(levels.keys())
 
-        self.scenes = {level : display.Scene([key], self.vars) for level, key in levels.items()}
+        self.scenes = {}
+        for player in range(1, self.vars["players"]+1):
+            self.scenes[player] = {level : display.Scene([key], self.vars) for level, key in levels.items()}
 
         self.set_state(self.INITIAL_STATE)
 
