@@ -253,16 +253,19 @@ class Paddle:
 
     def hit_ball(self, ball):
         delta = ball.rect.centerx - self.sprite.rect.centerx
+        half_width = self.sprite.rect.width / 2
+        sharp_thresh = half_width - 3
+        mid_thresh = half_width - 8
 
-        if delta < -13:
+        if delta < -sharp_thresh:
             vel = [-2,-1]
-        elif delta < -8:
+        elif delta < -mid_thresh:
             vel = [-1.6,-1.6]
         elif delta < 0:
             vel = [-1,-2]
-        elif delta < 8:
+        elif delta <= mid_thresh:
             vel = [1,-2]
-        elif delta < 13:
+        elif delta <= sharp_thresh:
             vel = [1.6,-1.6]
         else:
             vel = [2,-1]
