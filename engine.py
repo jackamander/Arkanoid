@@ -172,8 +172,8 @@ class BreakState(State):
         self._break = self.scene.names["break"]
         self._break.set_action(display.Animate(self._break.cfg["animation"]))
 
-        self.paddle_shrink = self.scene.names["paddle_shrink"]
-        self.paddle_shrink.set_action(display.Animate(self.paddle_shrink.cfg["animation"]).then(display.Die()).plus(display.Move([0.5,0])))
+        self.paddle_break = self.scene.names["paddle_break"]
+        self.paddle_break.set_action(display.Animate(self.paddle_break.cfg["animation"]).then(display.Die()).plus(display.Move([0.5,0])))
 
         self.sound = audio.play_sound("Break")
 
@@ -204,18 +204,38 @@ class Paddle:
 
         self.state.scene.names["laser"].kill()
 
-    def expand(self):
-        self.sprite.set_action(self.sprite.action.plus(display.Animate("paddle_grow")))
-        utils.events.unregister(utils.EVT_MOUSEBUTTONDOWN, self.fire_laser)
-        audio.play_sound("Enlarge")
+        self.handler = self.normal_handler
 
-    def normal(self):
-        self.sprite.set_image(display.get_image("paddle"))
-        utils.events.unregister(utils.EVT_MOUSEBUTTONDOWN, self.fire_laser)
+    def normal_handler(self, event):
+        if event == "expand":
+            self.sprite.set_action(self.sprite.action.plus(display.Animate("paddle_grow")))
+            audio.play_sound("Enlarge")
+            self.handler = self.expanded_handler
+        elif event == "laser":
+            self.sprite.set_image(display.get_image("paddle_laser"))
+            utils.events.register(utils.EVT_MOUSEBUTTONDOWN, self.fire_laser)
+            self.handler = self.laser_handler
 
-    def laser(self):
-        self.sprite.set_image(display.get_image("paddle_laser"))
-        utils.events.register(utils.EVT_MOUSEBUTTONDOWN, self.fire_laser)
+    def expanded_handler(self, event):
+        if event == "normal":
+            self.sprite.set_action(self.sprite.action.plus(display.Animate("paddle_shrink")))
+            self.handler = self.normal_handler
+        elif event == "laser":
+            self.sprite.set_image(display.get_image("paddle_laser"))
+            utils.events.register(utils.EVT_MOUSEBUTTONDOWN, self.fire_laser)
+            self.handler = self.laser_handler
+
+    def laser_handler(self, event):
+        if event == "expand":
+            self.sprite.set_image(display.get_image("paddle"))
+            self.sprite.set_action(self.sprite.action.plus(display.Animate("paddle_grow")))
+            audio.play_sound("Enlarge")
+            self.handler = self.expanded_handler
+            utils.events.unregister(utils.EVT_MOUSEBUTTONDOWN, self.fire_laser)
+        elif event == "normal":
+            self.sprite.set_image(display.get_image("paddle"))
+            self.handler = self.normal_handler
+            utils.events.unregister(utils.EVT_MOUSEBUTTONDOWN, self.fire_laser)
 
     def fire_laser(self, event):
         sprite = self.state.scene.names["laser"].clone()
@@ -300,7 +320,7 @@ class Capsules:
         self._break = self.scene.names["break"]
         self._break.set_action(display.Animate(self._break.cfg["animation"]))
         self._break.kill()
-        self.scene.names["paddle_shrink"].kill()
+        self.scene.names["paddle_break"].kill()
 
         utils.events.register(utils.EVT_CAPSULE, self.on_brick)
 
@@ -362,15 +382,15 @@ class Capsules:
             self.state.speed_timer()
 
         if effect == "laser":
-            self.state.paddle.laser()
+            self.state.paddle.handler("laser")
             self.block(["capsuleL"])
             self.unblock(["capsuleE"])
         elif effect == "enlarge":
-            self.state.paddle.expand()
+            self.state.paddle.handler("expand")
             self.block(["capsuleE"])
             self.unblock(["capsuleL"])
         else:
-            self.state.paddle.normal()
+            self.state.paddle.handler("normal")
             self.unblock(["capsuleE", "capsuleL"])
 
         if effect == "catch":
