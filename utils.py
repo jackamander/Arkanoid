@@ -58,6 +58,7 @@ EVT_MOUSEMOTION = pygame.MOUSEMOTION
 EVT_VAR_CHANGE = pygame.USEREVENT
 EVT_POINTS = pygame.USEREVENT + 1
 EVT_CAPSULE = pygame.USEREVENT + 2
+EVT_EXTRA_LIFE = pygame.USEREVENT + 3
 
 class Events:
     def __init__(self):

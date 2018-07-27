@@ -335,9 +335,7 @@ class Capsules:
 
             self.disable()
         elif effect == "player":
-            self.state.engine.vars["lives1" if self.state.engine.vars["player"] == 1 else "lives2"] += 1
-            audio.play_sound("Life")
-            show_lives(self.state)
+            utils.events.generate(utils.EVT_EXTRA_LIFE)
         elif effect == "slow":
             self.state.ball_speed /= utils.config["ball_speed"]
 
@@ -422,6 +420,7 @@ class GameState(State):
 
         utils.events.register(utils.EVT_KEYDOWN, self.on_keydown)
         utils.events.register(utils.EVT_POINTS, self.on_points)
+        utils.events.register(utils.EVT_EXTRA_LIFE, self.on_extra_life)
 
         self.speed_timer()
 
@@ -450,9 +449,25 @@ class GameState(State):
 
     def on_points(self, event):
         key = "score1" if self.engine.vars["player"] == 1 else "score2"
-        self.engine.vars[key] += event.points
-        if self.engine.vars[key] > self.engine.vars["high"]:
-            self.engine.vars["high"] = self.engine.vars[key]
+
+        # Accumulate the points
+        before = self.engine.vars[key]
+        after = before + event.points
+        self.engine.vars[key] = after
+
+        # Update the high score
+        if after > self.engine.vars["high"]:
+            self.engine.vars["high"] = after
+
+        # Check for extra lives
+        for threshold in [20000] + range(60000, after+1, 60000):
+            if before < threshold and after >= threshold:
+                utils.events.generate(utils.EVT_EXTRA_LIFE)
+
+    def on_extra_life(self, event):
+        self.engine.vars["lives1" if self.engine.vars["player"] == 1 else "lives2"] += 1
+        audio.play_sound("Life")
+        show_lives(self)
 
     def update(self):
         self.scene.groups["all"].update()
