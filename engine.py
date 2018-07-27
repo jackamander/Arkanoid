@@ -205,7 +205,7 @@ class Paddle:
         self.state.scene.names["laser"].kill()
 
     def expand(self):
-        self.sprite.set_image(display.get_image("paddle_ext"))
+        self.sprite.set_action(self.sprite.action.plus(display.Animate("paddle_grow")))
         utils.events.unregister(utils.EVT_MOUSEBUTTONDOWN, self.fire_laser)
         audio.play_sound("Enlarge")
 
@@ -314,6 +314,19 @@ class Capsules:
         if self.count == 0:
             self.count = random.randint(1, 10)
 
+    def block(self, names):
+        for name in names:
+            self.scene.names[name].kill()
+            self.total -= 1
+
+    def unblock(self, names):
+        sprites = self.scene.groups["capsules"].sprites()
+        for name in names:
+            sprite = self.scene.names[name]
+            if sprite not in sprites:
+                self.scene.groups["capsules"].add(sprite)
+                self.total += 1
+
     def apply(self, capsule):
         effect = capsule.cfg.get("effect", "")
         if effect == "break":
@@ -350,10 +363,15 @@ class Capsules:
 
         if effect == "laser":
             self.state.paddle.laser()
+            self.block(["capsuleL"])
+            self.unblock(["capsuleE"])
         elif effect == "enlarge":
             self.state.paddle.expand()
+            self.block(["capsuleE"])
+            self.unblock(["capsuleL"])
         else:
             self.state.paddle.normal()
+            self.unblock(["capsuleE", "capsuleL"])
 
         if effect == "catch":
             self.paddle.catch = True

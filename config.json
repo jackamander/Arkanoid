@@ -12,6 +12,21 @@
             "size" : [32, 8],
             "offset" : [0, 0]
         },
+        "paddle_grow1" : {
+            "filename" : "resources\\images\\vaus.png",
+            "size" : [36, 8],
+            "offset" : [0, 24]
+        },
+        "paddle_grow2" : {
+            "filename" : "resources\\images\\vaus.png",
+            "size" : [40, 8],
+            "offset" : [36, 24]
+        },
+        "paddle_grow3" : {
+            "filename" : "resources\\images\\vaus.png",
+            "size" : [44, 8],
+            "offset" : [76, 24]
+        },
         "paddle_shrink1" : {
             "filename" : "resources\\images\\vaus.png",
             "size" : [24, 8],
@@ -694,6 +709,10 @@
         "paddle_shrink" : {
             "images" : ["paddle", "paddle_shrink1", "paddle_shrink2", "paddle_shrink3"],
             "speed" : 12
+        },
+        "paddle_grow" : {
+            "images" : ["paddle_grow1", "paddle_grow2", "paddle_grow3", "paddle_ext"],
+            "speed" : 2
         },
         "inlet_open" : {
             "images" : ["inlet2", "inlet3", "inlet4"],
