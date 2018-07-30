@@ -212,7 +212,7 @@ class Paddle:
             audio.play_sound("Enlarge")
             self.handler = self.expanded_handler
         elif event == "laser":
-            self.sprite.set_image(display.get_image("paddle_laser"))
+            self.sprite.set_action(self.sprite.action.plus(display.Animate("paddle_to_laser")))
             utils.events.register(utils.EVT_MOUSEBUTTONDOWN, self.fire_laser)
             self.handler = self.laser_handler
 
@@ -221,19 +221,18 @@ class Paddle:
             self.sprite.set_action(self.sprite.action.plus(display.Animate("paddle_shrink")))
             self.handler = self.normal_handler
         elif event == "laser":
-            self.sprite.set_image(display.get_image("paddle_laser"))
+            self.sprite.set_action(self.sprite.action.plus(display.Animate("paddle_shrink").then(display.Animate("paddle_to_laser"))))
             utils.events.register(utils.EVT_MOUSEBUTTONDOWN, self.fire_laser)
             self.handler = self.laser_handler
 
     def laser_handler(self, event):
         if event == "expand":
-            self.sprite.set_image(display.get_image("paddle"))
-            self.sprite.set_action(self.sprite.action.plus(display.Animate("paddle_grow")))
+            self.sprite.set_action(self.sprite.action.plus(display.Animate("laser_to_paddle").then(display.Animate("paddle_grow"))))
             audio.play_sound("Enlarge")
             self.handler = self.expanded_handler
             utils.events.unregister(utils.EVT_MOUSEBUTTONDOWN, self.fire_laser)
         elif event == "normal":
-            self.sprite.set_image(display.get_image("paddle"))
+            self.sprite.set_action(self.sprite.action.plus(display.Animate("laser_to_paddle")))
             self.handler = self.normal_handler
             utils.events.unregister(utils.EVT_MOUSEBUTTONDOWN, self.fire_laser)
 

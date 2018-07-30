@@ -42,6 +42,46 @@
             "size" : [8, 8],
             "offset" : [0, 0]
         },
+        "paddle_lasershrink1" : {
+            "filename" : "resources\\images\\vaus.png",
+            "size" : [28, 8],
+            "offset" : [48, 0]
+        },
+        "paddle_lasershrink2" : {
+            "filename" : "resources\\images\\vaus.png",
+            "size" : [24, 8],
+            "offset" : [76, 0]
+        },
+        "paddle_lasershrink3" : {
+            "filename" : "resources\\images\\vaus.png",
+            "size" : [20, 8],
+            "offset" : [100, 0]
+        },
+        "paddle_lasershrink4" : {
+            "filename" : "resources\\images\\vaus.png",
+            "size" : [16, 8],
+            "offset" : [8, 0]
+        },
+        "paddle_lasergrow1" : {
+            "filename" : "resources\\images\\vaus.png",
+            "size" : [16, 8],
+            "offset" : [8, 16]
+        },
+        "paddle_lasergrow2" : {
+            "filename" : "resources\\images\\vaus.png",
+            "size" : [20, 8],
+            "offset" : [100, 8]
+        },
+        "paddle_lasergrow3" : {
+            "filename" : "resources\\images\\vaus.png",
+            "size" : [24, 8],
+            "offset" : [76, 8]
+        },
+        "paddle_lasergrow4" : {
+            "filename" : "resources\\images\\vaus.png",
+            "size" : [28, 8],
+            "offset" : [48, 8]
+        },
         "explode1" : {
             "filename" : "resources\\images\\vaus.png",
             "size" : [32, 8],
@@ -716,6 +756,14 @@
         },
         "paddle_shrink" : {
             "images" : ["paddle_grow3", "paddle_grow2", "paddle_grow1", "paddle"],
+            "speed" : 2
+        },
+        "paddle_to_laser" : {
+            "images" : ["paddle_lasershrink1", "paddle_lasershrink2", "paddle_lasershrink3", "paddle_lasershrink4", "paddle_lasergrow1", "paddle_lasergrow2", "paddle_lasergrow3", "paddle_lasergrow4", "paddle_laser"],
+            "speed" : 2
+        },
+        "laser_to_paddle" : {
+            "images" : ["paddle_lasergrow4", "paddle_lasergrow3", "paddle_lasergrow2", "paddle_lasergrow1", "paddle_lasershrink4", "paddle_lasershrink3", "paddle_lasershrink2", "paddle_lasershrink1", "paddle"],
             "speed" : 2
         },
         "inlet_open" : {
