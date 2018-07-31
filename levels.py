@@ -224,6 +224,24 @@ def main():
             " rogb ogpr ",
             " pgoS gorp ",
         ],
+        [           # Level 5
+            "",
+            "",
+            "   o   o   ",
+            "    o o    ",
+            "    o o    ",
+            "   SSSSS   ",
+            "   SSSSS   ",
+            "  SSrSrSS  ",
+            "  SSrSrSS  ",
+            " SSSSSSSSS ",
+            " SSSSSSSSS ",
+            " S SSSSS S ",
+            " S S   S S ",
+            " S S   S S ",
+            "    S S    ",
+            "    S S    ",
+        ],
     ]
 
     for index, data in enumerate(levels):
