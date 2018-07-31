@@ -20,7 +20,7 @@ import json
 # G = gold
 
 
-def create(num, data, fname):
+def create(num, data):
     sprites = [build_bg(num), build_alien(num)]
 
     bricks = build_bricks(num)
@@ -31,11 +31,11 @@ def create(num, data, fname):
                 brick["position"] = [16 + 16 * col, 8 + 8 * row]
                 sprites.append(brick)
 
+    return {"level%d" % num : sprites}
+
+def write(data, fname):
     with file(fname, "wb") as fout:
-        descriptor = {
-            "level%d" % num : sprites
-        }
-        json.dump(descriptor, fout, indent=4)
+        json.dump(data, fout, indent=4)
 
 def build_bg(num):
     bg_index = (num - 1) % 4
@@ -325,10 +325,96 @@ def main():
             " G         ",
             " GGGGGGGGGG",
         ],
+        [           # Level 11
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            " SSSSSSSSS ",
+            " S       S ",
+            " S SSSSS S ",
+            " S S   S S ",
+            " S S S S S ",
+            " S S   S S ",
+            " S SSSSS S ",
+            " S       S ",
+            " SSSSSSSSS ",
+        ],
+        [           # Level 12
+            "           ",
+            "           ",
+            "GGGGGGGGGGG",
+            "    G   Gp ",
+            " Gg G   G  ",
+            " G  G G G  ",
+            " G  G G G  ",
+            " G  GgG G  ",
+            " G pG GbG  ",
+            " G  GrG G  ",
+            " G  G G G  ",
+            " G  G G G  ",
+            " Gb   G    ",
+            " G    G   p",
+            " GGGGGGGGGG",
+        ],
+        [           # Level 13
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            " oo www oo ",
+            " ww ooo ww ",
+            " bb rrr bb ",
+            " mm ggg mm ",
+            " gg mmm gg ",
+            " rr bbb rr ",
+            " oo www oo ",
+            " ww ooo ww ",
+        ],
+        [           # Level 14
+            "           ",
+            "           ",
+            "           ",
+            "rSSSSSSSSSr",
+            "G         G",
+            "bbbbbbbbbbb",
+            "           ",
+            "pSSSSSSSSSp",
+            "G         G",
+            "bbbbbbbbbbb",
+            "           ",
+            "bSSSSSSSSSb",
+            "G         G",
+            "rrrrrrrrrrr",
+            "           ",
+            "rrrrrrrrrrr",
+            "G         G",
+        ],
+        [           # Level 15
+            "           ",
+            "           ",
+            "           ",
+            "cSScccccSSc",
+            "cSoScccSgSc",
+            "cSooSSSggSc",
+            "cSoooSgggSc",
+            "cSoooSgggSc",
+            "cSoooSgggSc",
+            "cSoooSgggSc",
+            "cSoooSgggSc",
+            "cSoooSgggSc",
+            "ccSooSggScc",
+            "cccSoSgSccc",
+            "ccccSSScccc",
+        ],
     ]
 
+    results = {}
     for index, data in enumerate(levels):
-        create(index + 1, data, "level%d.txt" % (index + 1))
+        level = create(index + 1, data)
+        results.update(level)
+
+    write(results, "levels.txt")
 
 if __name__ == "__main__":
     main()
