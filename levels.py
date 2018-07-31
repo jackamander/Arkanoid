@@ -242,6 +242,22 @@ def main():
             "    S S    ",
             "    S S    ",
         ],
+        [           # Level 6
+            "",
+            "",
+            "",
+            "b r g g r b",
+            "b r g g r b",
+            "b r g g r b",
+            "b GpGpGpg b",
+            "b r g g r b",
+            "b r g g r b",
+            "b r g g r b",
+            "b r g g r b",
+            "b r g g r b",
+            "p G G G G p",
+            "b r g g r b",
+        ],
     ]
 
     for index, data in enumerate(levels):
