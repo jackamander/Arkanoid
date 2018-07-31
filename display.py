@@ -242,8 +242,9 @@ class FireEvent(Action):
         return True
 
 class UpdateVar(Action):
-    def __init__(self, name):
+    def __init__(self, name, fmt="%s"):
         self.name = name
+        self.fmt = fmt
         self.text = ""
         self.dirty = False
 
@@ -252,7 +253,7 @@ class UpdateVar(Action):
     def on_var_change(self, event):
         if event.name == self.name:
             self.dirty = True
-            self.text = str(event.value)
+            self.text = self.fmt % event.value
 
     def update(self, sprite):
         if self.dirty:
@@ -534,9 +535,10 @@ class Scene:
 
                 key = cfg.pop("var", "")
                 if key:
-                    text = str(var_dict[key])
+                    fmt = cfg.pop("fmt", "%s")
+                    text = fmt % var_dict[key]
                     image = draw_text(text)
-                    action = UpdateVar(key)
+                    action = UpdateVar(key, fmt)
 
                 key = cfg.pop("image", "")
                 if key:

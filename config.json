@@ -855,7 +855,8 @@
             },
             {
                 "var" : "score1",
-                "position" : [48, 16]
+                "fmt" : "%6d",
+                "position" : [16, 16]
             },
             {
                 "text" : "HIGH SCORE",
@@ -863,7 +864,8 @@
             },
             {
                 "var" : "high",
-                "position" : [112, 16]
+                "fmt" : "%6d",
+                "position" : [104, 16]
             },
             {
                 "name" : "2UP",
@@ -873,6 +875,7 @@
             {
                 "name" : "score2",
                 "var" : "score2",
+                "fmt" : "%6d",
                 "position" : [200, 16]
             }
         ],
@@ -931,6 +934,7 @@
             },
             {
                 "var" : "level",
+                "fmt" : "%2d",
                 "position" : [144, 108]
             }
         ],
@@ -945,6 +949,7 @@
             },
             {
                 "var" : "high",
+                "fmt" : "%6d",
                 "position" : [208, 40]
             },
             {
@@ -955,6 +960,7 @@
             {
                 "name" : "score1",
                 "var" : "score1",
+                "fmt" : "%6d",
                 "position" : [208, 64]
             },
             {
@@ -965,6 +971,7 @@
             {
                 "name" : "score2",
                 "var" : "score2",
+                "fmt" : "%6d",
                 "position" : [208, 64]
             },
             {
@@ -973,6 +980,7 @@
             },
             {
                 "var" : "level",
+                "fmt" : "%2d",
                 "position" : [232, 200]
             },
             {
