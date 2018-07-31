@@ -486,6 +486,8 @@ class GameState(State):
     def on_keydown(self, event):
         if event.key == pygame.K_SPACE:
             self.engine.set_state(StartState)
+        elif event.key == pygame.K_PERIOD:
+            next_level(self.engine)
 
     def on_points(self, event):
         key = "score1" if self.engine.vars["player"] == 1 else "score2"
