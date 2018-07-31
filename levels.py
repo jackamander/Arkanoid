@@ -204,6 +204,26 @@ def main():
             "",
             "rrrrrrrrrrr",
         ],
+        [           # Level 4
+            "",
+            "",
+            "",
+            "",
+            " Sogp ogbS ",
+            " bgor grSb ",
+            " gpro bSrg ",
+            " orpg Sbgo ",
+            " rogb ogpr ",
+            " rgrS gorp ",
+            " gbSr prog ",
+            " oSbg rpgo ",
+            " Sogp ogbS ",
+            " bgor grSb ",
+            " gpro bSrg ",
+            " orpg Sbgo ",
+            " rogb ogpr ",
+            " pgoS gorp ",
+        ],
     ]
 
     for index, data in enumerate(levels):
