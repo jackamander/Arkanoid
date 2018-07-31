@@ -588,7 +588,8 @@ class GameState(State):
                 self.engine.set_state(TitleState)
 
         # Level completion detection
-        if len(self.scene.groups["bricks"]) == 0:
+        remaining = sum([brick.cfg.get("hits", 0) for brick in self.scene.groups["bricks"].sprites()])
+        if remaining == 0:
             next_level(self.engine)
 
     def draw(self, screen):
