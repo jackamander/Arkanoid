@@ -50,7 +50,7 @@ def draw_text(text):
     size = config["size"]
     characters = config["characters"]
 
-    surf = pygame.Surface([size[0]*len(text), size[1]])
+    surf = pygame.Surface([size[0]*len(text), size[1]], pygame.SRCALPHA).convert_alpha()
     image = _load_image(filename)
     pos = 0
     for char in text:
@@ -58,7 +58,7 @@ def draw_text(text):
 
         offset = (col * size[0], row * size[1])
 
-        surf.blit(image, [pos, 0], pygame.Rect(offset, size))
+        surf.blit(image, [pos, 0], pygame.Rect(offset, size), pygame.BLEND_RGBA_MAX)
 
         pos += size[0]
 
