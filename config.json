@@ -6,6 +6,19 @@
     "frame_rate" : 60,
     "bg_color" : "black",
     "ball_speed" : 1.2,
+    "font" : {
+        "filename" : "resources\\images\\nesfont8.png",
+        "size" : [8,8],
+        "characters" : [
+            " !\"#$%&'()*+,-./",
+            "0123456789:;<=>?",
+            "@ABCDEFGHIJKLMNO",
+            "PQRSTUVWXYZ[\\]^_",
+            "`abcdefghijklmno",
+            "pqrstuvwxyz{|}~"
+        ]
+
+    },
     "images" : {
         "paddle" : {
             "filename" : "resources\\images\\vaus.png",
@@ -1168,1255 +1181,2042 @@
                 "layer" : 20
             }
         ],
-        "level1" : [
-            {
-                "name" : "alien",
-                "image" : "alien0_0",
-                "animation" : "alien0",
-                "hit_sound" : "Alien",
-                "death_animation" : "dead",
-                "position" : [1000, 1000],
-                "layer" : 30,
-                "hits" : 1,
-                "points" : 100,
-                "groups" : ["aliens"]
-            },
-            {
-                "name" : "bg",
-                "image" : "bg0",
-                "position" : [16, 8],
-                "layer" : 0
-            },
-            {
-                "image" : "silver",
-                "position" : [ 16, 40],
-                "hit_sound" : "High",
-                "hit_animation" : "silver",
-                "hits" : 2,
-                "groups" : ["ball", "bricks"],
-                "points" : 50,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "silver",
-                "position" : [ 32, 40],
-                "hit_sound" : "High",
-                "hit_animation" : "silver",
-                "hits" : 2,
-                "groups" : ["ball", "bricks"],
-                "points" : 50,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "silver",
-                "position" : [ 48, 40],
-                "hit_sound" : "High",
-                "hit_animation" : "silver",
-                "hits" : 2,
-                "groups" : ["ball", "bricks"],
-                "points" : 50,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "silver",
-                "position" : [ 64, 40],
-                "hit_sound" : "High",
-                "hit_animation" : "silver",
-                "hits" : 2,
-                "groups" : ["ball", "bricks"],
-                "points" : 50,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "silver",
-                "position" : [ 80, 40],
-                "hit_sound" : "High",
-                "hit_animation" : "silver",
-                "hits" : 2,
-                "groups" : ["ball", "bricks"],
-                "points" : 50,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "silver",
-                "position" : [ 96, 40],
-                "hit_sound" : "High",
-                "hit_animation" : "silver",
-                "hits" : 2,
-                "groups" : ["ball", "bricks"],
-                "points" : 50,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "silver",
-                "position" : [112, 40],
-                "hit_sound" : "High",
-                "hit_animation" : "silver",
-                "hits" : 2,
-                "groups" : ["ball", "bricks"],
-                "points" : 50,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "silver",
-                "position" : [128, 40],
-                "hit_sound" : "High",
-                "hit_animation" : "silver",
-                "hits" : 2,
-                "groups" : ["ball", "bricks"],
-                "points" : 50,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "silver",
-                "position" : [144, 40],
-                "hit_sound" : "High",
-                "hit_animation" : "silver",
-                "hits" : 2,
-                "groups" : ["ball", "bricks"],
-                "points" : 50,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "silver",
-                "position" : [160, 40],
-                "hit_sound" : "High",
-                "hit_animation" : "silver",
-                "hits" : 2,
-                "groups" : ["ball", "bricks"],
-                "points" : 50,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "silver",
-                "position" : [176, 40],
-                "hit_sound" : "High",
-                "hit_animation" : "silver",
-                "hits" : 2,
-                "groups" : ["ball", "bricks"],
-                "points" : 50,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "red",
-                "position" : [ 16, 48],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 90,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "red",
-                "position" : [ 32, 48],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 90,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "red",
-                "position" : [ 48, 48],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 90,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "red",
-                "position" : [ 64, 48],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 90,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "red",
-                "position" : [ 80, 48],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 90,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "red",
-                "position" : [ 96, 48],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 90,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "red",
-                "position" : [112, 48],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 90,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "red",
-                "position" : [128, 48],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 90,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "red",
-                "position" : [144, 48],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 90,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "red",
-                "position" : [160, 48],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 90,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "red",
-                "position" : [176, 48],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 90,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "blue",
-                "position" : [ 16, 56],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 100,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "blue",
-                "position" : [ 32, 56],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 100,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "blue",
-                "position" : [ 48, 56],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 100,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "blue",
-                "position" : [ 64, 56],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 100,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "blue",
-                "position" : [ 80, 56],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 100,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "blue",
-                "position" : [ 96, 56],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 100,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "blue",
-                "position" : [112, 56],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 100,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "blue",
-                "position" : [128, 56],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 100,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "blue",
-                "position" : [144, 56],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 100,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "blue",
-                "position" : [160, 56],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 100,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "blue",
-                "position" : [176, 56],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 100,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "orange",
-                "position" : [ 16, 64],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 60,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "orange",
-                "position" : [ 32, 64],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 60,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "orange",
-                "position" : [ 48, 64],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 60,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "orange",
-                "position" : [ 64, 64],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 60,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "orange",
-                "position" : [ 80, 64],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 60,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "orange",
-                "position" : [ 96, 64],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 60,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "orange",
-                "position" : [112, 64],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 60,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "orange",
-                "position" : [128, 64],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 60,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "orange",
-                "position" : [144, 64],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 60,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "orange",
-                "position" : [160, 64],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 60,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "orange",
-                "position" : [176, 64],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 60,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "pink",
-                "position" : [ 16, 72],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 110,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "pink",
-                "position" : [ 32, 72],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 110,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "pink",
-                "position" : [ 48, 72],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 110,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "pink",
-                "position" : [ 64, 72],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 110,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "pink",
-                "position" : [ 80, 72],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 110,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "pink",
-                "position" : [ 96, 72],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 110,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "pink",
-                "position" : [112, 72],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 110,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "pink",
-                "position" : [128, 72],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 110,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "pink",
-                "position" : [144, 72],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 110,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "pink",
-                "position" : [160, 72],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 110,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "pink",
-                "position" : [176, 72],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 110,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "green",
-                "position" : [ 16, 80],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 80,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "green",
-                "position" : [ 32, 80],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 80,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "green",
-                "position" : [ 48, 80],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 80,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "green",
-                "position" : [ 64, 80],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 80,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "green",
-                "position" : [ 80, 80],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 80,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "green",
-                "position" : [ 96, 80],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 80,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "green",
-                "position" : [112, 80],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 80,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "green",
-                "position" : [128, 80],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 80,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "green",
-                "position" : [144, 80],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 80,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "green",
-                "position" : [160, 80],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 80,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "green",
-                "position" : [176, 80],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 80,
-                "on_death" : "create_capsule"
+        "level1": [
+            {
+                "position": [
+                    16,
+                    8
+                ],
+                "image": "bg0",
+                "name": "bg",
+                "layer": 0
+            },
+            {
+                "groups": [
+                    "aliens"
+                ],
+                "layer": 30,
+                "animation": "alien0",
+                "name": "alien",
+                "hit_sound": "Alien",
+                "position": [
+                    1000,
+                    1000
+                ],
+                "image": "alien0_0",
+                "death_animation": "dead",
+                "hits": 1,
+                "points": 100
+            },
+            {
+                "hits": 2,
+                "points": 50,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "High",
+                "position": [
+                    16,
+                    40
+                ],
+                "hit_animation": "silver",
+                "image": "silver"
+            },
+            {
+                "hits": 2,
+                "points": 50,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "High",
+                "position": [
+                    32,
+                    40
+                ],
+                "hit_animation": "silver",
+                "image": "silver"
+            },
+            {
+                "hits": 2,
+                "points": 50,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "High",
+                "position": [
+                    48,
+                    40
+                ],
+                "hit_animation": "silver",
+                "image": "silver"
+            },
+            {
+                "hits": 2,
+                "points": 50,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "High",
+                "position": [
+                    64,
+                    40
+                ],
+                "hit_animation": "silver",
+                "image": "silver"
+            },
+            {
+                "hits": 2,
+                "points": 50,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "High",
+                "position": [
+                    80,
+                    40
+                ],
+                "hit_animation": "silver",
+                "image": "silver"
+            },
+            {
+                "hits": 2,
+                "points": 50,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "High",
+                "position": [
+                    96,
+                    40
+                ],
+                "hit_animation": "silver",
+                "image": "silver"
+            },
+            {
+                "hits": 2,
+                "points": 50,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "High",
+                "position": [
+                    112,
+                    40
+                ],
+                "hit_animation": "silver",
+                "image": "silver"
+            },
+            {
+                "hits": 2,
+                "points": 50,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "High",
+                "position": [
+                    128,
+                    40
+                ],
+                "hit_animation": "silver",
+                "image": "silver"
+            },
+            {
+                "hits": 2,
+                "points": 50,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "High",
+                "position": [
+                    144,
+                    40
+                ],
+                "hit_animation": "silver",
+                "image": "silver"
+            },
+            {
+                "hits": 2,
+                "points": 50,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "High",
+                "position": [
+                    160,
+                    40
+                ],
+                "hit_animation": "silver",
+                "image": "silver"
+            },
+            {
+                "hits": 2,
+                "points": 50,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "High",
+                "position": [
+                    176,
+                    40
+                ],
+                "hit_animation": "silver",
+                "image": "silver"
+            },
+            {
+                "hits": 1,
+                "points": 90,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    16,
+                    48
+                ],
+                "image": "red"
+            },
+            {
+                "hits": 1,
+                "points": 90,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    32,
+                    48
+                ],
+                "image": "red"
+            },
+            {
+                "hits": 1,
+                "points": 90,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    48,
+                    48
+                ],
+                "image": "red"
+            },
+            {
+                "hits": 1,
+                "points": 90,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    64,
+                    48
+                ],
+                "image": "red"
+            },
+            {
+                "hits": 1,
+                "points": 90,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    80,
+                    48
+                ],
+                "image": "red"
+            },
+            {
+                "hits": 1,
+                "points": 90,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    96,
+                    48
+                ],
+                "image": "red"
+            },
+            {
+                "hits": 1,
+                "points": 90,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    112,
+                    48
+                ],
+                "image": "red"
+            },
+            {
+                "hits": 1,
+                "points": 90,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    128,
+                    48
+                ],
+                "image": "red"
+            },
+            {
+                "hits": 1,
+                "points": 90,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    144,
+                    48
+                ],
+                "image": "red"
+            },
+            {
+                "hits": 1,
+                "points": 90,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    160,
+                    48
+                ],
+                "image": "red"
+            },
+            {
+                "hits": 1,
+                "points": 90,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    176,
+                    48
+                ],
+                "image": "red"
+            },
+            {
+                "hits": 1,
+                "points": 100,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    16,
+                    56
+                ],
+                "image": "blue"
+            },
+            {
+                "hits": 1,
+                "points": 100,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    32,
+                    56
+                ],
+                "image": "blue"
+            },
+            {
+                "hits": 1,
+                "points": 100,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    48,
+                    56
+                ],
+                "image": "blue"
+            },
+            {
+                "hits": 1,
+                "points": 100,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    64,
+                    56
+                ],
+                "image": "blue"
+            },
+            {
+                "hits": 1,
+                "points": 100,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    80,
+                    56
+                ],
+                "image": "blue"
+            },
+            {
+                "hits": 1,
+                "points": 100,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    96,
+                    56
+                ],
+                "image": "blue"
+            },
+            {
+                "hits": 1,
+                "points": 100,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    112,
+                    56
+                ],
+                "image": "blue"
+            },
+            {
+                "hits": 1,
+                "points": 100,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    128,
+                    56
+                ],
+                "image": "blue"
+            },
+            {
+                "hits": 1,
+                "points": 100,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    144,
+                    56
+                ],
+                "image": "blue"
+            },
+            {
+                "hits": 1,
+                "points": 100,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    160,
+                    56
+                ],
+                "image": "blue"
+            },
+            {
+                "hits": 1,
+                "points": 100,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    176,
+                    56
+                ],
+                "image": "blue"
+            },
+            {
+                "hits": 1,
+                "points": 60,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    16,
+                    64
+                ],
+                "image": "orange"
+            },
+            {
+                "hits": 1,
+                "points": 60,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    32,
+                    64
+                ],
+                "image": "orange"
+            },
+            {
+                "hits": 1,
+                "points": 60,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    48,
+                    64
+                ],
+                "image": "orange"
+            },
+            {
+                "hits": 1,
+                "points": 60,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    64,
+                    64
+                ],
+                "image": "orange"
+            },
+            {
+                "hits": 1,
+                "points": 60,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    80,
+                    64
+                ],
+                "image": "orange"
+            },
+            {
+                "hits": 1,
+                "points": 60,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    96,
+                    64
+                ],
+                "image": "orange"
+            },
+            {
+                "hits": 1,
+                "points": 60,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    112,
+                    64
+                ],
+                "image": "orange"
+            },
+            {
+                "hits": 1,
+                "points": 60,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    128,
+                    64
+                ],
+                "image": "orange"
+            },
+            {
+                "hits": 1,
+                "points": 60,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    144,
+                    64
+                ],
+                "image": "orange"
+            },
+            {
+                "hits": 1,
+                "points": 60,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    160,
+                    64
+                ],
+                "image": "orange"
+            },
+            {
+                "hits": 1,
+                "points": 60,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    176,
+                    64
+                ],
+                "image": "orange"
+            },
+            {
+                "hits": 1,
+                "points": 50,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    16,
+                    72
+                ],
+                "image": "pink"
+            },
+            {
+                "hits": 1,
+                "points": 50,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    32,
+                    72
+                ],
+                "image": "pink"
+            },
+            {
+                "hits": 1,
+                "points": 50,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    48,
+                    72
+                ],
+                "image": "pink"
+            },
+            {
+                "hits": 1,
+                "points": 50,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    64,
+                    72
+                ],
+                "image": "pink"
+            },
+            {
+                "hits": 1,
+                "points": 50,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    80,
+                    72
+                ],
+                "image": "pink"
+            },
+            {
+                "hits": 1,
+                "points": 50,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    96,
+                    72
+                ],
+                "image": "pink"
+            },
+            {
+                "hits": 1,
+                "points": 50,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    112,
+                    72
+                ],
+                "image": "pink"
+            },
+            {
+                "hits": 1,
+                "points": 50,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    128,
+                    72
+                ],
+                "image": "pink"
+            },
+            {
+                "hits": 1,
+                "points": 50,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    144,
+                    72
+                ],
+                "image": "pink"
+            },
+            {
+                "hits": 1,
+                "points": 50,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    160,
+                    72
+                ],
+                "image": "pink"
+            },
+            {
+                "hits": 1,
+                "points": 50,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    176,
+                    72
+                ],
+                "image": "pink"
+            },
+            {
+                "hits": 1,
+                "points": 80,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    16,
+                    80
+                ],
+                "image": "green"
+            },
+            {
+                "hits": 1,
+                "points": 80,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    32,
+                    80
+                ],
+                "image": "green"
+            },
+            {
+                "hits": 1,
+                "points": 80,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    48,
+                    80
+                ],
+                "image": "green"
+            },
+            {
+                "hits": 1,
+                "points": 80,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    64,
+                    80
+                ],
+                "image": "green"
+            },
+            {
+                "hits": 1,
+                "points": 80,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    80,
+                    80
+                ],
+                "image": "green"
+            },
+            {
+                "hits": 1,
+                "points": 80,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    96,
+                    80
+                ],
+                "image": "green"
+            },
+            {
+                "hits": 1,
+                "points": 80,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    112,
+                    80
+                ],
+                "image": "green"
+            },
+            {
+                "hits": 1,
+                "points": 80,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    128,
+                    80
+                ],
+                "image": "green"
+            },
+            {
+                "hits": 1,
+                "points": 80,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    144,
+                    80
+                ],
+                "image": "green"
+            },
+            {
+                "hits": 1,
+                "points": 80,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    160,
+                    80
+                ],
+                "image": "green"
+            },
+            {
+                "hits": 1,
+                "points": 80,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    176,
+                    80
+                ],
+                "image": "green"
             }
         ],
-        "level2" : [
-            {
-                "name" : "alien",
-                "image" : "alien1_0",
-                "hit_sound" : "Alien",
-                "animation" : "alien1",
-                "death_animation" : "dead",
-                "position" : [1000, 1000],
-                "layer" : 30,
-                "hits" : 1,
-                "points" : 100,
-                "groups" : ["aliens"]
-            },
-            {
-                "name" : "bg",
-                "image" : "bg1",
-                "position" : [16, 8],
-                "layer" : 0
-            },
-            {
-                "image" : "pink",
-                "position" : [ 16, 24],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 50,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "pink",
-                "position" : [ 16, 32],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 50,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "pink",
-                "position" : [ 16, 40],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 50,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "pink",
-                "position" : [ 16, 48],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 50,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "pink",
-                "position" : [ 16, 56],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 50,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "pink",
-                "position" : [ 16, 64],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 50,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "pink",
-                "position" : [ 16, 72],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 50,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "pink",
-                "position" : [ 16, 80],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 50,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "pink",
-                "position" : [ 16, 88],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 50,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "pink",
-                "position" : [ 16, 96],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 50,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "silver",
-                "position" : [ 16, 104],
-                "hit_sound" : "High",
-                "hit_animation" : "silver",
-                "hits" : 2,
-                "groups" : ["ball", "bricks"],
-                "points" : 100,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "cyan",
-                "position" : [ 32, 32],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 70,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "cyan",
-                "position" : [ 32, 40],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 70,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "cyan",
-                "position" : [ 32, 48],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 70,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "cyan",
-                "position" : [ 32, 56],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 70,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "cyan",
-                "position" : [ 32, 64],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 70,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "cyan",
-                "position" : [ 32, 72],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 70,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "cyan",
-                "position" : [ 32, 80],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 70,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "cyan",
-                "position" : [ 32, 88],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 70,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "cyan",
-                "position" : [ 32, 96],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 70,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "silver",
-                "position" : [ 32, 104],
-                "hit_sound" : "High",
-                "hit_animation" : "silver",
-                "hits" : 2,
-                "groups" : ["ball", "bricks"],
-                "points" : 100,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "green",
-                "position" : [ 48, 40],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 80,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "green",
-                "position" : [ 48, 48],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 80,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "green",
-                "position" : [ 48, 56],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 80,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "green",
-                "position" : [ 48, 64],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 80,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "green",
-                "position" : [ 48, 72],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 80,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "green",
-                "position" : [ 48, 80],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 80,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "green",
-                "position" : [ 48, 88],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 80,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "green",
-                "position" : [ 48, 96],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 80,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "silver",
-                "position" : [ 48, 104],
-                "hit_sound" : "High",
-                "hit_animation" : "silver",
-                "hits" : 2,
-                "groups" : ["ball", "bricks"],
-                "points" : 100,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "blue",
-                "position" : [ 64, 48],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 100,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "blue",
-                "position" : [ 64, 56],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 100,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "blue",
-                "position" : [ 64, 64],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 100,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "blue",
-                "position" : [ 64, 72],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 100,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "blue",
-                "position" : [ 64, 80],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 100,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "blue",
-                "position" : [ 64, 88],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 100,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "blue",
-                "position" : [ 64, 96],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 100,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "silver",
-                "position" : [ 64, 104],
-                "hit_sound" : "High",
-                "hit_animation" : "silver",
-                "hits" : 2,
-                "groups" : ["ball", "bricks"],
-                "points" : 100,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "red",
-                "position" : [ 80, 56],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 90,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "red",
-                "position" : [ 80, 64],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 90,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "red",
-                "position" : [ 80, 72],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 90,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "red",
-                "position" : [ 80, 80],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 90,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "red",
-                "position" : [ 80, 88],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 90,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "red",
-                "position" : [ 80, 96],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 90,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "silver",
-                "position" : [ 80, 104],
-                "hit_sound" : "High",
-                "hit_animation" : "silver",
-                "hits" : 2,
-                "groups" : ["ball", "bricks"],
-                "points" : 100,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "pink",
-                "position" : [ 96, 64],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 50,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "pink",
-                "position" : [ 96, 72],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 50,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "pink",
-                "position" : [ 96, 80],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 50,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "pink",
-                "position" : [ 96, 88],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 50,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "pink",
-                "position" : [ 96, 96],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 50,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "silver",
-                "position" : [ 96, 104],
-                "hit_sound" : "High",
-                "hit_animation" : "silver",
-                "hits" : 2,
-                "groups" : ["ball", "bricks"],
-                "points" : 100,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "cyan",
-                "position" : [112, 72],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 70,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "cyan",
-                "position" : [112, 80],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 70,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "cyan",
-                "position" : [112, 88],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 70,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "cyan",
-                "position" : [112, 96],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 70,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "silver",
-                "position" : [112, 104],
-                "hit_sound" : "High",
-                "hit_animation" : "silver",
-                "hits" : 2,
-                "groups" : ["ball", "bricks"],
-                "points" : 100,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "green",
-                "position" : [128, 80],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 80,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "green",
-                "position" : [128, 88],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 80,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "green",
-                "position" : [128, 96],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 80,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "silver",
-                "position" : [128, 104],
-                "hit_sound" : "High",
-                "hit_animation" : "silver",
-                "hits" : 2,
-                "groups" : ["ball", "bricks"],
-                "points" : 100,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "blue",
-                "position" : [144, 88],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 100,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "blue",
-                "position" : [144, 96],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 100,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "silver",
-                "position" : [144, 104],
-                "hit_sound" : "High",
-                "hit_animation" : "silver",
-                "hits" : 2,
-                "groups" : ["ball", "bricks"],
-                "points" : 100,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "red",
-                "position" : [160, 96],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 90,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "silver",
-                "position" : [160, 104],
-                "hit_sound" : "High",
-                "hit_animation" : "silver",
-                "hits" : 2,
-                "groups" : ["ball", "bricks"],
-                "points" : 100,
-                "on_death" : "create_capsule"
-            },
-            {
-                "image" : "pink",
-                "position" : [176, 104],
-                "hit_sound" : "Med",
-                "hits" : 1,
-                "groups" : ["ball", "bricks"],
-                "points" : 50,
-                "on_death" : "create_capsule"
+        "level2": [
+            {
+                "position": [
+                    16,
+                    8
+                ],
+                "image": "bg1",
+                "name": "bg",
+                "layer": 0
+            },
+            {
+                "groups": [
+                    "aliens"
+                ],
+                "layer": 30,
+                "animation": "alien1",
+                "name": "alien",
+                "hit_sound": "Alien",
+                "position": [
+                    1000,
+                    1000
+                ],
+                "image": "alien1_0",
+                "death_animation": "dead",
+                "hits": 1,
+                "points": 100
+            },
+            {
+                "hits": 1,
+                "points": 50,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    16,
+                    24
+                ],
+                "image": "pink"
+            },
+            {
+                "hits": 1,
+                "points": 50,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    16,
+                    32
+                ],
+                "image": "pink"
+            },
+            {
+                "hits": 1,
+                "points": 70,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    32,
+                    32
+                ],
+                "image": "cyan"
+            },
+            {
+                "hits": 1,
+                "points": 50,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    16,
+                    40
+                ],
+                "image": "pink"
+            },
+            {
+                "hits": 1,
+                "points": 70,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    32,
+                    40
+                ],
+                "image": "cyan"
+            },
+            {
+                "hits": 1,
+                "points": 80,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    48,
+                    40
+                ],
+                "image": "green"
+            },
+            {
+                "hits": 1,
+                "points": 50,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    16,
+                    48
+                ],
+                "image": "pink"
+            },
+            {
+                "hits": 1,
+                "points": 70,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    32,
+                    48
+                ],
+                "image": "cyan"
+            },
+            {
+                "hits": 1,
+                "points": 80,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    48,
+                    48
+                ],
+                "image": "green"
+            },
+            {
+                "hits": 1,
+                "points": 100,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    64,
+                    48
+                ],
+                "image": "blue"
+            },
+            {
+                "hits": 1,
+                "points": 50,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    16,
+                    56
+                ],
+                "image": "pink"
+            },
+            {
+                "hits": 1,
+                "points": 70,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    32,
+                    56
+                ],
+                "image": "cyan"
+            },
+            {
+                "hits": 1,
+                "points": 80,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    48,
+                    56
+                ],
+                "image": "green"
+            },
+            {
+                "hits": 1,
+                "points": 100,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    64,
+                    56
+                ],
+                "image": "blue"
+            },
+            {
+                "hits": 1,
+                "points": 90,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    80,
+                    56
+                ],
+                "image": "red"
+            },
+            {
+                "hits": 1,
+                "points": 50,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    16,
+                    64
+                ],
+                "image": "pink"
+            },
+            {
+                "hits": 1,
+                "points": 70,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    32,
+                    64
+                ],
+                "image": "cyan"
+            },
+            {
+                "hits": 1,
+                "points": 80,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    48,
+                    64
+                ],
+                "image": "green"
+            },
+            {
+                "hits": 1,
+                "points": 100,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    64,
+                    64
+                ],
+                "image": "blue"
+            },
+            {
+                "hits": 1,
+                "points": 90,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    80,
+                    64
+                ],
+                "image": "red"
+            },
+            {
+                "hits": 1,
+                "points": 50,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    96,
+                    64
+                ],
+                "image": "pink"
+            },
+            {
+                "hits": 1,
+                "points": 50,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    16,
+                    72
+                ],
+                "image": "pink"
+            },
+            {
+                "hits": 1,
+                "points": 70,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    32,
+                    72
+                ],
+                "image": "cyan"
+            },
+            {
+                "hits": 1,
+                "points": 80,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    48,
+                    72
+                ],
+                "image": "green"
+            },
+            {
+                "hits": 1,
+                "points": 100,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    64,
+                    72
+                ],
+                "image": "blue"
+            },
+            {
+                "hits": 1,
+                "points": 90,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    80,
+                    72
+                ],
+                "image": "red"
+            },
+            {
+                "hits": 1,
+                "points": 50,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    96,
+                    72
+                ],
+                "image": "pink"
+            },
+            {
+                "hits": 1,
+                "points": 70,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    112,
+                    72
+                ],
+                "image": "cyan"
+            },
+            {
+                "hits": 1,
+                "points": 50,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    16,
+                    80
+                ],
+                "image": "pink"
+            },
+            {
+                "hits": 1,
+                "points": 70,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    32,
+                    80
+                ],
+                "image": "cyan"
+            },
+            {
+                "hits": 1,
+                "points": 80,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    48,
+                    80
+                ],
+                "image": "green"
+            },
+            {
+                "hits": 1,
+                "points": 100,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    64,
+                    80
+                ],
+                "image": "blue"
+            },
+            {
+                "hits": 1,
+                "points": 90,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    80,
+                    80
+                ],
+                "image": "red"
+            },
+            {
+                "hits": 1,
+                "points": 50,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    96,
+                    80
+                ],
+                "image": "pink"
+            },
+            {
+                "hits": 1,
+                "points": 70,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    112,
+                    80
+                ],
+                "image": "cyan"
+            },
+            {
+                "hits": 1,
+                "points": 80,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    128,
+                    80
+                ],
+                "image": "green"
+            },
+            {
+                "hits": 1,
+                "points": 50,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    16,
+                    88
+                ],
+                "image": "pink"
+            },
+            {
+                "hits": 1,
+                "points": 70,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    32,
+                    88
+                ],
+                "image": "cyan"
+            },
+            {
+                "hits": 1,
+                "points": 80,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    48,
+                    88
+                ],
+                "image": "green"
+            },
+            {
+                "hits": 1,
+                "points": 100,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    64,
+                    88
+                ],
+                "image": "blue"
+            },
+            {
+                "hits": 1,
+                "points": 90,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    80,
+                    88
+                ],
+                "image": "red"
+            },
+            {
+                "hits": 1,
+                "points": 50,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    96,
+                    88
+                ],
+                "image": "pink"
+            },
+            {
+                "hits": 1,
+                "points": 70,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    112,
+                    88
+                ],
+                "image": "cyan"
+            },
+            {
+                "hits": 1,
+                "points": 80,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    128,
+                    88
+                ],
+                "image": "green"
+            },
+            {
+                "hits": 1,
+                "points": 100,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    144,
+                    88
+                ],
+                "image": "blue"
+            },
+            {
+                "hits": 1,
+                "points": 50,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    16,
+                    96
+                ],
+                "image": "pink"
+            },
+            {
+                "hits": 1,
+                "points": 70,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    32,
+                    96
+                ],
+                "image": "cyan"
+            },
+            {
+                "hits": 1,
+                "points": 80,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    48,
+                    96
+                ],
+                "image": "green"
+            },
+            {
+                "hits": 1,
+                "points": 100,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    64,
+                    96
+                ],
+                "image": "blue"
+            },
+            {
+                "hits": 1,
+                "points": 90,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    80,
+                    96
+                ],
+                "image": "red"
+            },
+            {
+                "hits": 1,
+                "points": 50,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    96,
+                    96
+                ],
+                "image": "pink"
+            },
+            {
+                "hits": 1,
+                "points": 70,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    112,
+                    96
+                ],
+                "image": "cyan"
+            },
+            {
+                "hits": 1,
+                "points": 80,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    128,
+                    96
+                ],
+                "image": "green"
+            },
+            {
+                "hits": 1,
+                "points": 100,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    144,
+                    96
+                ],
+                "image": "blue"
+            },
+            {
+                "hits": 1,
+                "points": 90,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    160,
+                    96
+                ],
+                "image": "red"
+            },
+            {
+                "hits": 2,
+                "points": 100,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "High",
+                "position": [
+                    16,
+                    104
+                ],
+                "hit_animation": "silver",
+                "image": "silver"
+            },
+            {
+                "hits": 2,
+                "points": 100,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "High",
+                "position": [
+                    32,
+                    104
+                ],
+                "hit_animation": "silver",
+                "image": "silver"
+            },
+            {
+                "hits": 2,
+                "points": 100,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "High",
+                "position": [
+                    48,
+                    104
+                ],
+                "hit_animation": "silver",
+                "image": "silver"
+            },
+            {
+                "hits": 2,
+                "points": 100,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "High",
+                "position": [
+                    64,
+                    104
+                ],
+                "hit_animation": "silver",
+                "image": "silver"
+            },
+            {
+                "hits": 2,
+                "points": 100,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "High",
+                "position": [
+                    80,
+                    104
+                ],
+                "hit_animation": "silver",
+                "image": "silver"
+            },
+            {
+                "hits": 2,
+                "points": 100,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "High",
+                "position": [
+                    96,
+                    104
+                ],
+                "hit_animation": "silver",
+                "image": "silver"
+            },
+            {
+                "hits": 2,
+                "points": 100,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "High",
+                "position": [
+                    112,
+                    104
+                ],
+                "hit_animation": "silver",
+                "image": "silver"
+            },
+            {
+                "hits": 2,
+                "points": 100,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "High",
+                "position": [
+                    128,
+                    104
+                ],
+                "hit_animation": "silver",
+                "image": "silver"
+            },
+            {
+                "hits": 2,
+                "points": 100,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "High",
+                "position": [
+                    144,
+                    104
+                ],
+                "hit_animation": "silver",
+                "image": "silver"
+            },
+            {
+                "hits": 2,
+                "points": 100,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "High",
+                "position": [
+                    160,
+                    104
+                ],
+                "hit_animation": "silver",
+                "image": "silver"
+            },
+            {
+                "hits": 1,
+                "points": 50,
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
+                "hit_sound": "Med",
+                "on_death": "create_capsule",
+                "position": [
+                    176,
+                    104
+                ],
+                "image": "pink"
             }
-    ],
+        ],
         "debug" : [
             {
                 "name" : "ball",
@@ -2429,18 +3229,5 @@
                 "position" : [100, 100]
             }
         ]
-   },
-    "font" : {
-        "filename" : "resources\\images\\nesfont8.png",
-        "size" : [8,8],
-        "characters" : [
-            " !\"#$%&'()*+,-./",
-            "0123456789:;<=>?",
-            "@ABCDEFGHIJKLMNO",
-            "PQRSTUVWXYZ[\\]^_",
-            "`abcdefghijklmno",
-            "pqrstuvwxyz{|}~"
-        ]
-
     }
 }
