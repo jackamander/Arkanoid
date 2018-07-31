@@ -6,17 +6,31 @@
     "frame_rate" : 60,
     "bg_color" : "black",
     "ball_speed" : 1.2,
-    "font" : {
-        "filename" : "resources\\images\\nesfont8.png",
-        "size" : [8,8],
-        "characters" : [
-            " !\"#$%&'()*+,-./",
-            "0123456789:;<=>?",
-            "@ABCDEFGHIJKLMNO",
-            "PQRSTUVWXYZ[\\]^_",
-            "`abcdefghijklmno",
-            "pqrstuvwxyz{|}~"
-        ]
+    "fonts" : {
+        "white" : {
+            "filename" : "resources\\images\\nesfont8.png",
+            "size" : [8,8],
+            "characters" : [
+                " !\"#$%&'()*+,-./",
+                "0123456789:;<=>?",
+                "@ABCDEFGHIJKLMNO",
+                "PQRSTUVWXYZ[\\]^_",
+                "`abcdefghijklmno",
+                "pqrstuvwxyz{|}~"
+            ]
+        },
+        "red" : {
+            "filename" : "resources\\images\\nesfont8red.png",
+            "size" : [8,8],
+            "characters" : [
+                " !\"#$%&'()*+,-./",
+                "0123456789:;<=>?",
+                "@ABCDEFGHIJKLMNO",
+                "PQRSTUVWXYZ[\\]^_",
+                "`abcdefghijklmno",
+                "pqrstuvwxyz{|}~"
+            ]
+        }
     },
     "images" : {
         "paddle" : {
@@ -851,6 +865,7 @@
         "banner" : [
             {
                 "text" : "1UP",
+                "font" : "red",
                 "position" : [32, 8]
             },
             {
@@ -860,6 +875,7 @@
             },
             {
                 "text" : "HIGH SCORE",
+                "font" : "red",
                 "position" : [88, 8]
             },
             {
@@ -870,6 +886,7 @@
             {
                 "name" : "2UP",
                 "text" : "2UP",
+                "font" : "red",
                 "position" : [216, 8]
             },
             {
@@ -941,10 +958,12 @@
         "hud" : [
             {
                 "text" : "HIGH",
+                "font" : "red",
                 "position" : [200, 24]
             },
             {
                 "text" : "SCORE",
+                "font" : "red",
                 "position" : [208, 32]
             },
             {
@@ -955,6 +974,7 @@
             {
                 "name" : "1UP",
                 "text" : "1UP",
+                "font" : "red",
                 "position" : [200, 56]
             },
             {
@@ -966,6 +986,7 @@
             {
                 "name" : "2UP",
                 "text" : "2UP",
+                "font" : "red",
                 "position" : [200, 56]
             },
             {
@@ -976,6 +997,7 @@
             },
             {
                 "text" : "ROUND",
+                "font" : "red",
                 "position" : [208, 192]
             },
             {

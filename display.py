@@ -44,8 +44,8 @@ def _find_char_offset(char, characters):
 
     raise ValueError("Unsupported Character: %s" % char)
 
-def draw_text(text):
-    config = utils.config["font"]
+def draw_text(text, font):
+    config = utils.config["fonts"][font]
     filename = config["filename"]
     size = config["size"]
     characters = config["characters"]
@@ -242,8 +242,9 @@ class FireEvent(Action):
         return True
 
 class UpdateVar(Action):
-    def __init__(self, name, fmt="%s"):
+    def __init__(self, name, font="white", fmt="%s"):
         self.name = name
+        self.font = font
         self.fmt = fmt
         self.text = ""
         self.dirty = False
@@ -258,7 +259,7 @@ class UpdateVar(Action):
     def update(self, sprite):
         if self.dirty:
             self.dirty = False
-            image = draw_text(self.text)
+            image = draw_text(self.text, self.font)
             sprite.set_image(image)
 
 class Delay(Action):
@@ -531,14 +532,16 @@ class Scene:
 
                 key = cfg.pop("text", "")
                 if key:
-                    image = draw_text(key)
+                    font = cfg.pop("font", "white")
+                    image = draw_text(key, font)
 
                 key = cfg.pop("var", "")
                 if key:
                     fmt = cfg.pop("fmt", "%s")
                     text = fmt % var_dict[key]
-                    image = draw_text(text)
-                    action = UpdateVar(key, fmt)
+                    font = cfg.pop("font", "white")
+                    image = draw_text(text, font)
+                    action = UpdateVar(key, font, fmt)
 
                 key = cfg.pop("image", "")
                 if key:

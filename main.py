@@ -43,7 +43,7 @@ def main():
         eng.draw(window.screen)
 
         fps = str(int(clock.get_fps()))
-        window.screen.blit(display.draw_text(fps), (0, 0))
+        window.screen.blit(display.draw_text(fps, "white"), (0, 0))
 
         clock.tick(utils.config["frame_rate"])
         window.flip()
