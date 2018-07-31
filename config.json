@@ -122,27 +122,27 @@
             "size" : [16, 8],
             "offset" : [40, 16]
         },
-        "bg1" : {
+        "bg0" : {
             "filename" : "resources\\images\\fields.png",
             "size" : [176, 224],
             "offset" : [8, 8]
         },
-        "bg2" : {
+        "bg1" : {
             "filename" : "resources\\images\\fields.png",
             "size" : [176, 224],
             "offset" : [200, 8]
         },
-        "bg3" : {
+        "bg2" : {
             "filename" : "resources\\images\\fields.png",
             "size" : [176, 224],
             "offset" : [392, 8]
         },
-        "bg4" : {
+        "bg3" : {
             "filename" : "resources\\images\\fields.png",
             "size" : [176, 224],
             "offset" : [584, 8]
         },
-        "bg5" : {
+        "bg_final" : {
             "filename" : "resources\\images\\fields.png",
             "size" : [176, 224],
             "offset" : [776, 8]
@@ -507,147 +507,147 @@
             "size" : [16, 8],
             "offset" : [80, 48]
         },
-        "alien1_0" : {
+        "alien0_0" : {
             "filename" : "resources\\images\\enemies.png",
             "size" : [16, 16],
             "offset" : [0, 0]
         },
-        "alien1_1" : {
+        "alien0_1" : {
             "filename" : "resources\\images\\enemies.png",
             "size" : [16, 16],
             "offset" : [16, 0]
         },
-        "alien1_2" : {
+        "alien0_2" : {
             "filename" : "resources\\images\\enemies.png",
             "size" : [16, 16],
             "offset" : [32, 0]
         },
-        "alien1_3" : {
+        "alien0_3" : {
             "filename" : "resources\\images\\enemies.png",
             "size" : [16, 16],
             "offset" : [48, 0]
         },
-        "alien1_4" : {
+        "alien0_4" : {
             "filename" : "resources\\images\\enemies.png",
             "size" : [16, 16],
             "offset" : [64, 0]
         },
-        "alien1_5" : {
+        "alien0_5" : {
             "filename" : "resources\\images\\enemies.png",
             "size" : [16, 16],
             "offset" : [80, 0]
         },
-        "alien1_6" : {
+        "alien0_6" : {
             "filename" : "resources\\images\\enemies.png",
             "size" : [16, 16],
             "offset" : [96, 0]
         },
-        "alien1_7" : {
+        "alien0_7" : {
             "filename" : "resources\\images\\enemies.png",
             "size" : [16, 16],
             "offset" : [112, 0]
         },
-        "alien2_0" : {
+        "alien1_0" : {
             "filename" : "resources\\images\\enemies.png",
             "size" : [16, 16],
             "offset" : [0, 16]
         },
-        "alien2_1" : {
+        "alien1_1" : {
             "filename" : "resources\\images\\enemies.png",
             "size" : [16, 16],
             "offset" : [16, 16]
         },
-        "alien2_2" : {
+        "alien1_2" : {
             "filename" : "resources\\images\\enemies.png",
             "size" : [16, 16],
             "offset" : [32, 16]
         },
-        "alien2_3" : {
+        "alien1_3" : {
             "filename" : "resources\\images\\enemies.png",
             "size" : [16, 16],
             "offset" : [48, 16]
         },
-        "alien2_4" : {
+        "alien1_4" : {
             "filename" : "resources\\images\\enemies.png",
             "size" : [16, 16],
             "offset" : [64, 16]
         },
-        "alien2_5" : {
+        "alien1_5" : {
             "filename" : "resources\\images\\enemies.png",
             "size" : [16, 16],
             "offset" : [80, 16]
         },
-        "alien2_6" : {
+        "alien1_6" : {
             "filename" : "resources\\images\\enemies.png",
             "size" : [16, 16],
             "offset" : [96, 16]
         },
-        "alien3_0" : {
+        "alien2_0" : {
             "filename" : "resources\\images\\enemies.png",
             "size" : [16, 16],
             "offset" : [0, 32]
         },
-        "alien3_1" : {
+        "alien2_1" : {
             "filename" : "resources\\images\\enemies.png",
             "size" : [16, 16],
             "offset" : [16, 32]
         },
-        "alien3_2" : {
+        "alien2_2" : {
             "filename" : "resources\\images\\enemies.png",
             "size" : [16, 16],
             "offset" : [32, 32]
         },
-        "alien3_3" : {
+        "alien2_3" : {
             "filename" : "resources\\images\\enemies.png",
             "size" : [16, 16],
             "offset" : [48, 32]
         },
-        "alien3_4" : {
+        "alien2_4" : {
             "filename" : "resources\\images\\enemies.png",
             "size" : [16, 16],
             "offset" : [64, 32]
         },
-        "alien3_5" : {
+        "alien2_5" : {
             "filename" : "resources\\images\\enemies.png",
             "size" : [16, 16],
             "offset" : [80, 32]
         },
-        "alien4_0" : {
+        "alien3_0" : {
             "filename" : "resources\\images\\enemies.png",
             "size" : [16, 16],
             "offset" : [0, 48]
         },
-        "alien4_1" : {
+        "alien3_1" : {
             "filename" : "resources\\images\\enemies.png",
             "size" : [16, 16],
             "offset" : [16, 48]
         },
-        "alien4_2" : {
+        "alien3_2" : {
             "filename" : "resources\\images\\enemies.png",
             "size" : [16, 16],
             "offset" : [32, 48]
         },
-        "alien4_3" : {
+        "alien3_3" : {
             "filename" : "resources\\images\\enemies.png",
             "size" : [16, 16],
             "offset" : [48, 48]
         },
-        "alien4_4" : {
+        "alien3_4" : {
             "filename" : "resources\\images\\enemies.png",
             "size" : [16, 16],
             "offset" : [64, 48]
         },
-        "alien4_5" : {
+        "alien3_5" : {
             "filename" : "resources\\images\\enemies.png",
             "size" : [16, 16],
             "offset" : [80, 48]
         },
-        "alien4_6" : {
+        "alien3_6" : {
             "filename" : "resources\\images\\enemies.png",
             "size" : [16, 16],
             "offset" : [96, 48]
         },
-        "alien4_7" : {
+        "alien3_7" : {
             "filename" : "resources\\images\\enemies.png",
             "size" : [16, 16],
             "offset" : [112, 48]
@@ -774,23 +774,23 @@
             "images" : ["inlet3", "inlet2", "inlet1"],
             "speed" : 30
         },
+        "alien0" : {
+            "images" : ["alien0_0", "alien0_1", "alien0_2", "alien0_3", "alien0_4", "alien0_5", "alien0_6", "alien0_7"],
+            "speed" : 15,
+            "loop" : true
+        },
         "alien1" : {
-            "images" : ["alien1_0", "alien1_1", "alien1_2", "alien1_3", "alien1_4", "alien1_5", "alien1_6", "alien1_7"],
+            "images" : ["alien1_0", "alien1_1", "alien1_2", "alien1_3", "alien1_4", "alien1_5", "alien1_6"],
             "speed" : 15,
             "loop" : true
         },
         "alien2" : {
-            "images" : ["alien2_0", "alien2_1", "alien2_2", "alien2_3", "alien2_4", "alien2_5", "alien2_6"],
+            "images" : ["alien2_0", "alien2_1", "alien2_2", "alien2_3", "alien2_4", "alien2_5"],
             "speed" : 15,
             "loop" : true
         },
         "alien3" : {
-            "images" : ["alien3_0", "alien3_1", "alien3_2", "alien3_3", "alien3_4", "alien3_5"],
-            "speed" : 15,
-            "loop" : true
-        },
-        "alien4" : {
-            "images" : ["alien4_0", "alien4_1", "alien4_2", "alien4_3", "alien4_4", "alien4_5", "alien4_6", "alien4_7"],
+            "images" : ["alien3_0", "alien3_1", "alien3_2", "alien3_3", "alien3_4", "alien3_5", "alien3_6", "alien3_7"],
             "speed" : 15,
             "loop" : true
         },
@@ -1171,8 +1171,8 @@
         "level1" : [
             {
                 "name" : "alien",
-                "image" : "alien1_0",
-                "animation" : "alien1",
+                "image" : "alien0_0",
+                "animation" : "alien0",
                 "hit_sound" : "Alien",
                 "death_animation" : "dead",
                 "position" : [1000, 1000],
@@ -1183,7 +1183,7 @@
             },
             {
                 "name" : "bg",
-                "image" : "bg1",
+                "image" : "bg0",
                 "position" : [16, 8],
                 "layer" : 0
             },
@@ -1796,9 +1796,9 @@
         "level2" : [
             {
                 "name" : "alien",
-                "image" : "alien2_0",
+                "image" : "alien1_0",
                 "hit_sound" : "Alien",
-                "animation" : "alien2",
+                "animation" : "alien1",
                 "death_animation" : "dead",
                 "position" : [1000, 1000],
                 "layer" : 30,
@@ -1808,7 +1808,7 @@
             },
             {
                 "name" : "bg",
-                "image" : "bg2",
+                "image" : "bg1",
                 "position" : [16, 8],
                 "layer" : 0
             },
