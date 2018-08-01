@@ -18,7 +18,7 @@ CollisionSide_Left = 4
 CollisionSide_Right = 8
 
 class State(object):
-    def __init__(self, engine):
+    def __init__(self, engine, data):
         self.engine = engine
 
     def input(self, event):
@@ -31,8 +31,8 @@ class State(object):
         pass
 
 class TitleState(State):
-    def __init__(self, engine):
-        State.__init__(self, engine)
+    def __init__(self, engine, data):
+        State.__init__(self, engine, data)
 
         self.scene = display.Scene(["title", "banner"], engine.vars)
 
@@ -70,8 +70,8 @@ class TitleState(State):
         self.scene.groups["all"].draw(screen)
 
 class BlinkState(State):
-    def __init__(self, engine):
-        State.__init__(self, engine)
+    def __init__(self, engine, data):
+        State.__init__(self, engine, data)
 
         self.scene = display.Scene(["title", "banner"], engine.vars)
 
@@ -102,8 +102,8 @@ class BlinkState(State):
         self.scene.groups["all"].draw(screen)
 
 class RoundState(State):
-    def __init__(self, engine):
-        State.__init__(self, engine)
+    def __init__(self, engine, data):
+        State.__init__(self, engine, data)
 
         self.scene = display.Scene(["round", "banner"], engine.vars)
 
@@ -127,8 +127,8 @@ def show_lives(state):
                 state.scene.groups["all"].add(sprite)
 
 class StartState(State):
-    def __init__(self, engine):
-        State.__init__(self, engine)
+    def __init__(self, engine, data):
+        State.__init__(self, engine, data)
 
         self.scene = display.Scene(["hud", "walls", "ready"], engine.vars)
         self.scene.merge(engine.scenes[engine.vars["player"]][engine.vars["level"]])
@@ -154,8 +154,8 @@ class StartState(State):
         self.scene.groups["all"].draw(screen)
 
 class BreakState(State):
-    def __init__(self, engine):
-        State.__init__(self, engine)
+    def __init__(self, engine, data):
+        State.__init__(self, engine, data)
 
         self.scene = display.Scene(["hud", "walls", "break"], engine.vars)
         self.scene.merge(engine.scenes[engine.vars["player"]][engine.vars["level"]])
@@ -187,6 +187,24 @@ class BreakState(State):
         self.scene.groups["all"].update()
 
         if self.sound is None or not self.sound.get_busy():
+            next_level(self.engine)
+
+    def draw(self, screen):
+        self.scene.groups["all"].draw(screen)
+
+class DeathState(State):
+    def __init__(self, engine, data):
+        State.__init__(self, engine, data)
+
+        self.scene = data["scene"]
+        self.paddle = data["paddle"]
+
+        self.paddle.kill()
+
+    def update(self):
+        self.scene.names["paddle"].update()
+
+        if not self.paddle.alive():
             next_level(self.engine)
 
     def draw(self, screen):
@@ -431,8 +449,8 @@ def next_level(engine):
         engine.set_state(VictoryState)
 
 class GameState(State):
-    def __init__(self, engine):
-        State.__init__(self, engine)
+    def __init__(self, engine, data):
+        State.__init__(self, engine, data)
 
         self.scene = display.Scene(["hud", "walls", "tools", "break"], engine.vars)
         self.scene.merge(engine.scenes[engine.vars["player"]][engine.vars["level"]])
@@ -573,8 +591,9 @@ class GameState(State):
                 if len(self.balls) == 1:
                     self.capsules.enable()
 
-                if len(self.balls) == 0:
-                    self.paddle.kill()
+        # Check for death
+        if len(self.balls) == 0:
+            self.engine.set_state(DeathState, {"scene" : self.scene, "paddle" : self.paddle})
 
         if not self.paddle.alive():
             self.engine.vars["lives1" if self.engine.vars["player"] == 1 else "lives2"] -= 1
@@ -694,8 +713,8 @@ def GetCollisionSideFromSlopeComparison(potentialSides, velocityRise, velocityRu
     return CollisionSide_None
 
 class VictoryState(State):
-    def __init__(self, engine):
-        State.__init__(self, engine)
+    def __init__(self, engine, data):
+        State.__init__(self, engine, data)
 
         self.scene = display.Scene(["victory", "banner"], engine.vars)
 
@@ -765,10 +784,10 @@ class Engine(object):
 
         self.set_state(self.INITIAL_STATE)
 
-    def set_state(self, state):
+    def set_state(self, state, data={}):
         utils.events.clear()
         utils.timers.clear()
-        self.state = state(self)
+        self.state = state(self, data)
 
     def input(self, event):
         utils.events.handle(event)
