@@ -94,7 +94,7 @@ class BlinkState(State):
     def update(self):
         self.scene.groups["all"].update()
 
-        if not self.sound.get_busy():
+        if self.sound is None or not self.sound.get_busy():
             self.engine.reset()
             self.engine.set_state(RoundState)
 
@@ -147,7 +147,7 @@ class StartState(State):
     def update(self):
         self.scene.groups["all"].update()
 
-        if not self.sound.get_busy():
+        if self.sound is None or not self.sound.get_busy():
             self.engine.set_state(GameState)
 
     def draw(self, screen):
@@ -186,7 +186,7 @@ class BreakState(State):
     def update(self):
         self.scene.groups["all"].update()
 
-        if not self.sound.get_busy():
+        if self.sound is None or not self.sound.get_busy():
             next_level(self.engine)
 
     def draw(self, screen):
@@ -299,7 +299,7 @@ class Paddle:
         self.sound = audio.play_sound("Death")
 
     def alive(self):
-        return self.sprite.alive() or self.sound.get_busy()
+        return self.sprite.alive() or self.sound is None or self.sound.get_busy()
 
 class Capsules:
     def __init__(self, state, paddle):

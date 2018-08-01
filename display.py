@@ -228,7 +228,7 @@ class PlaySound(Action):
         self.sound = audio.play_sound(sound)
 
     def update(self, sprite):
-        return not self.sound.get_busy()
+        return self.sound is None or not self.sound.get_busy()
 
 class FireEvent(Action):
     def __init__(self, event, **kwargs):
