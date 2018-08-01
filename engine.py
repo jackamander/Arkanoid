@@ -205,7 +205,17 @@ class DeathState(State):
         self.scene.names["paddle"].update()
 
         if not self.paddle.alive():
-            next_level(self.engine)
+            self.engine.vars["lives1" if self.engine.vars["player"] == 1 else "lives2"] -= 1
+
+            for _ in range(self.engine.vars["players"]):
+                self.engine.vars["player"] = self.engine.vars["player"] % self.engine.vars["players"] + 1
+
+                if self.engine.vars["lives1" if self.engine.vars["player"] == 1 else "lives2"] > 0:
+                    self.engine.vars["level"] = self.engine.vars["level1" if self.engine.vars["player"] == 1 else "level2"]
+                    self.engine.set_state(RoundState)
+                    break
+            else:
+                self.engine.set_state(TitleState)
 
     def draw(self, screen):
         self.scene.groups["all"].draw(screen)
@@ -594,19 +604,6 @@ class GameState(State):
         # Check for death
         if len(self.balls) == 0:
             self.engine.set_state(DeathState, {"scene" : self.scene, "paddle" : self.paddle})
-
-        if not self.paddle.alive():
-            self.engine.vars["lives1" if self.engine.vars["player"] == 1 else "lives2"] -= 1
-
-            for _ in range(self.engine.vars["players"]):
-                self.engine.vars["player"] = self.engine.vars["player"] % self.engine.vars["players"] + 1
-
-                if self.engine.vars["lives1" if self.engine.vars["player"] == 1 else "lives2"] > 0:
-                    self.engine.vars["level"] = self.engine.vars["level1" if self.engine.vars["player"] == 1 else "level2"]
-                    self.engine.set_state(RoundState)
-                    break
-            else:
-                self.engine.set_state(TitleState)
 
         # Level completion detection
         remaining = sum([brick.cfg.get("hits", 0) for brick in self.scene.groups["bricks"].sprites()])
