@@ -623,49 +623,57 @@ def collision_side(sprite1, sprite2):
     velocityRise = sprite1.rect.top - sprite1.last.top
     velocityRun = sprite1.rect.left - sprite1.last.left
 
+    velocityRise2 = sprite2.rect.top - sprite2.last.top
+    velocityRun2 = sprite2.rect.left - sprite2.last.left
+
+    # Adjust for sprite2's velocity
+    velocityRise -= velocityRise2
+    velocityRun -= velocityRun2
+    sprite1_prev = sprite1.last.move(velocityRun2, velocityRise2)
+
     # Stores what sides might have been collided with
     potentialCollisionSide = CollisionSide_None
 
-    if sprite1.last.right <= sprite2.rect.left:
+    if sprite1_prev.right <= sprite2.rect.left:
         # Did not collide with right side might have collided with left side
         potentialCollisionSide |= CollisionSide_Left
 
-        cornerSlopeRun = sprite2.rect.left - sprite1.last.right
+        cornerSlopeRun = sprite2.rect.left - sprite1_prev.right
 
-        if sprite1.last.bottom <= sprite2.rect.top:
+        if sprite1_prev.bottom <= sprite2.rect.top:
             # Might have collided with top side
             potentialCollisionSide |= CollisionSide_Top
-            cornerSlopeRise = sprite2.rect.top - sprite1.last.bottom
-        elif sprite1.last.top >= sprite2.rect.bottom:
+            cornerSlopeRise = sprite2.rect.top - sprite1_prev.bottom
+        elif sprite1_prev.top >= sprite2.rect.bottom:
             # Might have collided with bottom side
             potentialCollisionSide |= CollisionSide_Bottom
-            cornerSlopeRise = sprite2.rect.bottom - sprite1.last.top
+            cornerSlopeRise = sprite2.rect.bottom - sprite1_prev.top
         else:
             # Did not collide with top side or bottom side or right side
             return CollisionSide_Left
-    elif sprite1.last.left >= sprite2.rect.right:
+    elif sprite1_prev.left >= sprite2.rect.right:
         # Did not collide with left side might have collided with right side
         potentialCollisionSide |= CollisionSide_Right
 
-        cornerSlopeRun = sprite1.last.left - sprite2.rect.right
+        cornerSlopeRun = sprite1_prev.left - sprite2.rect.right
 
-        if sprite1.last.bottom <= sprite2.rect.top:
+        if sprite1_prev.bottom <= sprite2.rect.top:
             # Might have collided with top side
             potentialCollisionSide |= CollisionSide_Top
-            cornerSlopeRise = sprite1.last.bottom - sprite2.rect.top
-        elif sprite1.last.top >= sprite2.rect.bottom:
+            cornerSlopeRise = sprite1_prev.bottom - sprite2.rect.top
+        elif sprite1_prev.top >= sprite2.rect.bottom:
             # Might have collided with bottom side
             potentialCollisionSide |= CollisionSide_Bottom
-            cornerSlopeRise = sprite1.last.top - sprite2.rect.bottom
+            cornerSlopeRise = sprite1_prev.top - sprite2.rect.bottom
         else:
             # Did not collide with top side or bottom side or left side
             return CollisionSide_Right
     else:
         # Did not collide with either left or right side
         # must be top side, bottom side, or none
-        if sprite1.last.bottom <= sprite2.rect.top:
+        if sprite1_prev.bottom <= sprite2.rect.top:
             return CollisionSide_Top
-        elif sprite1.last.top >= sprite2.rect.bottom:
+        elif sprite1_prev.top >= sprite2.rect.bottom:
             return CollisionSide_Bottom
         else:
             # Previous hitbox of moving object was already colliding with stationary object
