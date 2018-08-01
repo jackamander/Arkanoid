@@ -220,6 +220,17 @@ class DeathState(State):
     def draw(self, screen):
         self.scene.groups["all"].draw(screen)
 
+class ClearState(State):
+    def __init__(self, engine, data):
+        State.__init__(self, engine, data)
+
+        self.scene = data["scene"]
+
+        utils.timers.start(2.0, next_level, engine)
+
+    def draw(self, screen):
+        self.scene.groups["all"].draw(screen)
+
 class Paddle:
     def __init__(self, sprite, playspace, state):
         self.state = state
@@ -608,7 +619,7 @@ class GameState(State):
         # Level completion detection
         remaining = sum([brick.cfg.get("hits", 0) for brick in self.scene.groups["bricks"].sprites()])
         if remaining == 0:
-            next_level(self.engine)
+            self.engine.set_state(ClearState, {"scene" : self.scene})
 
     def draw(self, screen):
         self.scene.groups["all"].draw(screen)
