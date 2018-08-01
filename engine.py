@@ -157,36 +157,16 @@ class BreakState(State):
     def __init__(self, engine, data):
         State.__init__(self, engine, data)
 
-        self.scene = display.Scene(["hud", "walls", "break"], engine.vars)
-        self.scene.merge(engine.scenes[engine.vars["player"]][engine.vars["level"]])
+        self.scene = data["scene"]
+        self.paddle = data["paddle"]
 
-        if engine.vars["player"] == 1:
-            self.scene.names["2UP"].kill()
-            self.scene.names["score2"].kill()
-        else:
-            self.scene.names["1UP"].kill()
-            self.scene.names["score1"].kill()
-
-        show_lives(self)
-
-        self._break = self.scene.names["break"]
-        self._break.set_action(display.Animate(self._break.cfg["animation"]))
-
-        self.paddle_break = self.scene.names["paddle_break"]
-        self.paddle_break.set_action(display.Animate(self.paddle_break.cfg["animation"]).then(display.Die()).plus(display.Move([0.5,0])))
-
-        self.sound = audio.play_sound("Break")
-
-        utils.events.register(utils.EVT_KEYDOWN, self.on_keydown)
-
-    def on_keydown(self, event):
-        if event.key == pygame.K_SPACE:
-            self.engine.set_state(BreakState)
+        self.paddle._break()
 
     def update(self):
-        self.scene.groups["all"].update()
+        self.scene.names["break"].update()
+        self.scene.names["paddle"].update()
 
-        if self.sound is None or not self.sound.get_busy():
+        if not self.paddle.alive():
             next_level(self.engine)
 
     def draw(self, screen):
@@ -337,6 +317,17 @@ class Paddle:
         self.sprite.set_action(display.Animate("explode").then(display.Die()))
         self.sound = audio.play_sound("Death")
 
+    def _break(self):
+        if self.handler == self.normal_handler:
+            animation = "paddle_break"
+        elif self.handler == self.expanded_handler:
+            animation = "paddle_ext_break"
+        elif self.handler == self.laser_handler:
+            animation = "laser_break"
+
+        self.sprite.set_action(display.Animate(animation).then(display.Die()).plus(display.Move([0.5,0])))
+        self.sound = audio.play_sound("Break")
+
     def alive(self):
         return self.sprite.alive() or self.sound is None or self.sound.get_busy()
 
@@ -358,7 +349,6 @@ class Capsules:
         self._break = self.scene.names["break"]
         self._break.set_action(display.Animate(self._break.cfg["animation"]))
         self._break.kill()
-        self.scene.names["paddle_break"].kill()
 
         utils.events.register(utils.EVT_CAPSULE, self.on_brick)
 
@@ -473,7 +463,7 @@ class GameState(State):
     def __init__(self, engine, data):
         State.__init__(self, engine, data)
 
-        self.scene = display.Scene(["hud", "walls", "tools", "break"], engine.vars)
+        self.scene = display.Scene(["hud", "walls", "tools"], engine.vars)
         self.scene.merge(engine.scenes[engine.vars["player"]][engine.vars["level"]])
 
         if engine.vars["player"] == 1:
@@ -562,7 +552,7 @@ class GameState(State):
         for sprite in self.scene.groups["break"]:
             if self.paddle.sprite.rect.right + 1 >= sprite.rect.left:
                 utils.events.generate(utils.EVT_POINTS, points=10000)
-                self.engine.set_state(BreakState)
+                self.engine.set_state(BreakState, {"scene" : self.scene, "paddle" : self.paddle})
 
         # Capsules
         sprites = pygame.sprite.spritecollide(self.paddle.sprite, self.scene.groups["paddle"], False)
