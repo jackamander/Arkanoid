@@ -484,6 +484,15 @@ def next_level(engine):
     else:
         engine.set_state(VictoryState)
 
+def jump_level(engine, level):
+    key = "level1" if engine.vars["player"] == 1 else "level2"
+    engine.vars["level"] = level
+    engine.vars[key] = level
+    if engine.vars["level"] <= engine.last_level:
+        engine.set_state(RoundState)
+    else:
+        engine.set_state(VictoryState)
+
 class GameState(State):
     def __init__(self, engine, data):
         State.__init__(self, engine, data)
@@ -546,6 +555,8 @@ class GameState(State):
             self.engine.set_state(StartState)
         elif event.key == pygame.K_PERIOD:
             next_level(self.engine)
+        elif event.key == pygame.K_q:
+            jump_level(self.engine, 36)
 
     def on_points(self, event):
         key = "score1" if self.engine.vars["player"] == 1 else "score2"
