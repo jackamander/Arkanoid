@@ -449,9 +449,10 @@ class InletMgr(Action):
             self._randomize()
 
 class DohMgr(Action):
-    def __init__(self, scene):
+    def __init__(self, scene, sprite):
         self.scene = scene
         self.set_state(self.state_open, 1)
+        self.set_closed(sprite)
 
     def delay(self, delay):
         self.frames = delay * utils.config["frame_rate"]
@@ -461,6 +462,14 @@ class DohMgr(Action):
             self.frames -= 1
         else:
             self.state(sprite)
+
+    def set_open(self, sprite):
+        sprite.set_image(get_image("doh_open"))
+        sprite.cfg["hit_animation"] = "doh_hit_open"
+
+    def set_closed(self, sprite):
+        sprite.set_image(get_image("doh"))
+        sprite.cfg["hit_animation"] = "doh_hit"
 
     def set_state(self, handler, delay):
         self.state = handler
@@ -490,8 +499,7 @@ class DohMgr(Action):
         self.scene.groups["paddle"].add(shot)
 
     def state_open(self, sprite):
-        sprite.set_image(get_image("doh_open"))
-        sprite.cfg["hit_animation"] = "doh_hit_open"
+        self.set_open(sprite)
         self.set_state(self.state_fire1, 0.0)
 
     def state_fire1(self, sprite):
@@ -507,8 +515,7 @@ class DohMgr(Action):
         self.set_state(self.state_close, 0.0)
 
     def state_close(self, sprite):
-        sprite.set_image(get_image("doh"))
-        sprite.cfg["hit_animation"] = "doh_hit"
+        self.set_closed(sprite)
         self.set_state(self.state_open, 4)
 
 class Sprite(pygame.sprite.DirtySprite):

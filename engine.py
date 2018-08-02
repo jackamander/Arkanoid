@@ -162,8 +162,12 @@ class StartState(State):
 
         show_lives(self)
 
-        if self.scene.names.get("doh", None):
+        # This is to fix any stale state from previous lives.  A better solution
+        # is to reload the sprite from the config each round.
+        doh = self.scene.names.get("doh", None)
+        if doh:
             sound = "DohStart"
+            doh.set_action(display.DohMgr(self.scene, doh))
         else:
             sound = "Ready"
         self.sound = audio.play_sound(sound)
@@ -549,7 +553,7 @@ class GameState(State):
 
         doh = self.scene.names.get("doh", None)
         if doh:
-            doh.set_action(display.DohMgr(self.scene))
+            doh.set_action(display.DohMgr(self.scene, doh))
 
         for name in ["inlet_left", "inlet_right"]:
             inlet = self.scene.names[name]
