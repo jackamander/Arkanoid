@@ -244,6 +244,18 @@ class FireEvent(Action):
             self.event = None
         return True
 
+class Callback(Action):
+    def __init__(self, callback, *args, **kwargs):
+        self.callback = callback
+        self.args = args
+        self.kwargs = kwargs
+
+    def update(self, sprite):
+        if self.callback:
+            self.callback(*self.args, **self.kwargs)
+            self.callback = None
+        return True
+
 class UpdateVar(Action):
     def __init__(self, name, font="white", fmt="%s"):
         self.name = name

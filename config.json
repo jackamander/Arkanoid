@@ -857,6 +857,31 @@
             "filename" : "resources\\images\\doh.png",
             "size" : [64, 8],
             "offset" : [0, 88]
+        },
+        "final" : {
+            "filename" : "resources\\images\\ending.png",
+            "size" : [256, 232],
+            "offset" : [0, 0]
+        },
+        "final_doh0" : {
+            "filename" : "resources\\images\\ending.png",
+            "size" : [32, 80],
+            "offset" : [0, 248]
+        },
+        "final_doh1" : {
+            "filename" : "resources\\images\\ending.png",
+            "size" : [32, 80],
+            "offset" : [32, 248]
+        },
+        "final_doh2" : {
+            "filename" : "resources\\images\\ending.png",
+            "size" : [32, 80],
+            "offset" : [64, 248]
+        },
+        "final_doh3" : {
+            "filename" : "resources\\images\\ending.png",
+            "size" : [32, 80],
+            "offset" : [96, 248]
         }
     },
     "animations" : {
@@ -988,6 +1013,10 @@
         "doh_dead" : {
             "images" : ["doh_dead0", "doh_dead1", "doh_dead2", "doh_dead3", "doh_dead4", "doh_dead5", "doh_dead6", "doh_dead7", "doh_dead8", "doh_dead9", "doh_dead10"],
             "speed" : 15
+        },
+        "final_doh" : {
+            "images" : ["final_doh1", "final_doh2", "final_doh3"],
+            "speed" : 10
         }
     },
     "sounds" : {
@@ -1119,8 +1148,21 @@
         ],
         "victory" : [
             {
-                "text" : "YOU WIN!",
-                "position" : [96, 108]
+                "name" : "victory",
+                "text" : "DIMENSION-CONTROLLING FORT\n\n\"DOH\" HAS NOW BEEN\n\nDEMOLISHED, AND TIME\n\nSTARTED FLOWING REVERSLY.\n\n\n\"VAUS\" MANAGED TO ESCAPE\n\nFROM THE DISTORTED SPACE.\n\n\nBUT THE REAL VOYAGE OF\n\n\"ARKANOID\" IN THE GALAXY\n\nHAS ONLY STARTED......",
+                "position" : [24, 224]
+            }
+        ],
+        "final" : [
+            {
+                "image" : "final",
+                "position" : [0, 0]
+            },
+            {
+                "name" : "doh",
+                "image" : "final_doh0",
+                "animation" : "final_doh",
+                "position" : [112, 128]
             }
         ],
         "round" : [

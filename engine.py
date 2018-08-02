@@ -793,9 +793,39 @@ class VictoryState(State):
 
         self.sound = audio.play_sound("Victory")
 
+        self.victory = self.scene.names["victory"]
+        self.victory.set_action(display.MoveLimited([0,-2], (224-48)/2))
+
     def update(self):
+        self.victory.update()
         if not self.sound.get_busy():
-            self.engine.set_state(TitleState)
+            self.engine.set_state(FinalState)
+
+    def draw(self, screen):
+        self.scene.groups["all"].draw(screen)
+
+class FinalState(State):
+    def __init__(self, engine, data):
+        State.__init__(self, engine, data)
+
+        self.scene = display.Scene(["final", "banner"], engine.vars)
+
+        if engine.vars["players"] == 1:
+            self.scene.names["2UP"].kill()
+            self.scene.names["score2"].kill()
+
+        self.doh = self.scene.names["doh"]
+
+        utils.timers.start(3.0, self.animate)
+
+    def animate(self):
+        self.doh.set_action(display.Animate(self.doh.cfg["animation"]).then(display.PlaySound("High").then(display.Callback(self.done))))
+
+    def done(self):
+        utils.timers.start(3.0, self.engine.set_state, TitleState)
+
+    def update(self):
+        self.doh.update()
 
     def draw(self, screen):
         self.scene.groups["all"].draw(screen)
