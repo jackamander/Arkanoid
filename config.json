@@ -1076,6 +1076,13 @@
                 "position" : [200, 16]
             }
         ],
+        "splash" : [
+            {
+                "name" : "splash",
+                "text" : "THE ERA AND TIME OF\n\nTHIS STORY IS UNKNOWN.\n\n\nAFTER THE MOTHER SHIP\n\n\"ARKANOID\" WAS DESTROYED,\n\nA SPACECRAFT \"VAUS\"\n\nSCRAMBLED AWAY FROM IT.\n\n\nBUT ONLY TO BE\n\nTRAPPED IN SPACE WARPED\n\nBY SOMEONE......",
+                "position" : [24, 224]
+            }
+        ],
         "title" : [
             {
                 "name" : "p1",

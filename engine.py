@@ -30,6 +30,26 @@ class State(object):
     def draw(self, screen):
         pass
 
+class SplashState(State):
+    def __init__(self, engine, data):
+        State.__init__(self, engine, data)
+
+        self.scene = display.Scene(["banner", "splash"], engine.vars)
+
+        if engine.vars["players"] == 1:
+            self.scene.names["2UP"].kill()
+            self.scene.names["score2"].kill()
+
+        self.splash = self.scene.names["splash"]
+        self.splash.set_action(display.MoveLimited([0,-2], (224-48)/2))
+        utils.timers.start(10.0, self.engine.set_state, TitleState)
+
+    def update(self):
+        self.splash.update()
+
+    def draw(self, screen):
+        self.scene.groups["all"].draw(screen)
+
 class TitleState(State):
     def __init__(self, engine, data):
         State.__init__(self, engine, data)
@@ -793,7 +813,7 @@ class Vars:
 
 class Engine(object):
 
-    INITIAL_STATE = TitleState
+    INITIAL_STATE = SplashState
 
     def __init__(self):
         self.vars = Vars({
