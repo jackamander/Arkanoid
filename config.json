@@ -1088,16 +1088,8 @@
                 "position" : [96, 136]
             },
             {
-                "text" : "TAITO CORPORATION 1987",
-                "position" : [48, 192]
-            },
-            {
-                "text" : "LICENSED BY",
-                "position" : [84, 200]
-            },
-            {
-                "text" : "NINTENDO OF AMERICA INC.",
-                "position" : [32, 208]
+                "text" : "  TAITO CORPORATION 1987\n      LICENSED BY\nNINTENDO OF AMERICA INC.",
+                "position" : [32, 192]
             },
             {
                 "image" : "arkanoid",
@@ -1143,43 +1135,38 @@
         ],
         "hud" : [
             {
-                "text" : "HIGH",
+                "text" : "HIGH\n SCORE",
                 "font" : "red",
-                "position" : [200, 24]
-            },
-            {
-                "text" : "SCORE",
-                "font" : "red",
-                "position" : [208, 32]
+                "position" : [200, 16]
             },
             {
                 "var" : "high",
                 "fmt" : "%6d",
-                "position" : [208, 40]
+                "position" : [200, 32]
             },
             {
                 "name" : "1UP",
                 "text" : "1UP",
                 "font" : "red",
-                "position" : [200, 56]
+                "position" : [200, 48]
             },
             {
                 "name" : "score1",
                 "var" : "score1",
                 "fmt" : "%6d",
-                "position" : [208, 64]
+                "position" : [200, 56]
             },
             {
                 "name" : "2UP",
                 "text" : "2UP",
                 "font" : "red",
-                "position" : [200, 56]
+                "position" : [200, 48]
             },
             {
                 "name" : "score2",
                 "var" : "score2",
                 "fmt" : "%6d",
-                "position" : [208, 64]
+                "position" : [200, 56]
             },
             {
                 "text" : "ROUND",
@@ -1194,32 +1181,32 @@
             {
                 "name" : "life1",
                 "image" : "life",
-                "position" : [200, 112]
+                "position" : [200, 104]
             },
             {
                 "name" : "life2",
                 "image" : "life",
-                "position" : [220, 112]
+                "position" : [220, 104]
             },
             {
                 "name" : "life3",
                 "image" : "life",
-                "position" : [240, 112]
+                "position" : [240, 104]
             },
             {
                 "name" : "life4",
                 "image" : "life",
-                "position" : [200, 120]
+                "position" : [200, 112]
             },
             {
                 "name" : "life5",
                 "image" : "life",
-                "position" : [220, 120]
+                "position" : [220, 112]
             },
             {
                 "name" : "life6",
                 "image" : "life",
-                "position" : [240, 120]
+                "position" : [240, 112]
             }
         ],
         "tools" : [

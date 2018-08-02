@@ -51,17 +51,18 @@ def draw_text(text, font):
     size = config["size"]
     characters = config["characters"]
 
-    surf = pygame.Surface([size[0]*len(text), size[1]], pygame.SRCALPHA).convert_alpha()
+    text_split = text.split('\n')
+    rows = len(text_split)
+    cols = max(map(len, text_split))
+
+    surf = pygame.Surface([size[0] * cols, size[1] * rows], pygame.SRCALPHA).convert_alpha()
     image = _load_image(filename)
-    pos = 0
-    for char in text:
-        col, row = _find_char_offset(char, characters)
+    for row, line in enumerate(text_split):
+        for col, char in enumerate(line):
+            offset = _find_char_offset(char, characters)
+            offset = [offset[i] * size[i] for i in range(2)]
 
-        offset = (col * size[0], row * size[1])
-
-        surf.blit(image, [pos, 0], pygame.Rect(offset, size), pygame.BLEND_RGBA_MAX)
-
-        pos += size[0]
+            surf.blit(image, [col * size[0], row * size[1]], pygame.Rect(offset, size), pygame.BLEND_RGBA_MAX)
 
     return surf
 
