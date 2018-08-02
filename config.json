@@ -742,6 +742,121 @@
             "filename" : "resources\\images\\Arkanoid.png",
             "size" : [8, 8],
             "offset" : [780, 1748]
+        },
+        "doh" : {
+            "filename" : "resources\\images\\doh.png",
+            "size" : [64, 96],
+            "offset" : [0, 0]
+        },
+        "doh_open" : {
+            "filename" : "resources\\images\\doh.png",
+            "size" : [64, 96],
+            "offset" : [64, 0]
+        },
+        "doh_hit" : {
+            "filename" : "resources\\images\\doh.png",
+            "size" : [64, 96],
+            "offset" : [128, 0]
+        },
+        "doh_hit_open" : {
+            "filename" : "resources\\images\\doh.png",
+            "size" : [64, 96],
+            "offset" : [192, 0]
+        },
+        "doh_shot0" : {
+            "filename" : "resources\\images\\doh.png",
+            "size" : [8, 8],
+            "offset" : [0, 96]
+        },
+        "doh_shot1" : {
+            "filename" : "resources\\images\\doh.png",
+            "size" : [8, 8],
+            "offset" : [8, 96]
+        },
+        "doh_shot2" : {
+            "filename" : "resources\\images\\doh.png",
+            "size" : [8, 8],
+            "offset" : [16, 96]
+        },
+        "doh_shot3" : {
+            "filename" : "resources\\images\\doh.png",
+            "size" : [8, 8],
+            "offset" : [24, 96]
+        },
+        "doh_shot4" : {
+            "filename" : "resources\\images\\doh.png",
+            "size" : [8, 8],
+            "offset" : [32, 96]
+        },
+        "doh_shot5" : {
+            "filename" : "resources\\images\\doh.png",
+            "size" : [8, 8],
+            "offset" : [40, 96]
+        },
+        "doh_shot6" : {
+            "filename" : "resources\\images\\doh.png",
+            "size" : [8, 8],
+            "offset" : [48, 96]
+        },
+        "doh_shot7" : {
+            "filename" : "resources\\images\\doh.png",
+            "size" : [8, 8],
+            "offset" : [56, 96]
+        },
+        "doh_dead0" : {
+            "filename" : "resources\\images\\doh.png",
+            "size" : [64, 88],
+            "offset" : [0, 8]
+        },
+        "doh_dead1" : {
+            "filename" : "resources\\images\\doh.png",
+            "size" : [64, 80],
+            "offset" : [0, 16]
+        },
+        "doh_dead2" : {
+            "filename" : "resources\\images\\doh.png",
+            "size" : [64, 72],
+            "offset" : [0, 24]
+        },
+        "doh_dead3" : {
+            "filename" : "resources\\images\\doh.png",
+            "size" : [64, 64],
+            "offset" : [0, 32]
+        },
+        "doh_dead4" : {
+            "filename" : "resources\\images\\doh.png",
+            "size" : [64, 56],
+            "offset" : [0, 40]
+        },
+        "doh_dead5" : {
+            "filename" : "resources\\images\\doh.png",
+            "size" : [64, 48],
+            "offset" : [0, 48]
+        },
+        "doh_dead6" : {
+            "filename" : "resources\\images\\doh.png",
+            "size" : [64, 40],
+            "offset" : [0, 56]
+        },
+        "doh_dead7" : {
+            "filename" : "resources\\images\\doh.png",
+            "size" : [64, 32],
+            "offset" : [0, 64]
+        },
+        "doh_dead8" : {
+            "filename" : "resources\\images\\doh.png",
+            "size" : [64, 24],
+            "offset" : [0, 72]
+        },
+        "doh_dead9" : {
+            "filename" : "resources\\images\\doh.png",
+            "size" : [64, 16],
+            "offset" : [0, 80]
+        },
+        "doh_dead10" : {
+            "filename" : "resources\\images\\doh.png",
+            "size" : [64, 8],
+            "offset" : [0, 88]
         }
     },
     "animations" : {
@@ -856,6 +971,23 @@
         "dead" : {
             "images" : ["dead_0", "dead_1", "dead_2", "dead_3"],
             "speed" : 15
+        },
+        "doh_hit" : {
+            "images" : ["doh_hit", "doh"],
+            "speed" : 3
+        },
+        "doh_hit_open" : {
+            "images" : ["doh_hit_open", "doh_open"],
+            "speed" : 3
+        },
+        "doh_shot" : {
+            "images" : ["doh_shot0", "doh_shot1", "doh_shot2", "doh_shot3", "doh_shot4", "doh_shot5", "doh_shot6", "doh_shot7"],
+            "speed" : 2,
+            "loop" : true
+        },
+        "doh_dead" : {
+            "images" : ["doh_dead0", "doh_dead1", "doh_dead2", "doh_dead3", "doh_dead4", "doh_dead5", "doh_dead6", "doh_dead7", "doh_dead8", "doh_dead9", "doh_dead10"],
+            "speed" : 15
         }
     },
     "sounds" : {
@@ -895,6 +1027,18 @@
         },
         "GameOver" : {
             "filename" : "resources\\sounds\\GameOver.ogg"
+        },
+        "DohStart" : {
+            "filename" : "resources\\sounds\\DohStart.ogg"
+        },
+        "DohHit" : {
+            "filename" : "resources\\sounds\\DohHit.wav"
+        },
+        "DohDead" : {
+            "filename" : "resources\\sounds\\DohDead.wav"
+        },
+        "Victory" : {
+            "filename" : "resources\\sounds\\Victory.ogg"
         }
     },
     "scenes": {
@@ -1242,6 +1386,73 @@
                 "text" : "READY",
                 "position" : [84, 176],
                 "layer" : 20
+            }
+        ],
+        "level36" : [
+            {
+                "name" : "inlet_left",
+                "image" : "inlet1",
+                "position" : [48, 0],
+                "layer" : 20,
+                "groups" : ["inlets"],
+                "max_delay" : 20,
+                "max_aliens" : 0
+            },
+            {
+                "name" : "inlet_right",
+                "image" : "inlet1",
+                "position" : [136, 0],
+                "layer" : 20,
+                "groups" : ["inlets"],
+                "max_delay" : 20,
+                "max_aliens" : 0
+            },
+            {
+                "groups": [
+                    "aliens"
+                ],
+                "layer": 30,
+                "animation": "alien0",
+                "name": "alien",
+                "hit_sound": "Alien",
+                "position": [
+                    1000,
+                    1000
+                ],
+                "image": "alien0_0",
+                "death_animation": "dead",
+                "hits": 1,
+                "points": 100
+            },
+            {
+                "groups": ["paddle"],
+                "layer": 30,
+                "animation": "doh_shot",
+                "image": "doh_shot0",
+                "kill_paddle": true,
+                "name": "doh_shot",
+                "position": [1000, 1000]
+            },
+            {
+                "position": [
+                    16,
+                    8
+                ],
+                "image": "bg_final",
+                "name": "bg",
+                "layer": 0
+            },
+            {
+                "hits": 16,
+                "hit_points": 1000,
+                "groups": ["ball", "bricks"],
+                "hit_sound": "DohHit",
+                "hit_animation": "doh_hit",
+                "death_animation": "doh_dead",
+                "death_animation_align": "bottomleft",
+                "position": [72, 32],
+                "image": "doh",
+                "name": "doh"
             }
         ],
         "level29": [

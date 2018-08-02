@@ -142,13 +142,13 @@ class StartState(State):
 
         show_lives(self)
 
-        self.sound = audio.play_sound("Ready")
+        if self.scene.names.get("doh", None):
+            sound = "DohStart"
+        else:
+            sound = "Ready"
+        self.sound = audio.play_sound(sound)
 
-    def update(self):
-        self.scene.groups["all"].update()
-
-        if self.sound is None or not self.sound.get_busy():
-            self.engine.set_state(GameState)
+        utils.timers.start(3.0, self.engine.set_state, GameState)
 
     def draw(self, screen):
         self.scene.groups["all"].draw(screen)
@@ -219,7 +219,19 @@ class ClearState(State):
 
         self.scene = data["scene"]
 
-        utils.timers.start(2.0, next_level, engine)
+        self.doh = self.scene.names.get("doh", None)
+        if self.doh:
+            self.sound = audio.play_sound("DohDead")
+        else:
+            utils.timers.start(2.0, next_level, self.engine)
+
+    def update(self):
+        if self.doh:
+            self.doh.update()
+
+            if not self.sound.get_busy():
+                utils.timers.start(1.0, next_level, self.engine)
+                self.doh = None
 
     def draw(self, screen):
         self.scene.groups["all"].draw(screen)
@@ -506,6 +518,10 @@ class GameState(State):
 
         self.speed_timer()
 
+        doh = self.scene.names.get("doh", None)
+        if doh:
+            doh.set_action(display.DohMgr(self.scene))
+
         for name in ["inlet_left", "inlet_right"]:
             inlet = self.scene.names[name]
             inlet.set_action(display.InletMgr(self.scene, inlet))
@@ -576,6 +592,9 @@ class GameState(State):
             if sprite.cfg.get("effect"):
                 self.capsules.kill(sprite)
                 self.capsules.apply(sprite)
+
+            if sprite.cfg.get("kill_paddle", False):
+                self.engine.set_state(DeathState, {"scene" : self.scene, "paddle" : self.paddle})
 
         for sprite in self.scene.groups["paddle"]:
             if sprite.alive() and sprite.rect.top > self.playspace.bottom:
@@ -741,7 +760,11 @@ class VictoryState(State):
             self.scene.names["2UP"].kill()
             self.scene.names["score2"].kill()
 
-        utils.timers.start(5.0, self.engine.set_state, TitleState)
+        self.sound = audio.play_sound("Victory")
+
+    def update(self):
+        if not self.sound.get_busy():
+            self.engine.set_state(TitleState)
 
     def draw(self, screen):
         self.scene.groups["all"].draw(screen)

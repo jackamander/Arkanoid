@@ -4,6 +4,7 @@ display.py
 Display functionality
 """
 import logging
+import math
 import os
 import random
 
@@ -193,11 +194,12 @@ class Blink(Action):
             self.frames = 0
 
 class Animate(Action):
-    def __init__(self, name):
+    def __init__(self, name, align="center"):
         cfg = utils.config["animations"][name]
         self.images = [get_image(name) for name in cfg["images"]]
         self.speed = cfg["speed"]
         self.loop = cfg.get("loop")
+        self.align = align
         self.frame = 0
         self.count = 0
 
@@ -205,7 +207,7 @@ class Animate(Action):
         if self.frame < len(self.images):
             if self.count == 0:
                 image = self.images[self.frame]
-                sprite.set_image(image)
+                sprite.set_image(image, self.align)
 
             self.count += 1
             if self.count >= self.speed:
@@ -433,6 +435,69 @@ class InletMgr(Action):
                 sprite.set_action(Animate("inlet_open").then(Spawn("alien", self.scene).then(Delay(1.0).then(Animate("inlet_close").then(InletMgr(self.scene, sprite))))))
             self._randomize()
 
+class DohMgr(Action):
+    def __init__(self, scene):
+        self.scene = scene
+        self.set_state(self.state_open, 1)
+
+    def delay(self, delay):
+        self.frames = delay * utils.config["frame_rate"]
+
+    def update(self, sprite):
+        if self.frames > 0:
+            self.frames -= 1
+        else:
+            self.state(sprite)
+
+    def set_state(self, handler, delay):
+        self.state = handler
+        self.delay(delay)
+
+    def fire(self, sprite):
+        shot = self.scene.names["doh_shot"].clone()
+
+        shot.rect.center = sprite.rect.center
+
+        start = shot.rect.center
+        target = self.scene.names["paddle"].rect.center
+
+        delta = [target[i] - start[i] for i in range(2)]
+        magnitude = math.sqrt(delta[0]**2 + delta[1]**2)
+        speed = 3
+        delta = [speed * value / magnitude for value in delta]
+
+        action = Move(delta)
+
+        animation = shot.cfg["animation"]
+        if animation:
+            action = action.plus(Animate(animation))
+
+        shot.set_action(action)
+        self.scene.groups["all"].add(shot)
+        self.scene.groups["paddle"].add(shot)
+
+    def state_open(self, sprite):
+        sprite.set_image(get_image("doh_open"))
+        sprite.cfg["hit_animation"] = "doh_hit_open"
+        self.set_state(self.state_fire1, 0.0)
+
+    def state_fire1(self, sprite):
+        self.fire(sprite)
+        self.set_state(self.state_fire2, 0.5)
+
+    def state_fire2(self, sprite):
+        self.fire(sprite)
+        self.set_state(self.state_fire3, 0.5)
+
+    def state_fire3(self, sprite):
+        self.fire(sprite)
+        self.set_state(self.state_close, 0.0)
+
+    def state_close(self, sprite):
+        sprite.set_image(get_image("doh"))
+        sprite.cfg["hit_animation"] = "doh_hit"
+        self.set_state(self.state_open, 4)
+
 class Sprite(pygame.sprite.DirtySprite):
     def __init__(self, image, cfg={}):
         pygame.sprite.DirtySprite.__init__(self)
@@ -475,11 +540,11 @@ class Sprite(pygame.sprite.DirtySprite):
             if done:
                 self.action = None
 
-    def set_image(self, image):
+    def set_image(self, image, align="center"):
         old_rect = self.rect.copy()
         self.image = image
         self.rect.size = image.get_size()
-        self.rect.center = old_rect.center
+        setattr(self.rect, align, getattr(old_rect, align))
 
     def hit(self, scene):
         sound = self.cfg.get("hit_sound")
@@ -488,7 +553,14 @@ class Sprite(pygame.sprite.DirtySprite):
 
         animation = self.cfg.get("hit_animation")
         if animation:
-            self.set_action(Animate(animation))
+            action = Animate(animation)
+            if self.action:
+                action = self.action.plus(action)
+            self.set_action(action)
+
+        hit_points = self.cfg.get("hit_points")
+        if hit_points:
+            utils.events.generate(utils.EVT_POINTS, points=hit_points)
 
         hits = self.cfg.get("hits")
         if hits:
@@ -499,7 +571,8 @@ class Sprite(pygame.sprite.DirtySprite):
 
                 death_animation = self.cfg.get("death_animation")
                 if death_animation:
-                    self.set_action(Animate(death_animation).then(Die()))
+                    align = self.cfg.get("death_animation_align", "center")
+                    self.set_action(Animate(death_animation, align).then(Die()))
                     scene.groups["all"].add(self)
 
                 death_action = self.cfg.get("on_death")
