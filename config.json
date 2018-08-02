@@ -892,6 +892,9 @@
         },
         "Alien" : {
             "filename" : "resources\\sounds\\Alien.wav"
+        },
+        "GameOver" : {
+            "filename" : "resources\\sounds\\GameOver.ogg"
         }
     },
     "scenes": {
@@ -986,6 +989,12 @@
                 "var" : "level",
                 "fmt" : "%2d",
                 "position" : [144, 108]
+            }
+        ],
+        "gameover" : [
+            {
+                "text" : "GAME OVER",
+                "position" : [68, 176]
             }
         ],
         "hud" : [
@@ -1231,7 +1240,7 @@
             {
                 "name" : "start3",
                 "text" : "READY",
-                "position" : [ 84, 176],
+                "position" : [84, 176],
                 "layer" : 20
             }
         ],

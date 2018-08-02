@@ -195,7 +195,20 @@ class DeathState(State):
                     self.engine.set_state(RoundState)
                     break
             else:
-                self.engine.set_state(TitleState)
+                self.engine.set_state(GameOverState, {"scene" : self.scene})
+
+    def draw(self, screen):
+        self.scene.groups["all"].draw(screen)
+
+class GameOverState(State):
+    def __init__(self, engine, data):
+        State.__init__(self, engine, data)
+
+        self.scene = data["scene"]
+        self.scene.merge(display.Scene(["gameover"], engine.vars))
+
+        self.sound = audio.play_sound("GameOver")
+        utils.timers.start(4.0, self.engine.set_state, TitleState)
 
     def draw(self, screen):
         self.scene.groups["all"].draw(screen)
