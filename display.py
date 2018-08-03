@@ -104,6 +104,9 @@ class Action:
     def plus(self, action):
         return Parallel([self, action])
 
+    def update(self):
+        return True
+
 class Series(Action):
     def __init__(self, actions):
         self.actions = list(actions)
@@ -129,20 +132,20 @@ class Parallel(Action):
         return done
 
 class MouseMove(Action):
-    def __init__(self, region, sensitivity):
+    def __init__(self, sprite, region, sensitivity):
+        self.sprite = sprite
         self.rect = region.copy()
-        self.delta = [0, 0]
         self.sensitivity = sensitivity
 
         utils.events.register(utils.EVT_MOUSEMOTION, self.on_mousemove)
 
     def on_mousemove(self, event):
-        self.delta = [self.delta[i] + self.sensitivity[i] * event.rel[i] for i in range(2)]
+        delta = [self.sensitivity[i] * event.rel[i] for i in range(2)]
+        self.sprite.move(delta)
+        self.sprite.rect.clamp_ip(self.rect)
 
     def update(self, sprite):
-        sprite.move(self.delta)
-        sprite.rect.clamp_ip(self.rect)
-        self.delta = [0, 0]
+        return False
 
 class Move(Action):
     def __init__(self, delta):
