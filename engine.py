@@ -472,8 +472,10 @@ class Capsules:
 
         if effect == "catch":
             self.paddle.catch = True
+            self.block(["capsuleC"])
         else:
             self.paddle.catch = False
+            self.unblock(["capsuleC"])
 
         points = capsule.cfg.get("points", 0)
         utils.events.generate(utils.EVT_POINTS, points=points)
