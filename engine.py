@@ -44,6 +44,17 @@ class SplashState(State):
         self.splash.set_action(display.MoveLimited([0,-2], (224-48)/2))
         utils.timers.start(10.0, self.engine.set_state, TitleState)
 
+        utils.events.register(utils.EVT_MOUSEBUTTONDOWN, self.on_click)
+        utils.events.register(utils.EVT_KEYDOWN, self.on_keydown)
+
+    def on_click(self, event):
+        if event.button == 1:
+            self.engine.set_state(TitleState)
+
+    def on_keydown(self, event):
+        if event.key == pygame.K_SPACE:
+            self.engine.set_state(StartState)
+
     def update(self):
         self.splash.update()
 
