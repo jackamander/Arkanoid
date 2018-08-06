@@ -280,8 +280,7 @@ class Paddle:
             audio.play_sound("Enlarge")
             self.handler = self.expanded_handler
         elif event == "laser":
-            self.sprite.set_action(self.sprite.action.plus(display.Animate("paddle_to_laser")))
-            utils.events.register(utils.EVT_MOUSEBUTTONDOWN, self.fire_laser)
+            self.sprite.set_action(self.sprite.action.plus(display.Animate("paddle_to_laser").then(display.Callback(utils.events.register, utils.EVT_MOUSEBUTTONDOWN, self.fire_laser))))
             self.handler = self.laser_handler
 
     def expanded_handler(self, event):
@@ -289,8 +288,7 @@ class Paddle:
             self.sprite.set_action(self.sprite.action.plus(display.Animate("paddle_shrink")))
             self.handler = self.normal_handler
         elif event == "laser":
-            self.sprite.set_action(self.sprite.action.plus(display.Animate("paddle_shrink").then(display.Animate("paddle_to_laser"))))
-            utils.events.register(utils.EVT_MOUSEBUTTONDOWN, self.fire_laser)
+            self.sprite.set_action(self.sprite.action.plus(display.Animate("paddle_shrink").then(display.Animate("paddle_to_laser").then(display.Callback(utils.events.register, utils.EVT_MOUSEBUTTONDOWN, self.fire_laser)))))
             self.handler = self.laser_handler
 
     def laser_handler(self, event):
@@ -409,7 +407,7 @@ class Capsules:
 
     def enable(self):
         if self.count == 0:
-            self.count = random.randint(1, 10)
+            self.count = 1#random.randint(1, 10)
 
     def block(self, names):
         for name in names:
