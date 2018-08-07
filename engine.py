@@ -418,7 +418,7 @@ class Capsules:
 
     def enable(self):
         if self.count == 0:
-            self.count = 1#random.randint(1, 10)
+            self.count = random.randint(1, 10)
 
     def block(self, names):
         for name in names:
