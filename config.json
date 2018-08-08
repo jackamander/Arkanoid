@@ -1189,6 +1189,7 @@
                 "position" : [200, 16]
             },
             {
+                "name" : "high",
                 "var" : "high",
                 "fmt" : "%6d",
                 "position" : [200, 32]

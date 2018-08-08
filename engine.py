@@ -202,8 +202,8 @@ class BreakState(State):
         self.paddle._break()
 
     def update(self):
-        self.scene.names["break"].update()
-        self.scene.names["paddle"].update()
+        for name in ["high", "score1", "score2", "break", "paddle"]:
+            self.scene.names[name].update()
 
         if not self.paddle.alive():
             next_level(self.engine)
@@ -221,7 +221,8 @@ class DeathState(State):
         self.paddle.kill()
 
     def update(self):
-        self.scene.names["paddle"].update()
+        for name in ["high", "score1", "score2", "paddle"]:
+            self.scene.names[name].update()
 
         if not self.paddle.alive():
             self.engine.vars["lives1" if self.engine.vars["player"] == 1 else "lives2"] -= 1
@@ -265,6 +266,9 @@ class ClearState(State):
             utils.timers.start(2.0, next_level, self.engine)
 
     def update(self):
+        for name in ["high", "score1", "score2"]:
+            self.scene.names[name].update()
+
         if self.doh:
             self.doh.update()
 
