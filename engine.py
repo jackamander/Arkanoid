@@ -287,7 +287,7 @@ class Paddle:
         self.sound = None
         self.catch = False
 
-        self.sprite.set_action(display.MouseMove(self.sprite, playspace, [1,0]))
+        self.sprite.set_action(display.MouseMove(playspace, [1,0]))
 
         self.state.scene.names["laser"].kill()
 
