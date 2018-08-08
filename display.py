@@ -37,6 +37,14 @@ class Window:
     def clear(self):
         self.screen.fill(utils.color(utils.config["bg_color"]))
 
+def grab_mouse():
+    pygame.mouse.set_visible(0)
+    pygame.event.set_grab(1)
+
+def release_mouse():
+    pygame.mouse.set_visible(1)
+    pygame.event.set_grab(0)
+
 def _find_char_offset(char, characters):
     for row, data in enumerate(characters):
         col = data.find(char)

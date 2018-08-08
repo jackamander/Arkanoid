@@ -23,9 +23,6 @@ def main():
 
     eng = engine.Engine()
 
-    pygame.mouse.set_visible(0)
-    pygame.event.set_grab(1)
-
     while True:
 
         # Event pump

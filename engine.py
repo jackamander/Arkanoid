@@ -75,6 +75,8 @@ class TitleState(State):
         utils.events.register(utils.EVT_KEYDOWN, self.on_keydown)
         utils.events.register(utils.EVT_VAR_CHANGE, self.on_var_change)
 
+        display.release_mouse()
+
     def on_var_change(self, event):
         # Update cursor position
         if event.name == "players":
@@ -184,6 +186,8 @@ class StartState(State):
         self.sound = audio.play_sound(sound)
 
         utils.timers.start(3.0, self.engine.set_state, GameState)
+
+        display.grab_mouse()
 
     def draw(self, screen):
         self.scene.groups["all"].draw(screen)
@@ -810,6 +814,8 @@ class VictoryState(State):
 
         self.victory = self.scene.names["victory"]
         self.victory.set_action(display.MoveLimited([0,-2], (224-48)/2))
+
+        display.grab_mouse()
 
     def update(self):
         self.victory.update()
