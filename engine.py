@@ -664,7 +664,7 @@ class GameState(State):
         # Projectile collisions
         for projectile in self.scene.groups["balls"].sprites() + self.scene.groups["lasers"].sprites():
             sprites = pygame.sprite.spritecollide(projectile, self.scene.groups["ball"], False)
-            for sprite in sprites:
+            for sprite in find_closest(projectile, sprites):
                 projectile.hit(self.scene)
                 sprite.hit(self.scene)
 
@@ -706,6 +706,34 @@ class GameState(State):
 
     def draw(self, screen):
         self.scene.groups["all"].draw(screen)
+
+def find_closest(projectile, sprites):
+    if len(sprites) < 2:
+        return sprites
+    else:
+        deltas = [rect_distance(projectile.last.center, sprite.last) for sprite in sprites]
+        dsquareds = [x**2 + y**2 for x,y in deltas]
+        sortlist = zip(dsquareds, sprites)
+        sortlist.sort()
+        target = sortlist[0][0]
+        finalists = filter(lambda pair: pair[0] == target, sortlist)
+        final = [sprite for _, sprite in finalists]
+        return final
+
+def rect_distance(point, rect):
+    dx = 0
+    if point[0] < rect.left:
+        dx = rect.left - point[0]
+    elif rect.right - 1 < point[0]:
+        dx = point[0] - (rect.right - 1)
+
+    dy = 0
+    if point[1] < rect.top:
+        dy = rect.top - point[1]
+    elif rect.bottom - 1 < point[1]:
+        dy = point[1] - (rect.bottom - 1)
+
+    return dx, dy
 
 def collision_move_to_edge(sprite1, sprite2):
     "sprite1 is projectile, sprite2 is the other.  Move sprite1 to be out of contact based on velocity"
