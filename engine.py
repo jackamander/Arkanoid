@@ -334,6 +334,13 @@ class Paddle:
 
         audio.play_sound("Laser")
 
+    def enable_catch(self):
+        self.catch = True
+
+    def disable_catch(self):
+        self.catch = False
+        self.release_ball(self)
+
     def catch_ball(self, ball):
         if self.stuck_ball is None:
             self.stuck_ball = ball
@@ -454,6 +461,14 @@ class Capsules:
 
     def apply(self, capsule):
         effect = capsule.cfg.get("effect", "")
+
+        if effect == "catch":
+            self.paddle.enable_catch()
+            self.block(["capsuleC"])
+        else:
+            self.paddle.disable_catch()
+            self.unblock(["capsuleC"])
+
         if effect == "break":
             self.scene.groups["all"].add(self._break)
             self.scene.groups["break"].add(self._break)
@@ -498,13 +513,6 @@ class Capsules:
         else:
             self.state.paddle.handler("normal")
             self.unblock(["capsuleE", "capsuleL"])
-
-        if effect == "catch":
-            self.paddle.catch = True
-            self.block(["capsuleC"])
-        else:
-            self.paddle.catch = False
-            self.unblock(["capsuleC"])
 
         points = capsule.cfg.get("points", 0)
         utils.events.generate(utils.EVT_POINTS, points=points)
