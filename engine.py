@@ -641,7 +641,7 @@ class GameState(State):
         
         # Break support
         for sprite in self.scene.groups["break"]:
-            if self.paddle.sprite.rect.right + 1 >= sprite.rect.left:
+            if self.paddle.sprite.rect.right >= sprite.rect.left:
                 utils.events.generate(utils.EVT_POINTS, points=10000)
                 self.engine.set_state(BreakState, {"scene" : self.scene, "paddle" : self.paddle})
 
@@ -685,7 +685,7 @@ class GameState(State):
         # Destroy anything that wanders off the playspace
         for group in [self.scene.groups["paddle"], self.scene.groups["balls"]]:
             for sprite in group:
-                if sprite.alive() and sprite.rect.top > self.playspace.bottom:
+                if sprite.alive() and sprite.rect.top >= self.playspace.bottom:
                     if sprite.cfg.get("effect"):
                         self.capsules.kill(sprite)
                     else:

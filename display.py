@@ -437,7 +437,7 @@ class AlienEscape(Move):
         for brick in self.scene.groups["bricks"].sprites():
             rect.union_ip(brick.rect)
 
-        if sprite.rect.top > rect.bottom:
+        if sprite.rect.top >= rect.bottom:
             return AlienDescend(self.scene)
 
         return self
