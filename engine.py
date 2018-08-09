@@ -648,14 +648,6 @@ class GameState(State):
                 if sprite.cfg.get("paddle_bounce", False):
                     self.paddle.hit(sprite)
 
-        # Destroy anything that wanders off the playspace
-        for sprite in self.scene.groups["paddle"]:
-            if sprite.alive() and sprite.rect.top > self.playspace.bottom:
-                if sprite.cfg.get("effect"):
-                    self.capsules.kill(sprite)
-                else:
-                    sprite.kill()
-
         # Projectile collisions
         for projectile in self.scene.groups["balls"].sprites() + self.scene.groups["lasers"].sprites():
             sprites = pygame.sprite.spritecollide(projectile, self.scene.groups["ball"], False)
@@ -677,13 +669,18 @@ class GameState(State):
                         projectile.action.delta[0] = -abs(projectile.action.delta[0])
 
 
-        # Ball exit detection
-        for ball in self.scene.groups["balls"]:
-            if ball.alive() and ball.rect.top > self.playspace.bottom:
-                ball.kill()
+        # Destroy anything that wanders off the playspace
+        for group in [self.scene.groups["paddle"], self.scene.groups["balls"]]:
+            for sprite in group:
+                if sprite.alive() and sprite.rect.top > self.playspace.bottom:
+                    if sprite.cfg.get("effect"):
+                        self.capsules.kill(sprite)
+                    else:
+                        sprite.kill()
 
-                if len(self.scene.groups["balls"].sprites()) == 1:
-                    self.capsules.enable()
+        # Re-enable capsules when ball count drops to 1
+        if len(self.scene.groups["balls"].sprites()) == 1:
+            self.capsules.enable()
 
         # Check for death
         if len(self.scene.groups["balls"].sprites()) == 0:
