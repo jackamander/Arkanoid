@@ -446,6 +446,7 @@ class Capsules:
         if effect == "break":
             self.scene.groups["all"].add(self._break)
             self.scene.groups["break"].add(self._break)
+            self.block(["capsuleB"])
         elif effect == "disrupt":
             pos = self.state.balls[0].rect.topleft
             last = self.state.balls[0].last.topleft
