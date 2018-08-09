@@ -479,11 +479,11 @@ class Capsules:
         elif effect == "player":
             utils.events.generate(utils.EVT_EXTRA_LIFE)
         elif effect == "slow":
-            self.state.ball_speed /= utils.config["ball_speed"]
+            self.state.ball_speed /= utils.config["ball_speed_multiplier"]
 
             for ball in self.scene.groups["balls"]:
                 if isinstance(ball.action, display.Move):
-                    ball.action.delta = [i / utils.config["ball_speed"] for i in ball.action.delta]
+                    ball.action.delta = [i / utils.config["ball_speed_multiplier"] for i in ball.action.delta]
 
             self.state.speed_timer()
 
@@ -561,7 +561,7 @@ class GameState(State):
         self.scene.names["ball2"].kill()
         self.scene.names["ball3"].kill()
 
-        self.ball_speed = 1
+        self.ball_speed = 1.0
 
         self.paddle = Paddle(self.scene.names["paddle"], self.playspace, self)
         self.paddle.catch_ball(self.scene.names["ball1"])
@@ -588,12 +588,13 @@ class GameState(State):
         utils.timers.start(10.0, self.on_timer)
 
     def on_timer(self):
-        if self.ball_speed < 4:
-            self.ball_speed *= utils.config["ball_speed"]
+        new_speed = self.ball_speed * utils.config["ball_speed_multiplier"]
+        if new_speed <= utils.config["max_ball_speed"]:
+            self.ball_speed = new_speed
 
             for ball in self.scene.groups["balls"]:
                 if isinstance(ball.action, display.Move):
-                    ball.action.delta = [i * utils.config["ball_speed"] for i in ball.action.delta]
+                    ball.action.delta = [i * utils.config["ball_speed_multiplier"] for i in ball.action.delta]
 
         self.speed_timer()
 
