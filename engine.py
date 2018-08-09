@@ -395,7 +395,7 @@ class Paddle:
         self.sound = audio.play_sound("Break")
 
     def alive(self):
-        return self.sprite.alive() or self.sound is None or self.sound.get_busy()
+        return self.sprite.alive() or (self.sound is not None and self.sound.get_busy())
 
 class Capsules:
     def __init__(self, state, paddle):
