@@ -707,11 +707,11 @@ def collision_side(sprite1, sprite2):
     cornerSlopeRise = 0
     cornerSlopeRun = 0
 
-    velocityRise = sprite1.rect.top - sprite1.last.top
-    velocityRun = sprite1.rect.left - sprite1.last.left
+    velocityRise = sprite1.rect.centery - sprite1.last.centery
+    velocityRun = sprite1.rect.centerx - sprite1.last.centerx
 
-    velocityRise2 = sprite2.rect.top - sprite2.last.top
-    velocityRun2 = sprite2.rect.left - sprite2.last.left
+    velocityRise2 = sprite2.rect.centery - sprite2.last.centery
+    velocityRun2 = sprite2.rect.centerx - sprite2.last.centerx
 
     # Adjust for sprite2's velocity
     velocityRise -= velocityRise2
