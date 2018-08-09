@@ -30,15 +30,39 @@ class State(object):
     def draw(self, screen):
         pass
 
+def fix_banner(state):
+    if state.engine.vars["players"] == 1:
+        state.scene.names["2UP"].kill()
+        state.scene.names["score2"].kill()
+
+def fix_hud(state):
+    if state.engine.vars["player"] == 1:
+        state.scene.names["2UP"].kill()
+        state.scene.names["score2"].kill()
+    else:
+        state.scene.names["1UP"].kill()
+        state.scene.names["score1"].kill()
+
+    fix_lives(state)
+
+def fix_lives(state):
+    for name, sprite in state.scene.names.items():
+        mobj = re.match("life(\\d+)", name)
+        if mobj:
+            num = int(mobj.group(1))
+            if state.engine.vars["lives1" if state.engine.vars["player"] == 1 else "lives2"] <= num:
+                sprite.kill()
+            else:
+                state.scene.groups["all"].add(sprite)
+
+
 class SplashState(State):
     def __init__(self, engine, data):
         State.__init__(self, engine, data)
 
         self.scene = display.Scene(["banner", "splash"], engine.vars)
 
-        if engine.vars["players"] == 1:
-            self.scene.names["2UP"].kill()
-            self.scene.names["score2"].kill()
+        fix_banner(self)
 
         self.splash = self.scene.names["splash"]
         self.splash.set_action(display.MoveLimited([0,-2], (224-48)/2))
@@ -67,9 +91,7 @@ class TitleState(State):
 
         self.scene = display.Scene(["title", "banner"], engine.vars)
 
-        if engine.vars["players"] == 1:
-            self.scene.names["2UP"].kill()
-            self.scene.names["score2"].kill()
+        fix_banner(self)
 
         utils.events.register(utils.EVT_MOUSEBUTTONDOWN, self.on_click)
         utils.events.register(utils.EVT_KEYDOWN, self.on_keydown)
@@ -108,6 +130,8 @@ class BlinkState(State):
 
         self.scene = display.Scene(["title", "banner"], engine.vars)
 
+        fix_banner(self)
+
         self.sound = audio.play_sound("Intro")
 
         # Blink the chosen option
@@ -119,10 +143,6 @@ class BlinkState(State):
 
         # Get rid of the cursor
         self.scene.names["cursor"].kill()
-
-        if engine.vars["players"] == 1:
-            self.scene.names["2UP"].kill()
-            self.scene.names["score2"].kill()
 
     def update(self):
         self.scene.groups["all"].update()
@@ -140,24 +160,12 @@ class RoundState(State):
 
         self.scene = display.Scene(["round", "banner"], engine.vars)
 
-        if engine.vars["players"] == 1:
-            self.scene.names["2UP"].kill()
-            self.scene.names["score2"].kill()
+        fix_banner(self)
 
         utils.timers.start(2.0, self.engine.set_state, StartState)
 
     def draw(self, screen):
         self.scene.groups["all"].draw(screen)
-
-def show_lives(state):
-    for name, sprite in state.scene.names.items():
-        mobj = re.match("life(\\d+)", name)
-        if mobj:
-            num = int(mobj.group(1))
-            if state.engine.vars["lives1" if state.engine.vars["player"] == 1 else "lives2"] <= num:
-                sprite.kill()
-            else:
-                state.scene.groups["all"].add(sprite)
 
 class StartState(State):
     def __init__(self, engine, data):
@@ -166,14 +174,7 @@ class StartState(State):
         self.scene = display.Scene(["hud", "walls", "ready"], engine.vars)
         self.scene.merge(engine.scenes[engine.vars["player"]][engine.vars["level"]])
 
-        if engine.vars["player"] == 1:
-            self.scene.names["2UP"].kill()
-            self.scene.names["score2"].kill()
-        else:
-            self.scene.names["1UP"].kill()
-            self.scene.names["score1"].kill()
-
-        show_lives(self)
+        fix_hud(self)
 
         # This is to fix any stale state from previous lives.  A better solution
         # is to reload the sprite from the config each round.
@@ -544,14 +545,7 @@ class GameState(State):
         self.scene = display.Scene(["hud", "walls", "tools"], engine.vars)
         self.scene.merge(engine.scenes[engine.vars["player"]][engine.vars["level"]])
 
-        if engine.vars["player"] == 1:
-            self.scene.names["2UP"].kill()
-            self.scene.names["score2"].kill()
-        else:
-            self.scene.names["1UP"].kill()
-            self.scene.names["score1"].kill()
-
-        show_lives(self)
+        fix_hud(self)
 
         self.playspace = self.scene.names["bg"].rect
         self.scene.names["ball2"].kill()
@@ -621,7 +615,7 @@ class GameState(State):
     def on_extra_life(self, event):
         self.engine.vars["lives1" if self.engine.vars["player"] == 1 else "lives2"] += 1
         audio.play_sound("Life")
-        show_lives(self)
+        fix_lives(self)
 
     def update(self):
         self.scene.groups["all"].update()
@@ -837,9 +831,7 @@ class VictoryState(State):
 
         self.scene = display.Scene(["victory", "banner"], engine.vars)
 
-        if engine.vars["players"] == 1:
-            self.scene.names["2UP"].kill()
-            self.scene.names["score2"].kill()
+        fix_banner(self)
 
         self.sound = audio.play_sound("Victory")
 
@@ -862,9 +854,7 @@ class FinalState(State):
 
         self.scene = display.Scene(["final", "banner"], engine.vars)
 
-        if engine.vars["players"] == 1:
-            self.scene.names["2UP"].kill()
-            self.scene.names["score2"].kill()
+        fix_banner(self)
 
         self.doh = self.scene.names["doh"]
 
