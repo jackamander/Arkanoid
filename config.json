@@ -6,6 +6,7 @@
     "frame_rate" : 60,
     "bg_color" : "black",
     "ball_speed" : 1.2,
+    "max_capsule_count" : 10,
     "fonts" : {
         "white" : {
             "filename" : "resources\\images\\nesfont8.png",

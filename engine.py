@@ -426,7 +426,7 @@ class Capsules:
 
     def enable(self):
         if self.count == 0:
-            self.count = random.randint(1, 10)
+            self.count = random.randint(1, utils.config["max_capsule_count"])
 
     def block(self, names):
         for name in names:
