@@ -448,21 +448,21 @@ class Capsules:
             self.scene.groups["break"].add(self._break)
             self.block(["capsuleB"])
         elif effect == "disrupt":
-            pos = self.state.balls[0].rect.topleft
-            last = self.state.balls[0].last.topleft
+            ball0 = self.scene.groups["balls"].sprites()[0]
+            pos = ball0.rect.topleft
+            last = ball0.last.topleft
 
             signs = [1 if pos[i] - last[i] >= 0 else -1 for i in range(2)]
             vels = [[1,2], [1.6,1.6], [2,1]]
             vels = [[x * signs[0] * self.state.ball_speed, y * signs[1] * self.state.ball_speed] for x,y in vels]
 
-            self.state.balls = [self.scene.names[name] for name in ["ball1", "ball2", "ball3"]]
-
-            for sprite, vel in zip(self.state.balls, vels):
-                sprite.set_pos(pos)
-
-                sprite.kill()
-                self.scene.groups["all"].add(sprite)
-                sprite.set_action(display.Move(vel))
+            for name, vel in zip(["ball1", "ball2", "ball3"], vels):
+                ball = self.scene.names[name]
+                ball.set_pos(pos)
+                ball.set_action(display.Move(vel))
+                ball.kill()
+                self.scene.groups["balls"].add(ball)
+                self.scene.groups["all"].add(ball)
 
             self.disable()
         elif effect == "player":
@@ -470,7 +470,7 @@ class Capsules:
         elif effect == "slow":
             self.state.ball_speed /= utils.config["ball_speed"]
 
-            for ball in self.state.balls:
+            for ball in self.scene.groups["balls"]:
                 if isinstance(ball.action, display.Move):
                     ball.action.delta = [i / utils.config["ball_speed"] for i in ball.action.delta]
 
@@ -554,14 +554,13 @@ class GameState(State):
         show_lives(self)
 
         self.playspace = self.scene.names["bg"].rect
-        self.balls = [self.scene.names["ball1"]]
         self.scene.names["ball2"].kill()
         self.scene.names["ball3"].kill()
 
         self.ball_speed = 1
 
         self.paddle = Paddle(self.scene.names["paddle"], self.playspace, self)
-        self.paddle.catch_ball(self.balls[0])
+        self.paddle.catch_ball(self.scene.names["ball1"])
 
         self.capsules = Capsules(self, self.paddle)
 
@@ -588,7 +587,7 @@ class GameState(State):
         if self.ball_speed < 4:
             self.ball_speed *= utils.config["ball_speed"]
 
-            for ball in self.balls:
+            for ball in self.scene.groups["balls"]:
                 if isinstance(ball.action, display.Move):
                     ball.action.delta = [i * utils.config["ball_speed"] for i in ball.action.delta]
 
@@ -627,28 +626,27 @@ class GameState(State):
     def update(self):
         self.scene.groups["all"].update()
         
-        # Ball-Paddle collisions
-        for ball in self.balls:
-            if pygame.sprite.collide_rect(self.paddle.sprite, ball):
-                self.paddle.hit(ball)
-
         # Break support
         for sprite in self.scene.groups["break"]:
             if self.paddle.sprite.rect.right + 1 >= sprite.rect.left:
                 utils.events.generate(utils.EVT_POINTS, points=10000)
                 self.engine.set_state(BreakState, {"scene" : self.scene, "paddle" : self.paddle})
 
-        # Paddle collisions with everything but balls
-        sprites = pygame.sprite.spritecollide(self.paddle.sprite, self.scene.groups["paddle"], False)
-        for sprite in sprites:
-            sprite.hit(self.scene)
+        # Paddle collisions
+        for group in [self.scene.groups["balls"], self.scene.groups["paddle"]]:
+            sprites = pygame.sprite.spritecollide(self.paddle.sprite, group, False)
+            for sprite in sprites:
+                sprite.hit(self.scene)
 
-            if sprite.cfg.get("effect"):
-                self.capsules.kill(sprite)
-                self.capsules.apply(sprite)
+                if sprite.cfg.get("effect"):
+                    self.capsules.kill(sprite)
+                    self.capsules.apply(sprite)
 
-            if sprite.cfg.get("kill_paddle", False):
-                self.engine.set_state(DeathState, {"scene" : self.scene, "paddle" : self.paddle})
+                if sprite.cfg.get("kill_paddle", False):
+                    self.engine.set_state(DeathState, {"scene" : self.scene, "paddle" : self.paddle})
+                
+                if sprite.cfg.get("paddle_bounce", False):
+                    self.paddle.hit(sprite)
 
         # Destroy anything that wanders off the playspace
         for sprite in self.scene.groups["paddle"]:
@@ -659,7 +657,7 @@ class GameState(State):
                     sprite.kill()
 
         # Projectile collisions
-        for projectile in self.balls + self.scene.groups["lasers"].sprites():
+        for projectile in self.scene.groups["balls"].sprites() + self.scene.groups["lasers"].sprites():
             sprites = pygame.sprite.spritecollide(projectile, self.scene.groups["ball"], False)
             for sprite in sprites:
                 projectile.hit(self.scene)
@@ -680,16 +678,15 @@ class GameState(State):
 
 
         # Ball exit detection
-        for ball in list(self.balls):
+        for ball in self.scene.groups["balls"]:
             if ball.alive() and ball.rect.top > self.playspace.bottom:
                 ball.kill()
-                self.balls.remove(ball)
 
-                if len(self.balls) == 1:
+                if len(self.scene.groups["balls"].sprites()) == 1:
                     self.capsules.enable()
 
         # Check for death
-        if len(self.balls) == 0:
+        if len(self.scene.groups["balls"].sprites()) == 0:
             self.engine.set_state(DeathState, {"scene" : self.scene, "paddle" : self.paddle})
 
         # Level completion detection

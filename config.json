@@ -1270,17 +1270,19 @@
             {
                 "name" : "ball1",
                 "image" : "ball",
-                "position" : [ 96, 197]
+                "paddle_bounce" : true,
+                "position" : [ 96, 197],
+                "groups" : ["balls"]
             },
             {
                 "name" : "ball2",
                 "image" : "ball",
-                "position" : [ 96, 197]
+                "paddle_bounce" : true
             },
             {
                 "name" : "ball3",
                 "image" : "ball",
-                "position" : [ 96, 197]
+                "paddle_bounce" : true
             },
             {
                 "name" : "laser",
