@@ -351,7 +351,7 @@ class Paddle:
     def hit(self, ball):
         # Move ball out of contact based on its velocity vector
         collision_move_to_edge(ball, self.sprite)
-        
+
         if self.catch:
             self.catch_ball(ball)
         elif self.stuck_ball:
@@ -360,23 +360,30 @@ class Paddle:
             self.hit_ball(ball)
 
     def hit_ball(self, ball):
-        delta = ball.rect.centerx - self.sprite.rect.centerx
+        deltax = ball.rect.centerx - self.sprite.rect.centerx
+        deltay = ball.rect.centery - self.sprite.rect.centery
         half_width = self.sprite.rect.width / 2
         sharp_thresh = half_width - 3
         mid_thresh = half_width - 8
 
-        if delta < -sharp_thresh:
-            vel = [-2,-1]
-        elif delta < -mid_thresh:
+        if deltax < -sharp_thresh:
+            if deltay > 0:
+                vel = [-2, 1]
+            else:
+                vel = [-2,-1]
+        elif deltax < -mid_thresh:
             vel = [-1.6,-1.6]
-        elif delta < 0:
+        elif deltax < 0:
             vel = [-1,-2]
-        elif delta <= mid_thresh:
+        elif deltax <= mid_thresh:
             vel = [1,-2]
-        elif delta <= sharp_thresh:
+        elif deltax <= sharp_thresh:
             vel = [1.6,-1.6]
         else:
-            vel = [2,-1]
+            if deltay > 0:
+                vel = [2, 1]
+            else:
+                vel = [2,-1]
 
         vel = [i * self.state.ball_speed for i in vel]
 
