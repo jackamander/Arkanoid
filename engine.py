@@ -701,9 +701,16 @@ class GameState(State):
 def collision_move_to_edge(sprite1, sprite2):
     "sprite1 is projectile, sprite2 is the other.  Move sprite1 to be out of contact based on velocity"
 
-    # Use sprite1's speed only, since we don't care about intra-frame position
-    v_x = sprite1.rect.centerx - sprite1.last.centerx
-    v_y = sprite1.rect.centery - sprite1.last.centery
+    # Velocity1 alone keeps the ball path cleaner, but can be wonky when the paddle is moving fast
+    # Relative velocity improves the overall response, but jerks the ball path around under fast motion
+    v1_x = sprite1.rect.centerx - sprite1.last.centerx
+    v1_y = sprite1.rect.centery - sprite1.last.centery
+
+    v2_x = sprite2.rect.centerx - sprite2.last.centerx
+    v2_y = sprite2.rect.centery - sprite2.last.centery
+
+    v_x = v1_x - v2_x
+    v_y = v1_y - v2_y
 
     # Find the overlapping distances
     if v_x >= 0:
