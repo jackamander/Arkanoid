@@ -577,7 +577,7 @@ class GameState(State):
 
         for name in ["inlet_left", "inlet_right"]:
             inlet = self.scene.names[name]
-            inlet.set_action(display.InletMgr(self.scene, inlet))
+            inlet.set_action(display.InletMgr(self.scene))
 
         self.scene.names["alien"].kill()
 
@@ -626,7 +626,7 @@ class GameState(State):
 
     def update(self):
         self.scene.groups["all"].update()
-
+        
         # Ball-Paddle collisions
         for ball in self.balls:
             if pygame.sprite.collide_rect(self.paddle.sprite, ball):
@@ -700,6 +700,39 @@ class GameState(State):
 
     def draw(self, screen):
         self.scene.groups["all"].draw(screen)
+
+def collision_move_to_edge(sprite1, sprite2):
+    "Move sprite1 to the edge of sprite2 based on relative velocity"
+    # Find the overlapping region    
+    clip = sprite2.rect.clip(sprite1.rect)
+
+    # Start with sprite1's velocity 
+    v1_x = sprite1.rect.centerx - sprite1.last.centerx
+    v1_y = sprite1.rect.centery - sprite1.last.centery
+
+    # Subtract out sprite2's velocity to get the relative velocity of sprite1
+    v1_x -= sprite2.rect.centerx - sprite2.last.centerx
+    v1_y -= sprite2.rect.centery - sprite2.last.centery
+
+    # Hack to account for 0 - just assume they're very small
+    if v1_x == 0:
+        v1_x = 0.00001
+    
+    if v1_y == 0:
+        v1_y = 0.00001
+    
+    # Calculate the time to each edge, and rewind position by the minimum of the two
+    time_x = (clip.width - 1) / v1_x
+    time_y = (clip.height - 1) / v1_y
+
+    if time_x < time_y:
+        dx = -v1_x * time_x
+        dy = -v1_y * time_x
+    else:
+        dx = -v1_x * time_y
+        dy = -v1_y * time_y
+
+    sprite1.rect.move_ip(dx, dy)
 
 def collision_side(sprite1, sprite2):
     # Code adapted from https://hopefultoad.blogspot.com/2017/09/code-example-for-2d-aabb-collision.html

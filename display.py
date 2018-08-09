@@ -502,10 +502,12 @@ class AlienCircle(AlienJuke):
         self.frame_counts = [10, 30, 10, 10, 30, 10, 10, 30, 10, 10, 30, 10]
 
 class InletMgr(Action):
-    def __init__(self, scene, inlet):
-        self.max_delay = inlet.cfg["max_delay"] * utils.config["frame_rate"]
-        self.max_aliens = inlet.cfg["max_aliens"]
+    def __init__(self, scene):
         self.scene = scene
+
+    def start(self, sprite):
+        self.max_delay = sprite.cfg["max_delay"] * utils.config["frame_rate"]
+        self.max_aliens = sprite.cfg["max_aliens"]
         self._randomize()
 
     def _randomize(self):
@@ -516,7 +518,7 @@ class InletMgr(Action):
             self.frames -= 1
         else:
             if len(self.scene.groups["aliens"].sprites()) < self.max_aliens:
-                return Animate("inlet_open").then(Spawn("alien", self.scene).then(Delay(1.0).then(Animate("inlet_close").then(InletMgr(self.scene, sprite)))))
+                return Animate("inlet_open").then(Spawn("alien", self.scene).then(Delay(1.0).then(Animate("inlet_close").then(InletMgr(self.scene)))))
             self._randomize()
         return self
 
