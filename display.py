@@ -112,29 +112,71 @@ class Action:
     def plus(self, action):
         return Parallel([self, action])
 
+    def update(self, sprite):
+        return None
+
+    def start(self, sprite):
+        pass
+
+    def stop(self, sprite):
+        pass
+
 class Series(Action):
     def __init__(self, actions):
         self.actions = list(actions)
         self.action = self.actions.pop(0)
 
-    def update(self, sprite):
+    def start(self, sprite):
         if self.action:
-            done = self.action.update(sprite)
-            if done:
-                self.action = None
-                if self.actions:
-                    self.action = self.actions.pop(0)
+            self.action.start(sprite)
 
-        return self.action is None
+    def stop(self, sprite):
+        if self.action:
+            self.action.stop(sprite)
+
+    def update(self, sprite):
+        next_action = self.action.update(sprite)
+
+        if next_action is not self.action:
+            self.action.stop(sprite)
+            self.action = next_action
+            self.start(sprite)
+
+        if self.action:
+            return self
+        
+        if self.actions:
+            self.action = self.actions.pop(0)
+            self.start(sprite)
+            return self
+
+        return None
 
 class Parallel(Action):
     def __init__(self, actions):
         self.actions = list(actions)
 
+    def start(self, sprite):
+        for action in self.actions:
+            action.start(sprite)
+
+    def stop(self, sprite):
+        for action in self.actions:
+            action.stop(sprite)
+
     def update(self, sprite):
-        self.actions = filter(lambda action: not action.update(sprite), self.actions)
-        done = len(self.actions) == 0
-        return done
+        # Advance each action
+        next_actions = map(lambda action: action.update(sprite), self.actions)
+
+        # Issue any stops
+        for next_action, prev_action in zip(next_actions, self.actions):
+            if next_action is None:
+                prev_action.stop(sprite)
+
+        # Filter out any actions that finish
+        self.actions = filter(None, next_actions)
+
+        return self if self.actions else None
 
 class MouseMove(Action):
     def __init__(self, region, sensitivity):
@@ -151,6 +193,7 @@ class MouseMove(Action):
         sprite.move(self.delta)
         sprite.rect.clamp_ip(self.rect)
         self.delta = [0, 0]
+        return self
 
 class Move(Action):
     def __init__(self, delta):
@@ -162,6 +205,7 @@ class Move(Action):
         move = [int(i) for i in total]
         self.total = [t-m for t,m in zip(total, move)]
         sprite.move(move)
+        return self
 
 class MoveLimited(Move):
     def __init__(self, delta, frames):
@@ -173,20 +217,33 @@ class MoveLimited(Move):
 
         if self.frames > 0:
             self.frames -= 1
-
-        return self.frames == 0
+        
+        return None if self.frames == 0 else self
 
 class Follow(Action):
     def __init__(self, target):
+        self.sprite = None
         self.target = target
         self.last = target.get_pos()
 
+    def start(self, sprite):
+        self.sprite = sprite
+        self.target.subscribe(self.notify)
+
+    def stop(self, sprite):
+        self.sprite = None
+        self.target.unsubscribe(self.notify)
+    
     def update(self, sprite):
-        pos = self.target.get_pos()
+        return self
+
+    def notify(self, target):
+        pos = target.get_pos()
         if pos != self.last:
             delta = [pos[0] - self.last[0], pos[1] - self.last[1]]
-            sprite.move(delta)
+            self.sprite.move(delta)
             self.last = pos
+        return self
 
 class Blink(Action):
     def __init__(self, rate):
@@ -201,6 +258,7 @@ class Blink(Action):
         if self.frames == self.rate:
             sprite.visible ^= 1
             self.frames = 0
+        return self
 
 class Animate(Action):
     def __init__(self, name, align="center"):
@@ -213,33 +271,33 @@ class Animate(Action):
         self.count = 0
 
     def update(self, sprite):
-        if self.frame < len(self.images):
-            if self.count == 0:
-                image = self.images[self.frame]
-                sprite.set_image(image, self.align)
+        if self.count == 0:
+            image = self.images[self.frame]
+            sprite.set_image(image, self.align)
 
-            self.count += 1
-            if self.count >= self.speed:
-                self.frame += 1
-                self.count = 0
+        self.count += 1
+        if self.count >= self.speed:
+            self.frame += 1
+            self.count = 0
 
-        if self.frame >= len(self.images):
-            if self.loop:
-                self.frame = 0
-            else:
-                return True
+            if self.frame >= len(self.images):
+                if self.loop:
+                    self.frame = 0
+        
+        return self if self.frame < len(self.images) else None
 
 class Die(Action):
     def update(self, sprite):
         sprite.kill()
-        return True
+        return None
 
 class PlaySound(Action):
     def __init__(self, sound):
         self.sound = audio.play_sound(sound)
 
     def update(self, sprite):
-        return self.sound is None or not self.sound.get_busy()
+        done = self.sound is None or not self.sound.get_busy()
+        return None if done else self
 
 class FireEvent(Action):
     def __init__(self, event, **kwargs):
@@ -250,7 +308,7 @@ class FireEvent(Action):
         if self.event:
             utils.events.generate(self.event, **self.kwargs)
             self.event = None
-        return True
+        return None
 
 class Callback(Action):
     def __init__(self, callback, *args, **kwargs):
@@ -262,7 +320,7 @@ class Callback(Action):
         if self.callback:
             self.callback(*self.args, **self.kwargs)
             self.callback = None
-        return True
+        return None
 
 class UpdateVar(Action):
     def __init__(self, name, font="white", fmt="%s"):
@@ -284,6 +342,7 @@ class UpdateVar(Action):
             self.dirty = False
             image = draw_text(self.text, self.font)
             sprite.set_image(image)
+        return self
 
 class Delay(Action):
     def __init__(self, delay):
@@ -291,9 +350,8 @@ class Delay(Action):
         self.frames = int(delay * fps)
 
     def update(self, sprite):
-        if self.frames > 0:
-            self.frames -= 1
-        return self.frames == 0
+        self.frames -= 1
+        return self if self.frames > 0 else None
 
 class Spawn(Action):
     def __init__(self, name, scene):
@@ -318,7 +376,7 @@ class Spawn(Action):
         self.scene.groups["paddle"].add(clone)
         self.scene.groups["aliens"].add(clone)
 
-        return True
+        return None
 
 class AlienEscape(Move):
     def __init__(self, scene):
@@ -380,8 +438,9 @@ class AlienEscape(Move):
             rect.union_ip(brick.rect)
 
         if sprite.rect.top > rect.bottom:
-            sprite.set_action(AlienDescend(self.scene))
+            return AlienDescend(self.scene)
 
+        return self
 
 class AlienDescend(MoveLimited):
     def __init__(self, scene):
@@ -389,7 +448,7 @@ class AlienDescend(MoveLimited):
         self.scene = scene
 
     def update(self, sprite):
-        if MoveLimited.update(self, sprite):
+        if MoveLimited.update(self, sprite) is None:
             actions = [AlienDescend(self.scene)]
             playspace = self.scene.names["bg"].rect
 
@@ -405,7 +464,9 @@ class AlienDescend(MoveLimited):
             if sprite.rect.left > playspace.left + 40:
                 actions += [AlienCircle(self.scene, -1)]
 
-            sprite.set_action(random.choice(actions))
+            return random.choice(actions)
+
+        return self
 
 class AlienJuke(MoveLimited):
     def __init__(self, scene, xdir):
@@ -425,13 +486,15 @@ class AlienJuke(MoveLimited):
         MoveLimited.__init__(self, delta, frames)
 
     def update(self, sprite):
-        if MoveLimited.update(self, sprite):
+        if MoveLimited.update(self, sprite) is None:
             self.index += 1
 
             if self.index < len(self.deltas):
                 self.set()
             else:
-                sprite.set_action(AlienDescend(self.scene))
+                return AlienDescend(self.scene)
+        
+        return self
 
 class AlienCircle(AlienJuke):
     def init(self):
@@ -453,13 +516,16 @@ class InletMgr(Action):
             self.frames -= 1
         else:
             if len(self.scene.groups["aliens"].sprites()) < self.max_aliens:
-                sprite.set_action(Animate("inlet_open").then(Spawn("alien", self.scene).then(Delay(1.0).then(Animate("inlet_close").then(InletMgr(self.scene, sprite))))))
+                return Animate("inlet_open").then(Spawn("alien", self.scene).then(Delay(1.0).then(Animate("inlet_close").then(InletMgr(self.scene, sprite)))))
             self._randomize()
+        return self
 
 class DohMgr(Action):
-    def __init__(self, scene, sprite):
+    def __init__(self, scene):
         self.scene = scene
         self.set_state(self.state_open, 1)
+
+    def start(self, sprite):
         self.set_closed(sprite)
 
     def delay(self, delay):
@@ -470,6 +536,7 @@ class DohMgr(Action):
             self.frames -= 1
         else:
             self.state(sprite)
+        return self
 
     def set_open(self, sprite):
         sprite.set_image(get_image("doh_open"))
@@ -543,6 +610,7 @@ class Sprite(pygame.sprite.DirtySprite):
         self.action = None
 
         self.cfg = cfg
+        self.callbacks = set()
 
     def clone(self):
         return Sprite(self.image, self.cfg.copy())
@@ -558,15 +626,37 @@ class Sprite(pygame.sprite.DirtySprite):
         self.rect.x += delta[0]
         self.rect.y += delta[1]
 
-    def set_action(self, action=None):
-        self.action = action
+    def set_action(self, new_action=None):
+        old_action = self.action
+
+        # Stop the previous action
+        if old_action and old_action is not new_action:
+            old_action.stop(self)
+
+        self.action = new_action
+
+        # Start the new action
+        if new_action and old_action is not new_action:
+            new_action.start(self)
 
     def update(self):
         self.last = self.rect.copy()
+
         if self.action:
-            done = self.action.update(self)
-            if done:
-                self.action = None
+            new_action = self.action.update(self)
+            self.set_action(new_action)
+
+        self.notify()        
+
+    def subscribe(self, callback):
+        self.callbacks.add(callback)
+
+    def unsubscribe(self, callback):
+        self.callbacks.discard(callback)
+
+    def notify(self):
+        for callback in self.callbacks:
+            callback(self)
 
     def set_image(self, image, align="center"):
         old_rect = self.rect.copy()

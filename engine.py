@@ -180,7 +180,7 @@ class StartState(State):
         doh = self.scene.names.get("doh", None)
         if doh:
             sound = "DohStart"
-            doh.set_action(display.DohMgr(self.scene, doh))
+            doh.set_action(display.DohMgr(self.scene))
         else:
             sound = "Ready"
         self.sound = audio.play_sound(sound)
@@ -573,7 +573,7 @@ class GameState(State):
 
         doh = self.scene.names.get("doh", None)
         if doh:
-            doh.set_action(display.DohMgr(self.scene, doh))
+            doh.set_action(display.DohMgr(self.scene))
 
         for name in ["inlet_left", "inlet_right"]:
             inlet = self.scene.names[name]
