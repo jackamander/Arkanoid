@@ -349,6 +349,9 @@ class Paddle:
             self.stuck_ball = None
 
     def hit(self, ball):
+        # Move ball out of contact based on its velocity vector
+        collision_move_to_edge(ball, self.sprite)
+        
         if self.catch:
             self.catch_ball(ball)
         elif self.stuck_ball:
@@ -689,37 +692,41 @@ class GameState(State):
         self.scene.groups["all"].draw(screen)
 
 def collision_move_to_edge(sprite1, sprite2):
-    "Move sprite1 to the edge of sprite2 based on relative velocity"
-    # Find the overlapping region    
-    clip = sprite2.rect.clip(sprite1.rect)
+    "sprite1 is projectile, sprite2 is the other.  Move sprite1 to be out of contact based on velocity"
 
-    # Start with sprite1's velocity 
-    v1_x = sprite1.rect.centerx - sprite1.last.centerx
-    v1_y = sprite1.rect.centery - sprite1.last.centery
+    # Use sprite1's speed only, since we don't care about intra-frame position
+    v_x = sprite1.rect.centerx - sprite1.last.centerx
+    v_y = sprite1.rect.centery - sprite1.last.centery
 
-    # Subtract out sprite2's velocity to get the relative velocity of sprite1
-    v1_x -= sprite2.rect.centerx - sprite2.last.centerx
-    v1_y -= sprite2.rect.centery - sprite2.last.centery
-
-    # Hack to account for 0 - just assume they're very small
-    if v1_x == 0:
-        v1_x = 0.00001
+    # Find the overlapping distances
+    if v_x >= 0:
+        overlap_x = sprite1.rect.right - sprite2.rect.left
+    else:
+        overlap_x = sprite1.rect.left - sprite2.rect.right
     
-    if v1_y == 0:
-        v1_y = 0.00001
+    if v_y >= 0:
+        overlap_y = sprite1.rect.bottom - sprite2.rect.top
+    else:
+        overlap_y = sprite1.rect.top - sprite2.rect.bottom
+    
+    # Hack to account for 0 - just assume they're very small
+    if v_x == 0:
+        v_x = 0.00001
+    
+    if v_y == 0:
+        v_y = 0.00001
     
     # Calculate the time to each edge, and rewind position by the minimum of the two
-    time_x = (clip.width - 1) / v1_x
-    time_y = (clip.height - 1) / v1_y
-
+    time_x = overlap_x / float(v_x)
+    time_y = overlap_y / float(v_y)
     if time_x < time_y:
-        dx = -v1_x * time_x
-        dy = -v1_y * time_x
+        dx = -v_x * time_x
+        dy = -v_y * time_x
     else:
-        dx = -v1_x * time_y
-        dy = -v1_y * time_y
+        dx = -v_x * time_y
+        dy = -v_y * time_y
 
-    sprite1.rect.move_ip(dx, dy)
+    sprite1.rect.move_ip(int(dx), int(dy))
 
 def collision_side(sprite1, sprite2):
     # Code adapted from https://hopefultoad.blogspot.com/2017/09/code-example-for-2d-aabb-collision.html
