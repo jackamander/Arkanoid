@@ -638,10 +638,9 @@ class GameState(State):
                 utils.events.generate(utils.EVT_POINTS, points=10000)
                 self.engine.set_state(BreakState, {"scene" : self.scene, "paddle" : self.paddle})
 
-        # Capsules
+        # Paddle collisions with everything but balls
         sprites = pygame.sprite.spritecollide(self.paddle.sprite, self.scene.groups["paddle"], False)
         for sprite in sprites:
-
             sprite.hit(self.scene)
 
             if sprite.cfg.get("effect"):
@@ -651,34 +650,34 @@ class GameState(State):
             if sprite.cfg.get("kill_paddle", False):
                 self.engine.set_state(DeathState, {"scene" : self.scene, "paddle" : self.paddle})
 
+        # Destroy anything that wanders off the playspace
         for sprite in self.scene.groups["paddle"]:
             if sprite.alive() and sprite.rect.top > self.playspace.bottom:
-                self.capsules.kill(sprite)
-
-        # Ball and laser collisions
-        for ball in self.balls + self.scene.groups["lasers"].sprites():
-            sprites = pygame.sprite.spritecollide(ball, self.scene.groups["ball"], False)
-            for sprite in sprites:
-                hits = ball.cfg.get("hits")
-                if hits:
-                    hits -= 1
-                    ball.cfg["hits"] = hits
-                    if hits == 0:
-                        ball.kill()
+                if sprite.cfg.get("effect"):
+                    self.capsules.kill(sprite)
                 else:
-                    if isinstance(ball.action, display.Move):
-                        side = collision_side(ball, sprite)
+                    sprite.kill()
 
-                        if side == CollisionSide_Bottom:
-                            ball.action.delta[1] = abs(ball.action.delta[1])
-                        elif side == CollisionSide_Top:
-                            ball.action.delta[1] = -abs(ball.action.delta[1])
-                        elif side == CollisionSide_Right:
-                            ball.action.delta[0] = abs(ball.action.delta[0])
-                        elif side == CollisionSide_Left:
-                            ball.action.delta[0] = -abs(ball.action.delta[0])
-
+        # Projectile collisions
+        for projectile in self.balls + self.scene.groups["lasers"].sprites():
+            sprites = pygame.sprite.spritecollide(projectile, self.scene.groups["ball"], False)
+            for sprite in sprites:
+                projectile.hit(self.scene)
                 sprite.hit(self.scene)
+
+                # Bounce the balls
+                if projectile.alive() and isinstance(projectile.action, display.Move):
+                    side = collision_side(projectile, sprite)
+
+                    if side == CollisionSide_Bottom:
+                        projectile.action.delta[1] = abs(projectile.action.delta[1])
+                    elif side == CollisionSide_Top:
+                        projectile.action.delta[1] = -abs(projectile.action.delta[1])
+                    elif side == CollisionSide_Right:
+                        projectile.action.delta[0] = abs(projectile.action.delta[0])
+                    elif side == CollisionSide_Left:
+                        projectile.action.delta[0] = -abs(projectile.action.delta[0])
+
 
         # Ball exit detection
         for ball in list(self.balls):
