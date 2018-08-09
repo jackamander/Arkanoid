@@ -476,9 +476,9 @@ class Capsules:
         elif effect == "disrupt":
             ball0 = self.scene.groups["balls"].sprites()[0]
             pos = ball0.rect.topleft
-            last = ball0.last.topleft
+            vel = ball0.action.delta
 
-            signs = [1 if pos[i] - last[i] >= 0 else -1 for i in range(2)]
+            signs = [1 if vel[i] > 0 else -1 for i in range(2)]
             vels = [[1,2], [1.6,1.6], [2,1]]
             vels = [[x * signs[0] * self.state.ball_speed, y * signs[1] * self.state.ball_speed] for x,y in vels]
 
