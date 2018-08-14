@@ -202,6 +202,9 @@ class BreakState(State):
 
         self.paddle._break()
 
+        for ball in self.scene.groups["balls"]:
+            ball.kill()
+
     def update(self):
         for name in ["high", "score1", "score2", "break", "paddle"]:
             self.scene.names[name].update()
@@ -639,12 +642,6 @@ class GameState(State):
     def update(self):
         self.scene.groups["all"].update()
         
-        # Break support
-        for sprite in self.scene.groups["break"]:
-            if self.paddle.sprite.rect.right >= sprite.rect.left:
-                utils.events.generate(utils.EVT_POINTS, points=10000)
-                self.engine.set_state(BreakState, {"scene" : self.scene, "paddle" : self.paddle})
-
         # Paddle collisions
         for group in [self.scene.groups["balls"], self.scene.groups["paddle"]]:
             sprites = pygame.sprite.spritecollide(self.paddle.sprite, group, False)
@@ -656,7 +653,9 @@ class GameState(State):
                     self.capsules.apply(sprite)
 
                 if sprite.cfg.get("kill_paddle", False):
-                    self.engine.set_state(DeathState, {"scene" : self.scene, "paddle" : self.paddle})
+                    # Kill the paddle by eliminating all the balls
+                    for ball in self.scene.groups["balls"]:
+                        ball.kill()
                 
                 if sprite.cfg.get("paddle_bounce", False):
                     self.paddle.hit(sprite)
@@ -712,6 +711,12 @@ class GameState(State):
         remaining = sum([brick.cfg.get("hits", 0) for brick in self.scene.groups["bricks"].sprites()])
         if remaining == 0:
             self.engine.set_state(ClearState, {"scene" : self.scene})
+
+        # Break support
+        for sprite in self.scene.groups["break"]:
+            if self.paddle.sprite.rect.right >= sprite.rect.left:
+                utils.events.generate(utils.EVT_POINTS, points=10000)
+                self.engine.set_state(BreakState, {"scene" : self.scene, "paddle" : self.paddle})
 
     def draw(self, screen):
         self.scene.groups["all"].draw(screen)
