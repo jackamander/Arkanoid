@@ -229,17 +229,11 @@ class DeathState(State):
             self.scene.names[name].update()
 
         if not self.paddle.alive():
-            self.engine.vars["lives1" if self.engine.vars["player"] == 1 else "lives2"] -= 1
-
-            for _ in range(self.engine.vars["players"]):
-                self.engine.vars["player"] = self.engine.vars["player"] % self.engine.vars["players"] + 1
-
-                if self.engine.vars["lives1" if self.engine.vars["player"] == 1 else "lives2"] > 0:
-                    self.engine.vars["level"] = self.engine.vars["level1" if self.engine.vars["player"] == 1 else "level2"]
-                    self.engine.set_state(RoundState)
-                    break
-            else:
+            if self.engine.change_lives(-1) == 0:
                 self.engine.set_state(GameOverState, {"scene" : self.scene})
+            else:
+                self.engine.switch_player()
+                self.engine.set_state(RoundState)
 
     def draw(self, screen):
         self.scene.groups["all"].draw(screen)
@@ -252,7 +246,13 @@ class GameOverState(State):
         self.scene.merge(display.Scene(["gameover"], engine.vars))
 
         self.sound = audio.play_sound("GameOver")
-        utils.timers.start(4.0, self.engine.set_state, TitleState)
+        utils.timers.start(4.0, self.next_round)
+
+    def next_round(self):
+        if self.engine.switch_player():
+            self.engine.set_state(RoundState)
+        else:
+            self.engine.set_state(TitleState)
 
     def draw(self, screen):
         self.scene.groups["all"].draw(screen)
@@ -994,6 +994,23 @@ class Engine(object):
             self.scenes[player] = {level : display.Scene([key], self.vars) for level, key in levels.items()}
 
         self.set_state(self.INITIAL_STATE)
+
+    def change_lives(self, adjust):
+        player = self.vars["player"]
+        key = "lives1" if player == 1 else "lives2"
+        self.vars[key] += adjust
+        return self.vars[key]
+
+    def switch_player(self):
+        for _ in range(self.vars["players"]):
+            self.vars["player"] = self.vars["player"] % self.vars["players"] + 1
+
+            if self.change_lives(0) > 0:
+                key = "level1" if self.vars["player"] == 1 else "level2"
+                self.vars["level"] = self.vars[key]
+                return True
+
+        return False
 
     def set_state(self, state, data={}):
         utils.events.clear()
