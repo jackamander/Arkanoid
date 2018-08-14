@@ -927,10 +927,18 @@ class FinalState(State):
         utils.timers.start(3.0, self.animate)
 
     def animate(self):
-        self.doh.set_action(display.Animate(self.doh.cfg["animation"]).then(display.PlaySound("High").then(display.Callback(self.done))))
+        self.doh.set_action(display.Animate(self.doh.cfg["animation"]).then(display.PlaySound("High").then(display.Callback(utils.timers.start, 3.0, self.done))))
 
     def done(self):
-        utils.timers.start(3.0, self.engine.set_state, TitleState)
+        # Eliminate any remaining lives for the winning player
+        lives = self.engine.change_lives(0)
+        self.engine.change_lives(-lives)
+
+        # Give any remaining player a chance to continue
+        if self.engine.switch_player():
+            self.engine.set_state(RoundState)
+        else:
+            self.engine.set_state(TitleState)
 
     def update(self):
         self.doh.update()
