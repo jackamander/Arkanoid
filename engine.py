@@ -663,24 +663,33 @@ class GameState(State):
 
         # Projectile collisions
         for projectile in self.scene.groups["balls"].sprites() + self.scene.groups["lasers"].sprites():
-            sprites = pygame.sprite.spritecollide(projectile, self.scene.groups["ball"], False)
-            for sprite in find_closest(projectile, sprites):
-                projectile.hit(self.scene)
-                sprite.hit(self.scene)
+            # Hit the closest object and slide along the collsion edge.  Repeat a few more times
+            # in case the slide hits other objects
+            for _ in range(3):
+                sprites = pygame.sprite.spritecollide(projectile, self.scene.groups["ball"], False)
 
-                # Bounce the balls
-                if projectile.alive() and isinstance(projectile.action, display.Move):
-                    side = collision_side(projectile, sprite)
+                if len(sprites) > 0:
+                    closest = find_closest(projectile, sprites)
 
-                    if side == CollisionSide_Bottom:
-                        projectile.action.delta[1] = abs(projectile.action.delta[1])
-                    elif side == CollisionSide_Top:
-                        projectile.action.delta[1] = -abs(projectile.action.delta[1])
-                    elif side == CollisionSide_Right:
-                        projectile.action.delta[0] = abs(projectile.action.delta[0])
-                    elif side == CollisionSide_Left:
-                        projectile.action.delta[0] = -abs(projectile.action.delta[0])
+                    projectile.hit(self.scene)
+                    closest.hit(self.scene)
 
+                    # Bounce the balls
+                    if projectile.alive() and isinstance(projectile.action, display.Move):
+                        side = collision_side(projectile, closest)
+
+                        if side == CollisionSide_Bottom:
+                            projectile.action.delta[1] = abs(projectile.action.delta[1])
+                            projectile.rect.top = closest.rect.bottom
+                        elif side == CollisionSide_Top:
+                            projectile.action.delta[1] = -abs(projectile.action.delta[1])
+                            projectile.rect.bottom = closest.rect.top
+                        elif side == CollisionSide_Right:
+                            projectile.action.delta[0] = abs(projectile.action.delta[0])
+                            projectile.rect.left = closest.rect.right
+                        elif side == CollisionSide_Left:
+                            projectile.action.delta[0] = -abs(projectile.action.delta[0])
+                            projectile.rect.right = closest.rect.left
 
         # Destroy anything that wanders off the playspace
         for group in [self.scene.groups["paddle"], self.scene.groups["balls"]]:
@@ -708,17 +717,11 @@ class GameState(State):
         self.scene.groups["all"].draw(screen)
 
 def find_closest(projectile, sprites):
-    if len(sprites) < 2:
-        return sprites
-    else:
-        deltas = [rect_distance(projectile.last.center, sprite.last) for sprite in sprites]
-        dsquareds = [x**2 + y**2 for x,y in deltas]
-        sortlist = zip(dsquareds, sprites)
-        sortlist.sort()
-        target = sortlist[0][0]
-        finalists = filter(lambda pair: pair[0] == target, sortlist)
-        final = [sprite for _, sprite in finalists]
-        return final
+    dsquareds = [rect_distance(projectile.last.center, sprite.last) for sprite in sprites]
+    sortlist = zip(dsquareds, sprites)
+    sortlist.sort()
+    _, final = sortlist.pop(0)
+    return final
 
 def rect_distance(point, rect):
     dx = 0
@@ -733,7 +736,7 @@ def rect_distance(point, rect):
     elif rect.bottom - 1 < point[1]:
         dy = point[1] - (rect.bottom - 1)
 
-    return dx, dy
+    return dx**2 + dy**2
 
 def collision_move_to_edge(sprite1, sprite2):
     "sprite1 is projectile, sprite2 is the other.  Move sprite1 to be out of contact based on velocity"
