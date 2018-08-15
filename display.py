@@ -25,8 +25,8 @@ class Window:
         self.main = pygame.display.set_mode(screen_size, flags)
         self.screen = pygame.Surface(world_size)
 
-        logging.info("Driver: %s", pygame.display.get_driver())
-        logging.info("Display Info:\n    %s", pygame.display.Info())
+        logging.warning("Driver: %s", pygame.display.get_driver())
+        logging.warning("Display Info:\n    %s", pygame.display.Info())
 
         pygame.display.set_caption(utils.config["title"])
 
@@ -82,6 +82,7 @@ def _load_image(fname, rect=None, scaled=[]):
         image = pygame.image.load(fname)
         image = image.convert_alpha()
         _image_cache[fname] = image
+        logging.warning("Image cache miss: %s", fname)
 
     if rect:
         image = image.subsurface(rect)

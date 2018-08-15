@@ -1,0 +1,38 @@
+{
+    "version": 1,
+    "disable_existing_loggers": false,
+    "formatters": {
+        "full": {
+            "format": "[%(relativeCreated)d %(levelname)s %(filename)s] %(message)s"
+        },
+        "simple": {
+            "format": "%(message)s"
+        }
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "level": "INFO",
+            "formatter": "simple",
+            "stream": "ext://sys.stdout"
+        },
+        "debug_file_handler": {
+            "class": "logging.FileHandler",
+            "level": "DEBUG",
+            "formatter": "full",
+            "filename": "logs/debug.log",
+            "mode" : "w"
+        },
+        "production_file_handler": {
+            "class": "logging.FileHandler",
+            "level": "INFO",
+            "formatter": "full",
+            "filename": "logs/production.log",
+            "mode" : "w"
+        }
+    },
+    "root": {
+        "level": "DEBUG",
+        "handlers": ["console", "debug_file_handler", "production_file_handler"]
+    }
+}

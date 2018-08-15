@@ -6,10 +6,15 @@ General utilities
 
 import json
 import logging
+import logging.config
 import math
 import os
 
 import pygame
+
+def init():
+    global config
+    config = get_config("config.json")
 
 def set_config(fname, obj):
     """Write a JSON config file"""
@@ -28,7 +33,7 @@ def setup_logging(fname):
         logging.config.dictConfig(config)
     else:
         logging.basicConfig(level=logging.INFO)
-        logging.warn("Missing logging config <%s>", fname)
+        logging.error("Missing logging config <%s>", fname)
 
 def lerp(pt1, pt2, ratio):
     """Generic linear interpolation"""

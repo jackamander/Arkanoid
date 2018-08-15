@@ -3,6 +3,7 @@ Main game engine for Arkanoid
 """
 
 import itertools
+import logging
 import random
 import re
 
@@ -17,6 +18,14 @@ CollisionSide_Top = 1
 CollisionSide_Bottom = 2
 CollisionSide_Left = 4
 CollisionSide_Right = 8
+
+CollisionSide_Text = {
+    CollisionSide_None : "None",
+    CollisionSide_Top : "Top",
+    CollisionSide_Bottom : "Bottom",
+    CollisionSide_Left : "Left",
+    CollisionSide_Right : "Right",
+}
 
 class State(object):
     def __init__(self, engine, data):
@@ -388,27 +397,26 @@ class Paddle:
             self.hit_ball(ball)
 
     def hit_ball(self, ball):
-        deltax = ball.rect.centerx - self.sprite.rect.centerx
-        deltay = ball.rect.centery - self.sprite.rect.centery
+        delta = [ball.rect.centerx - self.sprite.rect.centerx, ball.rect.centery - self.sprite.rect.centery]
         half_width = self.sprite.rect.width / 2
         sharp_thresh = half_width - 3
         mid_thresh = half_width - 8
 
-        if deltax < -sharp_thresh:
-            if deltay > 0:
+        if delta[0] < -sharp_thresh:
+            if delta[1] > 0:
                 vel = [-2, 1]
             else:
                 vel = [-2,-1]
-        elif deltax < -mid_thresh:
+        elif delta[0] < -mid_thresh:
             vel = [-1.6,-1.6]
-        elif deltax < 0:
+        elif delta[0] < 0:
             vel = [-1,-2]
-        elif deltax <= mid_thresh:
+        elif delta[0] <= mid_thresh:
             vel = [1,-2]
-        elif deltax <= sharp_thresh:
+        elif delta[0] <= sharp_thresh:
             vel = [1.6,-1.6]
         else:
-            if deltay > 0:
+            if delta[1] > 0:
                 vel = [2, 1]
             else:
                 vel = [2,-1]
@@ -417,6 +425,8 @@ class Paddle:
 
         ball.set_action(display.Move(vel))
         audio.play_sound("Low")
+
+        logging.info("hit_ball d=%s vel=%s", delta, vel)
 
     def kill(self):
         self.sprite.set_action(display.Animate("explode").then(display.Die()))
@@ -462,10 +472,12 @@ class Capsules:
 
     def disable(self):
         self.count = 0
+        logging.info("Capsule disabled")
 
     def enable(self):
         if self.count == 0:
             self.count = random.randint(1, utils.config["max_capsule_count"])
+            logging.info("Capsule in %d", self.count)
 
     def block(self, names):
         for name in names:
@@ -482,6 +494,8 @@ class Capsules:
 
     def apply(self, capsule):
         effect = capsule.cfg.get("effect", "")
+
+        logging.info("Apply %s", effect)
 
         if effect == "catch":
             self.paddle.enable_catch()
@@ -512,6 +526,8 @@ class Capsules:
                 self.scene.groups["all"].add(ball)
 
             self.disable()
+
+            logging.info("Vels: %s", vels)
         elif effect == "player":
             utils.events.generate(utils.EVT_EXTRA_LIFE)
         elif effect == "slow":
@@ -539,6 +555,7 @@ class Capsules:
         utils.events.generate(utils.EVT_POINTS, points=points)
 
     def kill(self, capsule):
+        logging.info("Kill %s", capsule.cfg["effect"])
         capsule.rect.topleft = [0,0]
         capsule.set_action(None)
         capsule.kill()
@@ -547,6 +564,7 @@ class Capsules:
         self.enable()
 
     def spawn(self, capsule, position):
+        logging.info("Spawn %s", capsule.cfg["effect"])
         capsule.rect.topleft = position
         capsule.set_action(display.Move([0,1]).plus(display.Animate(capsule.cfg["animation"])))
         self.scene.groups["capsules"].remove(capsule)
@@ -604,9 +622,11 @@ class GameState(State):
         score = self.engine.get_score()
         for threshold in itertools.chain([20000], itertools.count(60000, 60000)):
             if score < threshold:
+                logging.info("Next threshold:%d", threshold)
                 return threshold
 
     def speed_timer(self):
+        logging.info("Ball speed: %.1f", self.ball_speed)
         utils.timers.start(10.0, self.on_timer)
 
     def on_timer(self):
@@ -669,11 +689,16 @@ class GameState(State):
         for projectile in self.scene.groups["balls"].sprites() + self.scene.groups["lasers"].sprites():
             # Hit the closest object and slide along the collsion edge.  Repeat a few more times
             # in case the slide hits other objects
-            for _ in range(3):
+            for attempt in range(3):
                 sprites = pygame.sprite.spritecollide(projectile, self.scene.groups["ball"], False)
 
                 if len(sprites) > 0:
                     closest = find_closest(projectile, sprites)
+
+                    logging.info("collision %d", attempt)
+                    logging.info("proj %s", projectile.rect)
+                    for sprite in sprites:
+                        logging.info("targ %s", sprite.rect)
 
                     projectile.hit(self.scene)
                     closest.hit(self.scene)
@@ -792,9 +817,18 @@ def collision_move_to_edge(sprite1, sprite2):
         dx = -v_x * time_y
         dy = -v_y * time_y
 
+    logging.info("Move: (%d, %d)", dx, dy)
+
     sprite1.rect.move_ip(int(dx), int(dy))
 
 def collision_side(sprite1, sprite2):
+    result = collision_side_worker(sprite1, sprite2)
+    logging.info("collision curr %s %s", sprite1.rect, sprite2.rect)
+    logging.info("collision prev %s %s", sprite1.last, sprite2.last)
+    logging.info("collision side %s", CollisionSide_Text[result])
+    return result
+
+def collision_side_worker(sprite1, sprite2):
     # Code adapted from https://hopefultoad.blogspot.com/2017/09/code-example-for-2d-aabb-collision.html
 
     cornerSlopeRise = 0
@@ -972,6 +1006,8 @@ class Engine(object):
         self.set_state(self.INITIAL_STATE)
 
     def reset(self):
+        logging.warning("Engine Reset")
+
         self.vars["score1"] = 0
         self.vars["score2"] = 0
         self.vars["level"] = 1
@@ -996,28 +1032,38 @@ class Engine(object):
             self.scenes[player] = {level : display.Scene([key], self.vars) for level, key in levels.items()}
 
     def set_lives(self, lives):
-        key = "lives1" if self.vars["player"] == 1 else "lives2"
+        player = self.vars["player"]
+        key = "lives1" if player == 1 else "lives2"
         self.vars[key] = lives
+
+        logging.info("P%d Lives %d", player, lives)
 
     def get_lives(self):
         key = "lives1" if self.vars["player"] == 1 else "lives2"
         return self.vars[key]
 
     def set_score(self, score):
-        key = "score1" if self.vars["player"] == 1 else "score2"
+        player = self.vars["player"]
+        key = "score1" if player == 1 else "score2"
         self.vars[key] = score
 
         if score > self.vars["high"]:
             self.vars["high"] = score
+            logging.info("P%d Score %d (h)", player, score)
+        else:
+            logging.info("P%d Score %d", player, score)
+
 
     def get_score(self):
         key = "score1" if self.vars["player"] == 1 else "score2"
         return self.vars[key]
 
     def set_level(self, level):
-        key = "level1" if self.vars["player"] == 1 else "level2"
+        player = self.vars["player"]
+        key = "level1" if player == 1 else "level2"
         self.vars[key] = level
         self.vars["level"] = level
+        logging.info("P%d Level %d", player, level)
 
     def get_level(self):
         key = "level1" if self.vars["player"] == 1 else "level2"
@@ -1034,6 +1080,7 @@ class Engine(object):
         return False
 
     def set_state(self, state, data={}):
+        logging.info("State: %s", state.__name__)
         utils.events.clear()
         utils.timers.clear()
         self.state = state(self, data)

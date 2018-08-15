@@ -6,6 +6,7 @@ Goal is to produce a complete game without having to worry about any game design
 
 import logging
 import os
+import time
 
 import pygame
 
@@ -13,17 +14,35 @@ import display
 import engine
 import utils
 
+class Timer:
+    def __init__(self):
+        """Track time deltas to the millisecond"""
+        self.last = time.time()
+
+    def get(self):
+        """Get the time in milliseconds since last call"""
+        now = time.time()
+        delta = now - self.last
+        self.last = now
+        return delta
+
 def main():
-    utils.config = utils.get_config("config.json")
+    """Arkanoid main loop"""
+
+    utils.init()                    # Lazy initialization to give time to set up logging
+
     pygame.init()
 
     window = display.Window()
 
-    clock = pygame.time.Clock()
-
     eng = engine.Engine()
 
+    clock = pygame.time.Clock()
+    frame_timer = Timer()
+    utilization_timer = Timer()
+
     while True:
+        utilization_timer.get()
 
         # Event pump
         for event in pygame.event.get():
@@ -34,16 +53,30 @@ def main():
 
             eng.input(event)
 
+        # Integration
         eng.update()
 
+        # Render
         window.clear()
         eng.draw(window.screen)
 
-        fps = str(int(clock.get_fps()))
-        window.screen.blit(display.draw_text(fps, "white"), (0, 0))
+        fps = int(clock.get_fps())
+        window.screen.blit(display.draw_text(str(fps), "white"), (0, 0))
 
+        utime = utilization_timer.get()
+
+        # Frame sync
         clock.tick(utils.config["frame_rate"])
         window.flip()
+
+        # FPS logging
+        ftime = frame_timer.get()
+        utilization = utime / ftime * 100
+        if ftime > 2.0 / utils.config["frame_rate"] or utilization > 50:
+            logfunc = logging.warning
+        else:
+            logfunc = logging.debug
+        logfunc("%d FPS %.3fs (%d%%)", fps, ftime, utilization)
 
 if __name__ == '__main__':
     utils.setup_logging("logging.json")
