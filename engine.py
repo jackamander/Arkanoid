@@ -128,7 +128,7 @@ class TitleState(State):
             index = event.value - 1
             cursor = self.scene.names["cursor"]
             pos = cursor.cfg["locations"][index]
-            cursor.set_pos(pos)
+            cursor.rect.topleft = pos
 
     def on_click(self, event):
         if event.button == 1:
@@ -505,7 +505,7 @@ class Capsules:
 
             for name, vel in zip(["ball1", "ball2", "ball3"], vels):
                 ball = self.scene.names[name]
-                ball.set_pos(pos)
+                ball.rect.topleft = pos
                 ball.set_action(display.Move(vel))
                 ball.kill()
                 self.scene.groups["balls"].add(ball)
@@ -539,7 +539,7 @@ class Capsules:
         utils.events.generate(utils.EVT_POINTS, points=points)
 
     def kill(self, capsule):
-        capsule.set_pos([0,0])
+        capsule.rect.topleft = [0,0]
         capsule.set_action(None)
         capsule.kill()
         self.scene.groups["capsules"].add(capsule)
@@ -643,7 +643,7 @@ class GameState(State):
 
     def update(self):
         self.scene.groups["all"].update()
-        
+
         # Paddle collisions
         for group in [self.scene.groups["balls"], self.scene.groups["paddle"]]:
             sprites = pygame.sprite.spritecollide(self.paddle.sprite, group, False)
@@ -658,7 +658,7 @@ class GameState(State):
                     # Kill the paddle by eliminating all the balls
                     for ball in self.scene.groups["balls"]:
                         ball.kill()
-                
+
                 if sprite.cfg.get("paddle_bounce", False):
                     self.paddle.hit(sprite)
 
@@ -764,19 +764,19 @@ def collision_move_to_edge(sprite1, sprite2):
         overlap_x = sprite1.rect.right - sprite2.rect.left
     else:
         overlap_x = sprite1.rect.left - sprite2.rect.right
-    
+
     if v_y >= 0:
         overlap_y = sprite1.rect.bottom - sprite2.rect.top
     else:
         overlap_y = sprite1.rect.top - sprite2.rect.bottom
-    
+
     # Hack to account for 0 - just assume they're very small
     if v_x == 0:
         v_x = 0.00001
-    
+
     if v_y == 0:
         v_y = 0.00001
-    
+
     # Calculate the time to each edge, and rewind position by the minimum of the two
     time_x = overlap_x / float(v_x)
     time_y = overlap_y / float(v_y)

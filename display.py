@@ -144,7 +144,7 @@ class Series(Action):
 
         if self.action:
             return self
-        
+
         if self.actions:
             self.action = self.actions.pop(0)
             self.start(sprite)
@@ -190,7 +190,7 @@ class MouseMove(Action):
         self.delta = [self.delta[i] + self.sensitivity[i] * event.rel[i] for i in range(2)]
 
     def update(self, sprite):
-        sprite.move(self.delta)
+        sprite.rect.move_ip(self.delta)
         sprite.rect.clamp_ip(self.rect)
         self.delta = [0, 0]
         return self
@@ -202,9 +202,9 @@ class Move(Action):
 
     def update(self, sprite):
         total = [t + d for t,d in zip(self.total, self.delta)]
-        move = [int(i) for i in total]
-        self.total = [t-m for t,m in zip(total, move)]
-        sprite.move(move)
+        delta = [int(i) for i in total]
+        self.total = [t-m for t,m in zip(total, delta)]
+        sprite.rect.move_ip(delta)
         return self
 
 class MoveLimited(Move):
@@ -217,14 +217,14 @@ class MoveLimited(Move):
 
         if self.frames > 0:
             self.frames -= 1
-        
+
         return None if self.frames == 0 else self
 
 class Follow(Action):
     def __init__(self, target):
         self.sprite = None
         self.target = target
-        self.last = target.get_pos()
+        self.last = target.rect.center
 
     def start(self, sprite):
         self.sprite = sprite
@@ -233,15 +233,15 @@ class Follow(Action):
     def stop(self, sprite):
         self.sprite = None
         self.target.unsubscribe(self.notify)
-    
+
     def update(self, sprite):
         return self
 
     def notify(self, target):
-        pos = target.get_pos()
+        pos = target.rect.center
         if pos != self.last:
             delta = [pos[0] - self.last[0], pos[1] - self.last[1]]
-            self.sprite.move(delta)
+            self.sprite.rect.move_ip(delta)
             self.last = pos
         return self
 
@@ -283,7 +283,7 @@ class Animate(Action):
             if self.frame >= len(self.images):
                 if self.loop:
                     self.frame = 0
-        
+
         return self if self.frame < len(self.images) else None
 
 class Die(Action):
@@ -398,7 +398,7 @@ class AlienEscape(Move):
         delta = self.tests[direction]
 
         # Temporarily move in the requested direction
-        sprite.move(delta)
+        sprite.rect.move_ip(delta)
 
         # if it only collides with itself, we're good
         others = pygame.sprite.spritecollide(sprite, self.scene.groups["ball"], False)
@@ -406,7 +406,7 @@ class AlienEscape(Move):
             success = True
 
         # Move back
-        sprite.move([-i for i in delta])
+        sprite.rect.move_ip([-i for i in delta])
 
         return success
 
@@ -493,7 +493,7 @@ class AlienJuke(MoveLimited):
                 self.set()
             else:
                 return AlienDescend(self.scene)
-        
+
         return self
 
 class AlienCircle(AlienJuke):
@@ -617,17 +617,6 @@ class Sprite(pygame.sprite.DirtySprite):
     def clone(self):
         return Sprite(self.image, self.cfg.copy())
 
-    def get_pos(self):
-        return self.rect.topleft
-
-    def set_pos(self, pos):
-        self.rect.x = pos[0]
-        self.rect.y = pos[1]
-
-    def move(self, delta):
-        self.rect.x += delta[0]
-        self.rect.y += delta[1]
-
     def set_action(self, new_action=None):
         old_action = self.action
 
@@ -648,7 +637,7 @@ class Sprite(pygame.sprite.DirtySprite):
             new_action = self.action.update(self)
             self.set_action(new_action)
 
-        self.notify()        
+        self.notify()
 
     def subscribe(self, callback):
         self.callbacks.add(callback)
@@ -697,7 +686,7 @@ class Sprite(pygame.sprite.DirtySprite):
 
                 death_action = self.cfg.get("on_death")
                 if death_action == "create_capsule":
-                    utils.events.generate(utils.EVT_CAPSULE, position=self.get_pos())
+                    utils.events.generate(utils.EVT_CAPSULE, position=self.rect.topleft)
 
                 points = self.cfg.get("points", 0)
                 if points:
@@ -745,7 +734,7 @@ class Scene:
                 group_names = cfg.pop("groups", [])
 
                 sprite = Sprite(image, cfg)
-                sprite.set_pos(position)
+                sprite.rect.topleft = position
                 sprite.set_action(action)
 
                 for group_name in group_names + ["all"]:

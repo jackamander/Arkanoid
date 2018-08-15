@@ -34,7 +34,7 @@ class CollisionTest(engine.State):
         elif event.key == pygame.K_RIGHT:
             delta = [1,0]
 
-        self.scene["debug"].names["ball"].move(delta)
+        self.scene["debug"].names["ball"].rect.move_ip(delta)
 
         if pygame.sprite.collide_rect(self.ball, self.brick):
             side = engine.collision_side(self.ball, self.brick)
