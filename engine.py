@@ -694,6 +694,8 @@ class GameState(State):
                         elif side == CollisionSide_Left:
                             projectile.action.delta[0] = -abs(projectile.action.delta[0])
                             projectile.rect.right = closest.rect.left
+                else:
+                    break
 
         # Destroy anything that wanders off the playspace
         for group in [self.scene.groups["paddle"], self.scene.groups["balls"]]:
