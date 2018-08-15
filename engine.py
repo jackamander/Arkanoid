@@ -2,6 +2,7 @@
 Main game engine for Arkanoid
 """
 
+import itertools
 import random
 import re
 
@@ -47,28 +48,26 @@ class State(object):
         self.fix_lives()
 
     def fix_lives(self):
+        lives = self.engine.get_lives()
         for name, sprite in self.scene.names.items():
             mobj = re.match("life(\\d+)", name)
             if mobj:
                 num = int(mobj.group(1))
-                if self.engine.vars["lives1" if self.engine.vars["player"] == 1 else "lives2"] <= num:
+                if lives <= num:
                     sprite.kill()
                 else:
                     self.scene.groups["all"].add(sprite)
 
     def next_level(self):
-        key = "level1" if self.engine.vars["player"] == 1 else "level2"
-        self.engine.vars["level"] += 1
-        self.engine.vars[key] += 1
+        level = self.engine.get_level() + 1
+        self.engine.set_level(level)
         if self.engine.vars["level"] <= self.engine.last_level:
             self.engine.set_state(RoundState)
         else:
             self.engine.set_state(VictoryState)
 
     def jump_level(self, level):
-        key = "level1" if self.engine.vars["player"] == 1 else "level2"
-        self.engine.vars["level"] = level
-        self.engine.vars[key] = level
+        self.engine.set_level(level)
         if self.engine.vars["level"] <= self.engine.last_level:
             self.engine.set_state(RoundState)
         else:
@@ -596,6 +595,14 @@ class GameState(State):
 
         self.scene.names["alien"].kill()
 
+        self.threshold = self.next_life_threshold()
+
+    def next_life_threshold(self):
+        score = self.engine.get_score()
+        for threshold in itertools.chain([20000], itertools.count(60000, 60000)):
+            if score < threshold:
+                return threshold
+
     def speed_timer(self):
         utils.timers.start(10.0, self.on_timer)
 
@@ -619,24 +626,18 @@ class GameState(State):
             self.jump_level(36)
 
     def on_points(self, event):
-        key = "score1" if self.engine.vars["player"] == 1 else "score2"
-
         # Accumulate the points
-        before = self.engine.vars[key]
-        after = before + event.points
-        self.engine.vars[key] = after
-
-        # Update the high score
-        if after > self.engine.vars["high"]:
-            self.engine.vars["high"] = after
+        score = self.engine.get_score() + event.points
+        self.engine.set_score(score)
 
         # Check for extra lives
-        for threshold in [20000] + range(60000, after+1, 60000):
-            if before < threshold and after >= threshold:
-                utils.events.generate(utils.EVT_EXTRA_LIFE)
+        if score >= self.threshold:
+            utils.events.generate(utils.EVT_EXTRA_LIFE)
+            self.threshold = self.next_life_threshold()
 
     def on_extra_life(self, event):
-        self.engine.vars["lives1" if self.engine.vars["player"] == 1 else "lives2"] += 1
+        lives = self.engine.get_lives() + 1
+        self.engine.set_lives(lives)
         audio.play_sound("Life")
         self.fix_lives()
 
@@ -1005,13 +1006,32 @@ class Engine(object):
         key = "lives1" if self.vars["player"] == 1 else "lives2"
         return self.vars[key]
 
+    def set_score(self, score):
+        key = "score1" if self.vars["player"] == 1 else "score2"
+        self.vars[key] = score
+
+        if score > self.vars["high"]:
+            self.vars["high"] = score
+
+    def get_score(self):
+        key = "score1" if self.vars["player"] == 1 else "score2"
+        return self.vars[key]
+
+    def set_level(self, level):
+        key = "level1" if self.vars["player"] == 1 else "level2"
+        self.vars[key] = level
+        self.vars["level"] = level
+
+    def get_level(self):
+        key = "level1" if self.vars["player"] == 1 else "level2"
+        return self.vars[key]
+
     def switch_player(self):
         for _ in range(self.vars["players"]):
             self.vars["player"] = self.vars["player"] % self.vars["players"] + 1
 
             if self.get_lives() > 0:
-                key = "level1" if self.vars["player"] == 1 else "level2"
-                self.vars["level"] = self.vars[key]
+                self.set_level(self.get_level())
                 return True
 
         return False
