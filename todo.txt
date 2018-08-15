@@ -1,4 +1,0 @@
-* Improve FPS control to hit 60 always
-* Fix timers to be FPS independent
-* Vectors
-*
