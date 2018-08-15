@@ -1023,11 +1023,10 @@
     },
     "sounds" : {
         "Intro" : {
-            "filename" : "resources\\sounds\\Intro.wav",
-            "range" : [0, 5000]
+            "filename" : "resources\\sounds\\Intro.ogg"
         },
         "Ready" : {
-            "filename" : "resources\\sounds\\Ready.wav"
+            "filename" : "resources\\sounds\\Ready.ogg"
         },
         "High" : {
             "filename" : "resources\\sounds\\PingHigh.wav"
