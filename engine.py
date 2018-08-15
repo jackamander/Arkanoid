@@ -253,7 +253,9 @@ class DeathState(State):
             self.scene.names[name].update()
 
         if not self.paddle.alive():
-            if self.engine.change_lives(-1) == 0:
+            lives = self.engine.get_lives() - 1
+            self.engine.set_lives(lives)
+            if lives == 0:
                 self.engine.set_state(GameOverState, {"scene" : self.scene})
             else:
                 self.next_player()
@@ -929,11 +931,7 @@ class FinalState(State):
         self.doh.set_action(display.Animate(self.doh.cfg["animation"]).then(display.PlaySound("High").then(display.Callback(utils.timers.start, 3.0, self.done))))
 
     def done(self):
-        # Eliminate any remaining lives for the winning player
-        lives = self.engine.change_lives(0)
-        self.engine.change_lives(-lives)
-
-        # Give any remaining player a chance to continue
+        self.engine.set_lives(0)
         self.next_player()
 
     def update(self):
@@ -999,17 +997,19 @@ class Engine(object):
 
         self.set_state(self.INITIAL_STATE)
 
-    def change_lives(self, adjust):
-        player = self.vars["player"]
-        key = "lives1" if player == 1 else "lives2"
-        self.vars[key] += adjust
+    def set_lives(self, lives):
+        key = "lives1" if self.vars["player"] == 1 else "lives2"
+        self.vars[key] = lives
+
+    def get_lives(self):
+        key = "lives1" if self.vars["player"] == 1 else "lives2"
         return self.vars[key]
 
     def switch_player(self):
         for _ in range(self.vars["players"]):
             self.vars["player"] = self.vars["player"] % self.vars["players"] + 1
 
-            if self.change_lives(0) > 0:
+            if self.get_lives() > 0:
                 key = "level1" if self.vars["player"] == 1 else "level2"
                 self.vars["level"] = self.vars[key]
                 return True
