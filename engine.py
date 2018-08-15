@@ -546,18 +546,21 @@ class Capsules:
 
         self.enable()
 
+    def spawn(self, capsule, position):
+        capsule.rect.topleft = position
+        capsule.set_action(display.Move([0,1]).plus(display.Animate(capsule.cfg["animation"])))
+        self.scene.groups["capsules"].remove(capsule)
+        self.scene.groups["paddle"].add(capsule)
+        self.scene.groups["all"].add(capsule)
+
     def on_brick(self, event):
         if self.total == self.available() and self.count > 0:
             self.count -= 1
 
             if self.count == 0:
-                choices = [capsule for capsule in self.scene.groups["capsules"].sprites() for _ in range(capsule.cfg["weight"])]
+                choices = [capsule for capsule in self.scene.groups["capsules"] for _ in range(capsule.cfg["weight"])]
                 capsule = random.choice(choices)
-                capsule.set_pos(event.position)
-                capsule.set_action(display.Move([0,1]).plus(display.Animate(capsule.cfg["animation"])))
-                self.scene.groups["capsules"].remove(capsule)
-                self.scene.groups["paddle"].add(capsule)
-                self.scene.groups["all"].add(capsule)
+                self.spawn(capsule, event.position)
 
 class GameState(State):
     def __init__(self, engine, data):
