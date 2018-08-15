@@ -964,18 +964,12 @@ class Engine(object):
     def __init__(self):
         self.vars = Vars({
             "high":0,
-            "score1":0,
-            "score2":0,
-            "level":1,
-            "level1":1,
-            "level2":1,
-            "player":1,
-            "lives1":3,
-            "lives2":3,
             "players":1,
         })
 
         self.reset()
+
+        self.set_state(self.INITIAL_STATE)
 
     def reset(self):
         self.vars["score1"] = 0
@@ -1000,8 +994,6 @@ class Engine(object):
         self.scenes = {}
         for player in range(1, self.vars["players"]+1):
             self.scenes[player] = {level : display.Scene([key], self.vars) for level, key in levels.items()}
-
-        self.set_state(self.INITIAL_STATE)
 
     def set_lives(self, lives):
         key = "lives1" if self.vars["player"] == 1 else "lives2"
