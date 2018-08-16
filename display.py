@@ -13,6 +13,15 @@ import pygame
 import audio
 import utils
 
+os.environ['SDL_VIDEODRIVER'] = 'directx'
+
+def set_cursor(cursor_strings, hotspot=[0,0], scale=1):
+    # Scale the strings larger if requested
+    cursor_strings = ["".join([ch * scale for ch in line]) for line in cursor_strings for _ in range(scale)]
+    size = [len(cursor_strings[0]), len(cursor_strings)]
+    xormask, andmask = pygame.cursors.compile(cursor_strings)
+    pygame.mouse.set_cursor(size, hotspot, xormask, andmask)
+
 class Window:
     def __init__(self):
         world_size = utils.config['world_size']
