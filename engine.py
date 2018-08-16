@@ -108,8 +108,8 @@ class SplashState(State):
             self.engine.set_state(TitleState)
 
     def on_keydown(self, event):
-        if event.key == pygame.K_SPACE:
-            self.engine.set_state(StartState)
+        if event.key in [pygame.K_SPACE, pygame.K_RETURN]:
+            self.engine.set_state(TitleState)
 
     def update(self):
         self.splash.update()
@@ -156,10 +156,8 @@ class TitleState(State):
             self.engine.vars["players"] = 1
         elif event.key == pygame.K_DOWN:
             self.engine.vars["players"] = 2
-        elif event.key == pygame.K_RETURN:
+        elif event.key in [pygame.K_SPACE, pygame.K_RETURN]:
             self.engine.set_state(BlinkState)
-        elif event.key == pygame.K_SPACE:
-            self.engine.set_state(StartState)
 
     def draw(self, screen):
         self.scene.groups["all"].draw(screen)
@@ -654,14 +652,8 @@ class GameState(State):
             utils.events.generate(utils.EVT_FIRE)
 
     def on_keydown(self, event):
-        if event.key in [pygame.K_RETURN]:
+        if event.key in [pygame.K_SPACE, pygame.K_RETURN]:
             utils.events.generate(utils.EVT_FIRE)
-        elif event.key == pygame.K_SPACE:
-            self.engine.set_state(StartState)
-        elif event.key == pygame.K_PERIOD:
-            self.next_level()
-        elif event.key == pygame.K_q:
-            self.jump_level(36)
 
     def on_points(self, event):
         # Accumulate the points
