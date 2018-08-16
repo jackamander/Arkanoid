@@ -962,6 +962,17 @@ class VictoryState(State):
 
         display.grab_mouse()
 
+        utils.events.register(utils.EVT_MOUSEBUTTONDOWN, self.on_click)
+        utils.events.register(utils.EVT_KEYDOWN, self.on_keydown)
+
+    def on_click(self, event):
+        if event.button == 1:
+            self.sound.stop()
+
+    def on_keydown(self, event):
+        if event.key in [pygame.K_SPACE, pygame.K_RETURN]:
+            self.sound.stop()
+
     def update(self):
         self.victory.update()
         if not self.sound.get_busy():
