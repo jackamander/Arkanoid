@@ -126,6 +126,7 @@ class TitleState(State):
         self.fix_banner()
 
         utils.events.register(utils.EVT_MOUSEBUTTONDOWN, self.on_click)
+        utils.events.register(utils.EVT_MOUSEMOTION, self.on_motion)
         utils.events.register(utils.EVT_KEYDOWN, self.on_keydown)
         utils.events.register(utils.EVT_VAR_CHANGE, self.on_var_change)
 
@@ -142,6 +143,13 @@ class TitleState(State):
     def on_click(self, event):
         if event.button == 1:
             self.engine.set_state(BlinkState)
+
+    def on_motion(self, event):
+        locations = self.scene.names["cursor"].cfg["locations"]
+        if event.pos[1] < locations[1][1]:
+            self.engine.vars["players"] = 1
+        else:
+            self.engine.vars["players"] = 2
 
     def on_keydown(self, event):
         if event.key == pygame.K_UP:
@@ -318,7 +326,7 @@ class Paddle:
         self.sound = None
         self.catch = False
 
-        self.sprite.set_action(display.MouseMove(playspace, [1,0]))
+        self.sprite.set_action(display.PaddleMove(playspace, [1,0], [4,0]))
 
         self.state.scene.names["laser"].kill()
 
@@ -330,7 +338,7 @@ class Paddle:
             audio.play_sound("Enlarge")
             self.handler = self.expanded_handler
         elif event == "laser":
-            self.sprite.set_action(self.sprite.action.plus(display.Animate("paddle_to_laser").then(display.Callback(utils.events.register, utils.EVT_MOUSEBUTTONDOWN, self.fire_laser))))
+            self.sprite.set_action(self.sprite.action.plus(display.Animate("paddle_to_laser").then(display.Callback(utils.events.register, utils.EVT_FIRE, self.fire_laser))))
             self.handler = self.laser_handler
 
     def expanded_handler(self, event):
@@ -338,7 +346,7 @@ class Paddle:
             self.sprite.set_action(self.sprite.action.plus(display.Animate("paddle_shrink")))
             self.handler = self.normal_handler
         elif event == "laser":
-            self.sprite.set_action(self.sprite.action.plus(display.Animate("paddle_shrink").then(display.Animate("paddle_to_laser").then(display.Callback(utils.events.register, utils.EVT_MOUSEBUTTONDOWN, self.fire_laser)))))
+            self.sprite.set_action(self.sprite.action.plus(display.Animate("paddle_shrink").then(display.Animate("paddle_to_laser").then(display.Callback(utils.events.register, utils.EVT_FIRE, self.fire_laser)))))
             self.handler = self.laser_handler
 
     def laser_handler(self, event):
@@ -346,11 +354,11 @@ class Paddle:
             self.sprite.set_action(self.sprite.action.plus(display.Animate("laser_to_paddle").then(display.Animate("paddle_grow"))))
             audio.play_sound("Enlarge")
             self.handler = self.expanded_handler
-            utils.events.unregister(utils.EVT_MOUSEBUTTONDOWN, self.fire_laser)
+            utils.events.unregister(utils.EVT_FIRE, self.fire_laser)
         elif event == "normal":
             self.sprite.set_action(self.sprite.action.plus(display.Animate("laser_to_paddle")))
             self.handler = self.normal_handler
-            utils.events.unregister(utils.EVT_MOUSEBUTTONDOWN, self.fire_laser)
+            utils.events.unregister(utils.EVT_FIRE, self.fire_laser)
 
     def fire_laser(self, event):
         sprite = self.state.scene.names["laser"].clone()
@@ -375,12 +383,12 @@ class Paddle:
         if self.stuck_ball is None:
             self.stuck_ball = ball
             self.stuck_ball.set_action(display.Follow(self.sprite))
-            utils.events.register(utils.EVT_MOUSEBUTTONDOWN, self.release_ball)
+            utils.events.register(utils.EVT_FIRE, self.release_ball)
             utils.timers.start(3.0, self.release_ball)
 
     def release_ball(self, event=None):
         if self.stuck_ball is not None:
-            utils.events.unregister(utils.EVT_MOUSEBUTTONDOWN, self.release_ball)
+            utils.events.unregister(utils.EVT_FIRE, self.release_ball)
             utils.timers.cancel(self.release_ball)
             self.hit_ball(self.stuck_ball)
             self.stuck_ball = None
@@ -600,6 +608,7 @@ class GameState(State):
 
         self.capsules = Capsules(self, self.paddle)
 
+        utils.events.register(utils.EVT_MOUSEBUTTONDOWN, self.on_click)
         utils.events.register(utils.EVT_KEYDOWN, self.on_keydown)
         utils.events.register(utils.EVT_POINTS, self.on_points)
         utils.events.register(utils.EVT_EXTRA_LIFE, self.on_extra_life)
@@ -640,8 +649,14 @@ class GameState(State):
 
         self.speed_timer()
 
+    def on_click(self, event):
+        if event.button == 1:
+            utils.events.generate(utils.EVT_FIRE)
+
     def on_keydown(self, event):
-        if event.key == pygame.K_SPACE:
+        if event.key in [pygame.K_RETURN]:
+            utils.events.generate(utils.EVT_FIRE)
+        elif event.key == pygame.K_SPACE:
             self.engine.set_state(StartState)
         elif event.key == pygame.K_PERIOD:
             self.next_level()

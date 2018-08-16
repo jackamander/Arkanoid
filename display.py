@@ -188,18 +188,33 @@ class Parallel(Action):
 
         return self if self.actions else None
 
-class MouseMove(Action):
-    def __init__(self, region, sensitivity):
+class PaddleMove(Action):
+    def __init__(self, region, mouse_speed, kb_speed):
         self.rect = region.copy()
         self.delta = [0, 0]
-        self.sensitivity = sensitivity
+        self.mouse_speed = mouse_speed
+        self.kb_speed = kb_speed
 
         utils.events.register(utils.EVT_MOUSEMOTION, self.on_mousemove)
 
     def on_mousemove(self, event):
-        self.delta = [self.delta[i] + self.sensitivity[i] * event.rel[i] for i in range(2)]
+        self.delta = [self.delta[i] + self.mouse_speed[i] * event.rel[i] for i in range(2)]
+
+    def kb_update(self):
+        keys = pygame.key.get_pressed()
+        speed = 0
+
+        if keys[pygame.K_LEFT]:
+            speed -= 1
+
+        if keys[pygame.K_RIGHT]:
+            speed += 1
+
+        self.delta = [self.delta[i] + self.kb_speed[i] * speed for i in range(2)]
 
     def update(self, sprite):
+        self.kb_update()
+
         sprite.rect.move_ip(self.delta)
         sprite.rect.clamp_ip(self.rect)
         self.delta = [0, 0]
