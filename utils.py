@@ -9,6 +9,7 @@ import logging
 import logging.config
 import math
 import os
+import time
 
 import pygame
 
@@ -116,6 +117,18 @@ class Timers:
 
     def clear(self):
         self.timers = {}
+
+class Delta:
+    def __init__(self):
+        """Track time deltas to the millisecond"""
+        self.last = time.time()
+
+    def get(self):
+        """Get the time in milliseconds since last call"""
+        now = time.time()
+        delta = now - self.last
+        self.last = now
+        return delta
 
 # Globals
 config = {}     # initialized in main

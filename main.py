@@ -6,25 +6,12 @@ Goal is to produce a complete game without having to worry about any game design
 
 import logging
 import os
-import time
 
 import pygame
 
 import display
 import engine
 import utils
-
-class Timer:
-    def __init__(self):
-        """Track time deltas to the millisecond"""
-        self.last = time.time()
-
-    def get(self):
-        """Get the time in milliseconds since last call"""
-        now = time.time()
-        delta = now - self.last
-        self.last = now
-        return delta
 
 def main():
     """Arkanoid main loop"""
@@ -38,8 +25,8 @@ def main():
     eng = engine.Engine()
 
     clock = pygame.time.Clock()
-    frame_timer = Timer()
-    utilization_timer = Timer()
+    frame_timer = utils.Delta()
+    utilization_timer = utils.Delta()
 
     while True:
         utilization_timer.get()
