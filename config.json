@@ -8,6 +8,8 @@
     "max_ball_speed" : 4.0,
     "ball_speed_multiplier" : 1.2,
     "max_capsule_count" : 10,
+    "mouse_speed" : 1,
+    "kb_speed" : 4,
     "fonts" : {
         "white" : {
             "filename" : "resources\\images\\nesfont8.png",

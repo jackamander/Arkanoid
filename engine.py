@@ -320,7 +320,7 @@ class Paddle:
         self.sound = None
         self.catch = False
 
-        self.sprite.set_action(display.PaddleMove(playspace, [1,0], [4,0]))
+        self.sprite.set_action(display.PaddleMove(playspace))
 
         self.state.scene.names["laser"].kill()
 
@@ -603,6 +603,7 @@ class GameState(State):
         self.capsules = Capsules(self, self.paddle)
 
         utils.events.register(utils.EVT_MOUSEBUTTONDOWN, self.on_click)
+        utils.events.register(utils.EVT_MOUSEMOTION, self.on_motion)
         utils.events.register(utils.EVT_KEYDOWN, self.on_keydown)
         utils.events.register(utils.EVT_POINTS, self.on_points)
         utils.events.register(utils.EVT_EXTRA_LIFE, self.on_extra_life)
@@ -647,6 +648,10 @@ class GameState(State):
         if event.button == 1:
             utils.events.generate(utils.EVT_FIRE)
 
+    def on_motion(self, event):
+        delta = utils.config["mouse_speed"] * event.rel[0]
+        utils.events.generate(utils.EVT_PADDLEMOVE, delta=delta)
+
     def on_keydown(self, event):
         if event.key in [pygame.K_SPACE, pygame.K_RETURN]:
             utils.events.generate(utils.EVT_FIRE)
@@ -667,7 +672,24 @@ class GameState(State):
         audio.play_sound("Life")
         self.fix_lives()
 
+    def keyboard_input(self):
+        # Scan the keyboard state
+        keys = pygame.key.get_pressed()
+
+        # Calculate the direction the paddle should move
+        direction = 0
+        if keys[pygame.K_LEFT]:
+            direction -= 1
+        if keys[pygame.K_RIGHT]:
+            direction += 1
+
+        # Send the motion event
+        delta = utils.config["kb_speed"] * direction
+        utils.events.generate(utils.EVT_PADDLEMOVE, delta=delta)
+
     def update(self):
+        self.keyboard_input()
+
         self.scene.groups["all"].update()
 
         # Paddle collisions
