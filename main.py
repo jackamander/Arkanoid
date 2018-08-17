@@ -13,6 +13,8 @@ import display
 import engine
 import utils
 
+ENGINE_CLASS = engine.Engine
+
 def main():
     """Arkanoid main loop"""
 
@@ -24,7 +26,7 @@ def main():
 
     display.set_cursor(pygame.cursors.thickarrow_strings, hotspot=[0, 0], scale=1)
 
-    eng = engine.Engine()
+    eng = ENGINE_CLASS()
 
     clock = pygame.time.Clock()
     frame_timer = utils.Delta()

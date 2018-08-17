@@ -37414,18 +37414,6 @@
                 "hit_animation": "silver",
                 "image": "silver"
             }
-        ],
-        "debug" : [
-            {
-                "name" : "ball",
-                "image" : "ball",
-                "position" : [100, 80]
-            },
-            {
-                "name" : "brick",
-                "image" : "red",
-                "position" : [100, 100]
-            }
         ]
     }
 }
