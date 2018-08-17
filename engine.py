@@ -69,11 +69,7 @@ class State(object):
 
     def next_level(self):
         level = self.engine.get_level() + 1
-        self.engine.set_level(level)
-        if self.engine.vars["level"] <= self.engine.last_level:
-            self.engine.set_state(RoundState)
-        else:
-            self.engine.set_state(VictoryState)
+        self.jump_level(level)
 
     def jump_level(self, level):
         self.engine.set_level(level)
