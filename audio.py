@@ -7,6 +7,8 @@ import pygame
 
 import utils
 
+# Increase the frequency and lower the buffer size to reduce audio lag
+pygame.mixer.pre_init(frequency=44100, buffer=512)
 
 _audio_cache = utils.Cache(pygame.mixer.Sound)
 

@@ -1,0 +1,21 @@
+Goal:  Mimic Arkanoid as precisely as possible, and complete the full game
+
+Logging is for debugging, not verification
+
+Tasks:
+- Kill balls beyond the playspace
+- Make sure ball can never jump walls
+- Unit tests and code analysis
+- Code coverage
+- Windows executable
+- Fix double loud audio when ball hits two bricks
+- Refactor to ECS
+- Frame rate independence?
+- Use vectors
+- Add a sprite reload call for Doh
+- Centralize keyboard mappings
+- Doh kills you permanently
+- Play with mouse only
+- Play with keyboard only
+- Better folder structure
+- Pre-condition / post-condition
