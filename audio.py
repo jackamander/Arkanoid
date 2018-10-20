@@ -10,16 +10,25 @@ import utils
 # Increase the frequency and lower the buffer size to reduce audio lag
 pygame.mixer.pre_init(frequency=44100, buffer=512)
 
-_audio_cache = utils.Cache(pygame.mixer.Sound)
+
+def sound_factory(name):
+    "Load and configure a sound"
+    cfg = utils.config["sounds"][name]
+
+    fname = cfg["filename"]             # Filename is mandatory
+    volume = cfg.get("volume", 1.0)     # Volume is optional
+
+    sound = pygame.mixer.Sound(fname)
+    sound.set_volume(volume)
+
+    return sound
+
+_audio_cache = utils.Cache(sound_factory)
 
 def play_sound(name):
-    cfg = utils.config["sounds"][name]
-    fname = cfg["filename"]
-    _, stop = cfg.get("range", [0, 0])
+    sound = _audio_cache.get(name)
 
-    sound = _audio_cache.get(fname)
-
-    channel = sound.play(maxtime = stop)
+    channel = sound.play()
 
     if channel is None:
         logging.error("Audio fail: %s", name)
