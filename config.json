@@ -12,7 +12,7 @@
     "kb_speed" : 4,
     "fonts" : {
         "white" : {
-            "filename" : "resources\\images\\nesfont8.png",
+            "image" : "nesfont8",
             "size" : [8,8],
             "characters" : [
                 " !\"#$%&'()*+,-./",
@@ -24,7 +24,7 @@
             ]
         },
         "red" : {
-            "filename" : "resources\\images\\nesfont8red.png",
+            "image" : "nesfont8red",
             "size" : [8,8],
             "characters" : [
                 " !\"#$%&'()*+,-./",
@@ -37,6 +37,12 @@
         }
     },
     "images" : {
+        "nesfont8" : {
+            "filename" : "resources\\images\\nesfont8.png"
+        },
+        "nesfont8red" : {
+            "filename" : "resources\\images\\nesfont8red.png"
+        },
         "paddle" : {
             "filename" : "resources\\images\\vaus.png",
             "size" : [32, 8],

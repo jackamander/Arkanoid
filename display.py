@@ -64,7 +64,7 @@ def _find_char_offset(char, characters):
 
 def draw_text(text, font):
     config = utils.config["fonts"][font]
-    filename = config["filename"]
+    name = config["image"]
     size = config["size"]
     characters = config["characters"]
 
@@ -73,7 +73,7 @@ def draw_text(text, font):
     cols = max(map(len, text_split))
 
     surf = pygame.Surface([size[0] * cols, size[1] * rows], pygame.SRCALPHA).convert_alpha()
-    image = _load_image(filename)
+    image = get_image(name)
     for row, line in enumerate(text_split):
         for col, char in enumerate(line):
             offset = _find_char_offset(char, characters)
@@ -83,12 +83,19 @@ def draw_text(text, font):
 
     return surf
 
-_image_cache = utils.Cache(lambda fname: pygame.image.load(fname).convert_alpha())
+def image_factory(name):
+    cfg = utils.config["images"][name]
 
-def _load_image(fname, rect=None, scaled=[]):
-    image = _image_cache.get(fname)
+    fname = cfg["filename"]
+    size = cfg.get("size", None)
+    offset = cfg.get("offset", None)
+    scaled = cfg.get("scaled", None)
 
-    if rect:
+    image = pygame.image.load(fname)
+    image = image.convert_alpha()
+
+    if size and offset:
+        rect = pygame.Rect(offset, size)
         image = image.subsurface(rect)
 
     if scaled:
@@ -96,17 +103,10 @@ def _load_image(fname, rect=None, scaled=[]):
 
     return image
 
+_image_cache = utils.Cache(image_factory)
+
 def get_image(name):
-    cfg = utils.config["images"][name]
-
-    fname = cfg["filename"]
-    size = cfg["size"]
-    offset = cfg["offset"]
-    scaled = cfg.get("scaled")
-
-    rect = pygame.Rect(offset, size)
-
-    image = _load_image(fname, rect, scaled)
+    image = _image_cache.get(name)
 
     return image
 
