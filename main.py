@@ -24,8 +24,6 @@ def main():
 
     window = display.Window()
 
-    display.set_cursor(pygame.cursors.thickarrow_strings, hotspot=[0, 0], scale=1)
-
     eng = ENGINE_CLASS()
 
     clock = pygame.time.Clock()
