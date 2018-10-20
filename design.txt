@@ -7,9 +7,12 @@ Tasks:
 - Make sure ball can never jump walls
 - Unit tests and code analysis
 - Code coverage
+- Pre-conditions / post-conditions
+- Pure functions where possible
 - Windows executable
 - Fix double loud audio when ball hits two bricks
-- Refactor to ECS
+- Refactor to ECS (and move out of display)
+- Move actions into its own file (unless replaced by ECS)
 - Frame rate independence?
 - Use vectors
 - Add a sprite reload call for Doh
@@ -18,6 +21,7 @@ Tasks:
 - Play with mouse only
 - Play with keyboard only
 - Better folder structure
-- Pre-condition / post-condition
-- Pure functions where possible
-- Pull collision support into its own file
+- Pull physics / collision support into its own file
+- Generate level JSON at run-time rather than manually
+- Data-driven state machine for engine states
+- Level designer
