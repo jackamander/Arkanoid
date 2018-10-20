@@ -40,7 +40,7 @@ class Window:
         pygame.display.set_caption(utils.config["title"])
 
         # Load a white cursor
-        set_cursor(pygame.cursors.thickarrow_strings, hotspot=[0, 0], scale=1)
+        set_cursor(pygame.cursors.thickarrow_strings)
 
     def flip(self):
         pygame.transform.scale(self.screen, self.main.get_size(), self.main)
