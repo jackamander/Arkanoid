@@ -83,15 +83,10 @@ def draw_text(text, font):
 
     return surf
 
-_image_cache = {}
+_image_cache = utils.Cache(lambda fname: pygame.image.load(fname).convert_alpha())
 
 def _load_image(fname, rect=None, scaled=[]):
     image = _image_cache.get(fname)
-    if image is None:
-        image = pygame.image.load(fname)
-        image = image.convert_alpha()
-        _image_cache[fname] = image
-        logging.warning("Image cache miss: %s", fname)
 
     if rect:
         image = image.subsurface(rect)

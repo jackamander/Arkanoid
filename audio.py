@@ -7,7 +7,8 @@ import pygame
 
 import utils
 
-_audio_cache = {}
+
+_audio_cache = utils.Cache(pygame.mixer.Sound)
 
 def play_sound(name):
     cfg = utils.config["sounds"][name]
@@ -15,10 +16,6 @@ def play_sound(name):
     _, stop = cfg.get("range", [0, 0])
 
     sound = _audio_cache.get(fname)
-    if sound is None:
-        sound = pygame.mixer.Sound(fname)
-        _audio_cache[fname] = sound
-        logging.warning("Audio cache miss: %s", name)
 
     channel = sound.play(maxtime = stop)
 

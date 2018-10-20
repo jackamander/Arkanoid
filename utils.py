@@ -133,6 +133,19 @@ class Delta:
         self.last = now
         return delta
 
+class Cache:
+    def __init__(self, factory):
+        self.cache = {}
+        self.factory = factory
+
+    def get(self, key):
+        item = self.cache.get(key)
+        if item is None:
+            item = self.factory(key)
+            self.cache[key] = item
+            logging.warning("Cache miss: %s", key)
+        return item
+
 # Globals
 config = {}     # initialized in main
 events = Events()
