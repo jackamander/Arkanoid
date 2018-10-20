@@ -28,6 +28,7 @@ _audio_cache = utils.Cache(sound_factory)
 def play_sound(name):
     sound = _audio_cache.get(name)
 
+    sound.stop()            # Stop any previous instance of this sound
     channel = sound.play()
 
     if channel is None:

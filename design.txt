@@ -10,7 +10,6 @@ Tasks:
 - Pre-conditions / post-conditions
 - Pure functions where possible
 - Windows executable
-- Fix double loud audio when ball hits two bricks
 - Refactor to ECS (and move out of display)
 - Move actions into its own file (unless replaced by ECS)
 - Frame rate independence?
