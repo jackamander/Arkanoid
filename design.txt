@@ -19,3 +19,5 @@ Tasks:
 - Play with keyboard only
 - Better folder structure
 - Pre-condition / post-condition
+- Pure functions where possible
+- Pull collision support into its own file
