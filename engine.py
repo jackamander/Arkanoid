@@ -11,6 +11,7 @@ import pygame
 
 import audio
 import display
+import levels
 import utils
 
 CollisionSide_None = 0
@@ -72,8 +73,8 @@ class State(object):
         self.jump_level(level)
 
     def jump_level(self, level):
-        self.engine.set_level(level)
-        if self.engine.vars["level"] <= self.engine.last_level:
+        exists = self.engine.set_level(level)
+        if exists:
             self.engine.set_state(RoundState)
         else:
             self.engine.set_state(VictoryState)
@@ -1037,6 +1038,11 @@ class Engine(object):
             "players":1,
         })
 
+        # Load the level scene configurations into the global config structure
+        self.level_data = levels.create_scene_configs(utils.config["levels"])
+        self.level_data.update(utils.config["levels_custom"])
+        utils.config["scenes"].update(self.level_data)
+
         self.reset()
 
         self.set_state(self.INITIAL_STATE)
@@ -1053,19 +1059,10 @@ class Engine(object):
         self.vars["lives1"] = 3
         self.vars["lives2"] = 3
 
-        # Pre-allocate all level scenes
-        levels = {}
-        for key in utils.config["scenes"]:
-            mobj = re.match("level(\\d+)", key)
-            if mobj:
-                level = int(mobj.group(1))
-                levels[level] = key
-
-        self.last_level = max(levels.keys())
-
+        # Create independent scenes for all levels for each player to track progress
         self.scenes = {}
         for player in range(1, self.vars["players"]+1):
-            self.scenes[player] = {level : display.Scene([key], self.vars) for level, key in levels.items()}
+            self.scenes[player] = {levels.parse_num(key) : display.Scene([key], self.vars) for key in self.level_data}
 
     def set_lives(self, lives):
         player = self.vars["player"]
@@ -1100,6 +1097,7 @@ class Engine(object):
         self.vars[key] = level
         self.vars["level"] = level
         logging.info("P%d Level %d", player, level)
+        return level in self.scenes[player]
 
     def get_level(self):
         key = "level1" if self.vars["player"] == 1 else "level2"

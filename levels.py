@@ -1,26 +1,27 @@
 """
 levels.py
 
-Create the JSON for the levels
+Create the JSON for the levels.
+
+Data is the level layout.
+up to 18 rows, 11 columns
+w = white
+p = pink
+c = cyan
+g = green
+r = red
+b = blue
+m = magenta
+o = orange
+S = silver
+G = gold
 """
 
 import json
+import re
 
-# Data is the level layout.
-# up to 18 rows, 11 columns
-# w = white
-# p = pink
-# c = cyan
-# g = green
-# r = red
-# b = blue
-# m = magenta
-# o = orange
-# S = silver
-# G = gold
-
-
-def create(num, data):
+def create_sprites(num, data):
+    "Create all the sprite data for a level"
     sprites = [build_bg(num), build_alien(num)]
 
     bricks = build_bricks(num)
@@ -31,24 +32,21 @@ def create(num, data):
                 brick["position"] = [16 + 16 * col, 8 + 8 * row]
                 sprites.append(brick)
 
-    return {"level%d" % num : sprites}
-
-def write(data, fname):
-    with file(fname, "wb") as fout:
-        json.dump(data, fout, indent=4)
+    return sprites
 
 def build_bg(num):
     bg_index = (num - 1) % 4
-    return {
+    bg = {
         "name" : "bg",
         "image" : "bg%d" % bg_index,
         "position" : [16, 8],
         "layer" : 0
     }
+    return bg
 
 def build_alien(num):
     alien_index = (num - 1) % 4
-    return {
+    alien = {
         "name" : "alien",
         "image" : "alien%d_0" % alien_index,
         "hit_sound" : "Alien",
@@ -60,12 +58,13 @@ def build_alien(num):
         "points" : 100,
         "groups" : ["aliens"]
     }
+    return alien
 
 def build_bricks(num):
     silver_points = 50 * num
     silver_hits = 2 + (num - 1) / 8
 
-    return {
+    bricks = {
         "p" : {
             "image" : "pink",
             "hit_sound" : "Med",
@@ -154,590 +153,20 @@ def build_bricks(num):
             "groups" : ["ball", "bricks"],
         },
     }
+    return bricks
 
-def main():
-    levels = [
-        [           # Level 1
-            "",
-            "",
-            "",
-            "",
-            "SSSSSSSSSSS",
-            "rrrrrrrrrrr",
-            "bbbbbbbbbbb",
-            "ooooooooooo",
-            "ppppppppppp",
-            "ggggggggggg",
-        ],
-        [           # Level 2
-            "",
-            "",
-            "p",
-            "pc",
-            "pcg",
-            "pcgb",
-            "pcgbr",
-            "pcgbrp",
-            "pcgbrpc",
-            "pcgbrpcg",
-            "pcgbrpcgb",
-            "pcgbrpcgbr",
-            "SSSSSSSSSSp",
-        ],
-        [           # Level 3
-            "",
-            "",
-            "",
-            "ggggggggggg",
-            "",
-            "wwwGGGGGGGG",
-            "",
-            "rrrrrrrrrrr",
-            "",
-            "GGGGGGGGwww",
-            "",
-            "ppppppppppp",
-            "",
-            "bbbGGGGGGGG",
-            "",
-            "bbbbbbbbbbb",
-            "",
-            "rrrrrrrrrrr",
-        ],
-        [           # Level 4
-            "",
-            "",
-            "",
-            "",
-            " Sogp ogbS ",
-            " bgor grSb ",
-            " gpro bSrg ",
-            " orpg Sbgo ",
-            " rogb ogpr ",
-            " rgrS gorp ",
-            " gbSr prog ",
-            " oSbg rpgo ",
-            " Sogp ogbS ",
-            " bgor grSb ",
-            " gpro bSrg ",
-            " orpg Sbgo ",
-            " rogb ogpr ",
-            " pgoS gorp ",
-        ],
-        [           # Level 5
-            "",
-            "",
-            "   o   o   ",
-            "    o o    ",
-            "    o o    ",
-            "   SSSSS   ",
-            "   SSSSS   ",
-            "  SSrSrSS  ",
-            "  SSrSrSS  ",
-            " SSSSSSSSS ",
-            " SSSSSSSSS ",
-            " S SSSSS S ",
-            " S S   S S ",
-            " S S   S S ",
-            "    S S    ",
-            "    S S    ",
-        ],
-        [           # Level 6
-            "",
-            "",
-            "",
-            "b r g g r b",
-            "b r g g r b",
-            "b r g g r b",
-            "b GpGpGpg b",
-            "b r g g r b",
-            "b r g g r b",
-            "b r g g r b",
-            "b r g g r b",
-            "b r g g r b",
-            "p G G G G p",
-            "b r g g r b",
-        ],
-        [           # Level 7
-            "",
-            "",
-            "",
-            "",
-            "    ocb    ",
-            "   ogbco   ",
-            "   cbgop   ",
-            "  gbcogrp  ",
-            "  bgoprgo  ",
-            "  cogrpog  ",
-            "  oprgocb  ",
-            "  grpogbc  ",
-            "  rgocbgo  ",
-            "   ogbco   ",
-            "   cbgop   ",
-            "    cog    ",
-        ],
-        [           # Level 8
-            "",
-            "",
-            "",
-            " G  G G  G ",
-            " GG     GG ",
-            "     p     ",
-            "    GgG    ",
-            "  G  o  G  ",
-            "     b     ",
-            "  G  r  G  ",
-            "    GgG    ",
-            "     o     ",
-            " GG     GG ",
-            " G  G G  G ",
-        ],
-        [           # Level 9
-            "",
-            "",
-            " G G   G G ",
-            " GgG   GgG ",
-            " GbG   GbG ",
-            " GGG   GGG ",
-            "           ",
-            "   pbbbo   ",
-            "   pgcgo   ",
-            "   pcgco   ",
-            "   pgcgo   ",
-            "   pcgco   ",
-            "   pbbbo   ",
-        ],
-        [           # Level 10
-            " G         ",
-            "           ",
-            " G         ",
-            " G         ",
-            " G    b    ",
-            " G   bcb   ",
-            " G  bcbcb  ",
-            " G bcbSbcb ",
-            " G  bcbcb  ",
-            " G   bcb   ",
-            " G    b    ",
-            " G         ",
-            " G         ",
-            " G         ",
-            " G         ",
-            " GGGGGGGGGG",
-        ],
-        [           # Level 11
-            "           ",
-            "           ",
-            "           ",
-            "           ",
-            " SSSSSSSSS ",
-            " S       S ",
-            " S SSSSS S ",
-            " S S   S S ",
-            " S S S S S ",
-            " S S   S S ",
-            " S SSSSS S ",
-            " S       S ",
-            " SSSSSSSSS ",
-        ],
-        [           # Level 12
-            "           ",
-            "           ",
-            "GGGGGGGGGGG",
-            "    G   Gp ",
-            " Gg G   G  ",
-            " G  G G G  ",
-            " G  G G G  ",
-            " G  GgG G  ",
-            " G pG GbG  ",
-            " G  GrG G  ",
-            " G  G G G  ",
-            " G  G G G  ",
-            " Gb   G    ",
-            " G    G   p",
-            " GGGGGGGGGG",
-        ],
-        [           # Level 13
-            "           ",
-            "           ",
-            "           ",
-            "           ",
-            " oo www oo ",
-            " ww ooo ww ",
-            " bb rrr bb ",
-            " mm ggg mm ",
-            " gg mmm gg ",
-            " rr bbb rr ",
-            " oo www oo ",
-            " ww ooo ww ",
-        ],
-        [           # Level 14
-            "           ",
-            "           ",
-            "           ",
-            "rSSSSSSSSSr",
-            "G         G",
-            "bbbbbbbbbbb",
-            "           ",
-            "pSSSSSSSSSp",
-            "G         G",
-            "bbbbbbbbbbb",
-            "           ",
-            "bSSSSSSSSSb",
-            "G         G",
-            "rrrrrrrrrrr",
-            "           ",
-            "rrrrrrrrrrr",
-            "G         G",
-        ],
-        [           # Level 15
-            "           ",
-            "           ",
-            "           ",
-            "cSScccccSSc",
-            "cSoScccSgSc",
-            "cSooSSSggSc",
-            "cSoooSgggSc",
-            "cSoooSgggSc",
-            "cSoooSgggSc",
-            "cSoooSgggSc",
-            "cSoooSgggSc",
-            "cSoooSgggSc",
-            "ccSooSggScc",
-            "cccSoSgSccc",
-            "ccccSSScccc",
-        ],
-        [           # Level 16
-            "           ",
-            "           ",
-            "     G     ",
-            "   ww ww   ",
-            " ww  G  ww ",
-            "w  oo oo  w",
-            " oo  G  oo ",
-            "o  gg gg  o",
-            " gg  G  gg ",
-            "g  rr rr  g",
-            " rr  G  rr ",
-            "r  bb bb  r",
-            " bb  G  bb ",
-            "b  gg gg  b",
-            " gg     gg ",
-            "g         g",
-        ],
-        [           # Level 17
-            "           ",
-            "           ",
-            "     S     ",
-            "   bbSgg   ",
-            "  bbwwwgg  ",
-            " bbwwwwwgg ",
-            " bbwwwwwgg ",
-            " bbwwwwwgg ",
-            " S S S S S ",
-            "     S     ",
-            "     S     ",
-            "   G G     ",
-            "   GGG     ",
-            "    G      ",
-        ],
-        [           # Level 18
-            "           ",
-            "           ",
-            "           ",
-            "p GoooooG p",
-            "p GGoooGG p",
-            "p G GoG G p",
-            "p G gSg G p",
-            "p G g g G p",
-            "p G g g G p",
-            "p G g g G p",
-            "p G g g G p",
-            "p G g g G p",
-            "pGGGg gGGGp",
-        ],
-        [           # Level 19
-            "           ",
-            "           ",
-            "           ",
-            "  GGGGGGG  ",
-            "  grbGbrg  ",
-            "  grbGbrg  ",
-            "  grbGbrg  ",
-            "  grbGbrg  ",
-            "  grbGbrg  ",
-            "  grbGbrg  ",
-            "  grbGbrg  ",
-            "  GGGGGGG  ",
-        ],
-        [           # Level 20
-            "           ",
-            "           ",
-            "           ",
-            "gGpGcGgGmGo",
-            "mGSGSGSGSGc",
-            "  m        ",
-            " G GmG G G ",
-            " G G GmG G ",
-            " G G G GmG ",
-            "           ",
-            " G G GmG G ",
-            " G GmG G G ",
-            "  mG G G   ",
-            "m    G     ",
-        ],
-        [           # Level 21
-            "           ",
-            "           ",
-            "           ",
-            " GpppppppG ",
-            " G       G ",
-            " G GGGGG G ",
-            " G GbbbG G ",
-            " G GmmmG G ",
-            " G GgggG G ",
-            " G GpppG G ",
-            " G GcccG G ",
-            " G       G ",
-            " G       G ",
-            " GGGGGGGGG ",
-        ],
-        [           # Level 22
-            "           ",
-            "           ",
-            "           ",
-            "ooooooooooo",
-            "ooooooooooo",
-            "           ",
-            "rG GrrrG Gr",
-            "rG GrrrG Gr",
-            "rG GrrrG Gr",
-            "rG GrrrG Gr",
-            "           ",
-            "wwwwwwwwwww",
-            "wwwwwwwwwww",
-        ],
-        [           # Level 23
-            "           ",
-            "           ",
-            "bbbbbbbbbbb",
-            "           ",
-            "SSS SSS SSS",
-            "SgS SgS SgS",
-            "SSS SSS SSS",
-            "           ",
-            "  SSS SSS  ",
-            "  SrS SrS  ",
-            "  SSS SSS  ",
-            "           ",
-            "SSS SSS SSS",
-            "SbS SbS SbS",
-            "SSS SSS SSS",
-        ],
-        [           # Level 24
-            "           ",
-            "           ",
-            "           ",
-            "           ",
-            "           ",
-            "    www    ",
-            "    www    ",
-            "   wbwbw   ",
-            "   bbbbb   ",
-            "  bbbbbbb  ",
-            "  bbbbbbb  ",
-            " bbbbbbbbb ",
-            "bbbbbbbbbbb",
-        ],
-        [           # Level 25
-            "           ",
-            "           ",
-            "           ",
-            "rrrrrrrrrrr",
-            "ggggggggggg",
-            "bbbbbbbbbbb",
-            "GGGGrrrGGGG",
-            "GggGSSSGggG",
-            "GrrG   GbbG",
-            "G         G",
-            "G         G",
-            "G         G",
-            "G  GgggG  G",
-            "GSSGGGGGSSG",
-        ],
-        [           # Level 26
-            "           ",
-            "           ",
-            "           ",
-            "           ",
-            "  GSSG     ",
-            " G    G    ",
-            "G  cc  G   ",
-            "G bbbb G   ",
-            "G  mm  G   ",
-            " G    G    ",
-            "  GGGG     ",
-        ],
-        [           # Level 27
-            "           ",
-            "           ",
-            "           ",
-            "           ",
-            "           ",
-            "           ",
-            "           ",
-            "SSSSSSSSSSS",
-            "ooooooooooo",
-            "SSSSSSSSSSS",
-            "           ",
-            "SSSSSSSSSSS",
-            "rrrrrrrrrrr",
-            "SSSSSSSSSSS",
-        ],
-        [           # Level 28
-            "           ",
-            "           ",
-            "           ",
-            "bbbbbbbbbbb",
-            "bGGGmGmGGGb",
-            "bG       Gb",
-            "bGm     mGb",
-            "bGmm   mmGb",
-            " bGmm mmGb ",
-            "  bGmmmGb  ",
-            "   bGmGb   ",
-            "    bmb    ",
-            "     b     ",
-        ],
-        [           # Level 29
-            "           ",
-            "           ",
-            "           ",
-            "bbbbG Gbbbb",
-            "ggggG Ggggg",
-            "GGGGG GGGGG",
-            "ppppG Gpppp",
-            "ooooG Goooo",
-            "bbbbG Gbbbb",
-            "SSSSG GSSSS",
-            "ooooG Goooo",
-            "ppppG Gpppp",
-            "ggggG Ggggg",
-        ],
-        [           # Level 30
-            "           ",
-            "           ",
-            "           ",
-            "           ",
-            "op         ",
-            "opcg       ",
-            "opcgop     ",
-            "opcgopcg   ",
-            "Spcgopcgop ",
-            " GSgopcgopc",
-            "   GSpcgopc",
-            "     GSgopc",
-            "       GSpc",
-            "         GS",
-        ],
-        [           # Level 31
-            "           ",
-            "           ",
-            "           ",
-            "b r g p b r",
-            "S S S S S S",
-            " g r b o g ",
-            " S S S S S ",
-            "o b r g p b",
-            "S S S S S S",
-            " p g r b o ",
-            " S S S S S ",
-            "g o b r g p",
-            "S S S S S S",
-            " b p g r b ",
-            " S S S S S ",
-            "r g o b r g",
-            "S S S S S S",
-        ],
-        [           # Level 32
-            "           ",
-            "           ",
-            "           ",
-            "  G G G G  ",
-            "  G G G G  ",
-            "  G G G G  ",
-            "  G G Grr  ",
-            "  G G G G  ",
-            "  G Gbbbb  ",
-            "  G G G G  ",
-            "  Grrrrrr  ",
-            "  G G G G  ",
-            "  ooooooo  ",
-            "  SSSSSSS  ",
-        ],
-        [           # Level 33
-            "           ",
-            "           ",
-            "     rr    ",
-            "    rSSr   ",
-            "    rSrr   ",
-            "    rrrr   ",
-            "    rrrr   ",
-            "    rrrr   ",
-            "   ggrrrb  ",
-            "  gSSrrSSb ",
-            "  gSggbSbb ",
-            "  ggggbbbb ",
-            "  ggggbbbb ",
-            "  ggggbbbb ",
-            "  ggggbbbb ",
-            "   gg  bb  ",
-        ],
-        [           # Level 34
-            "           ",
-            "           ",
-            "           ",
-            "      ccc  ",
-            "      ccp  ",
-            "     ccppp ",
-            "     cccpb ",
-            "     ccccb ",
-            "    Gccccb ",
-            "    obccbb ",
-            "    oobbb  ",
-            "   GoGbbb  ",
-            "   oooo    ",
-            "  GoGo     ",
-            "  oooo     ",
-            "  ooo      ",
-            " ooo       ",
-            " oo        ",
-        ],
-        [           # Level 35
-            "         w ",
-            "         ww",
-            "   wwww    ",
-            "    wwww   ",
-            "     GGG   ",
-            "  w        ",
-            " wow       ",
-            "woGow      ",
-            " wow       ",
-            "  w       o",
-            "  p  G ggg ",
-            "g p g g gpg",
-            "Ggpg pgGg  ",
-            "Ggpg g pgg ",
-            "GGgGg  gg  ",
-        ],
-    ]
+def parse_num(key):
+    "Parse the level number from the JSON key"
+    mobj = re.match(r"level(\d+)", key)
+    assert mobj != None, "Bad level key %s" % key
+    return int(mobj.group(1))
 
-    results = {}
-    for index, data in enumerate(levels):
-        level = create(index + 1, data)
-        results.update(level)
+def create_scene_configs(levels):
+    "Create the scene configuration objects from the levels JSON"
+    configs = {}
 
-    write(results, "levels.txt")
+    for key, data in levels.items():
+        num = parse_num(key)
+        configs[key] = create_sprites(num, data)
 
-if __name__ == "__main__":
-    main()
+    return configs
