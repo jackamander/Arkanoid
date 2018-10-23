@@ -5,22 +5,26 @@ Logging is for debugging, not verification
 Tasks:
 - Kill balls beyond the playspace
 - Make sure ball can never jump walls
-- Unit tests and code analysis
-- Code coverage
-- Pre-conditions / post-conditions
-- Pure functions where possible
-- Windows executable
-- Refactor to ECS (and move out of display)
-- Move actions into its own file (unless replaced by ECS)
 - Frame rate independence?
-- Use vectors
 - Add a sprite reload call for Doh
-- Centralize keyboard mappings
 - Doh kills you permanently
 - Play with mouse only
 - Play with keyboard only
+- Level designer
+
+Refactor:
+- Refactor to ECS (and move out of display)
+- Pure functions where possible
+- Move actions into its own file (unless replaced by ECS)
+- Use vectors
+- Centralize keyboard mappings
 - Better folder structure
 - Pull physics / collision support into its own file
 - Generate level JSON at run-time rather than manually
 - Data-driven state machine for engine states
-- Level designer
+
+Polish:
+- Unit tests and code analysis
+- Code coverage
+- Pre-conditions / post-conditions
+- Windows executable
