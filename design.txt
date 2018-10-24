@@ -3,7 +3,6 @@ Goal:  Mimic Arkanoid as precisely as possible, and complete the full game
 Logging is for debugging, not verification
 
 Tasks:
-- Kill balls beyond the playspace
 - Make sure ball can never jump walls
 - Frame rate independence?
 - Play with mouse only
