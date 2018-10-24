@@ -518,7 +518,7 @@ class InletMgr(Action):
         self._randomize()
 
     def _randomize(self):
-        self.frames = random.randrange(self.max_delay)
+        self.frames = random.random() * self.max_delay
 
     def update(self, sprite):
         if self.frames > 0:
