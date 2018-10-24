@@ -704,9 +704,9 @@ class GameState(State):
                     self.capsules.apply(sprite)
 
                 if sprite.cfg.get("kill_paddle", False):
-                    # Kill the paddle by eliminating all the balls
-                    for ball in self.scene.groups["balls"]:
-                        ball.kill()
+                    # Drain all the lives and die!
+                    self.engine.set_lives(1)
+                    self.engine.set_state(DeathState, {"scene" : self.scene, "paddle" : self.paddle})
 
                 if sprite.cfg.get("paddle_bounce", False):
                     self.paddle.hit(sprite)

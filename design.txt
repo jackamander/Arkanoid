@@ -6,8 +6,6 @@ Tasks:
 - Kill balls beyond the playspace
 - Make sure ball can never jump walls
 - Frame rate independence?
-- Add a sprite reload call for Doh
-- Doh kills you permanently
 - Play with mouse only
 - Play with keyboard only
 - Level designer
