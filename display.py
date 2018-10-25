@@ -114,8 +114,8 @@ def get_image(name):
     return image
 
 class Action:
-    def then(self, next):
-        return Series([self, next])
+    def then(self, action):
+        return Series([self, action])
 
     def plus(self, action):
         return Parallel([self, action])
