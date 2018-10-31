@@ -13,7 +13,6 @@ Refactor:
 - Refactor to ECS (and move out of display)
 - Pure functions where possible
 - Move actions into its own file (unless replaced by ECS)
-- Use vectors
 - Centralize keyboard mappings
 - Better folder structure
 - Pull physics / collision support into its own file
