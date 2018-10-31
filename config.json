@@ -1,5 +1,5 @@
 {
-    "title" : "Arkanoid",
+    "title" : "Arkanoid v1.0",
     "world_size" : [256, 232],
     "screen_size" : [256, 232],
     "full_screen" : false,
