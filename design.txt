@@ -24,3 +24,33 @@ Polish:
 - Code coverage
 - Pre-conditions / post-conditions
 - Windows executable
+
+Refactor notes:
+- Actions are funky - one action per sprite is too limiting
+- ECS allows for lots of parallel action, but how to chain?
+- Maybe we stick with actions, but all set_action calls run in parallel
+- Analysis - what are the uses of the following (with resolution)
+    - plus() calls
+        1. Aliens move and animate (animation component)
+        2. Doh shots move and animate (animation component)
+        3. Animate with random previous action (animation component)
+        4. Paddle animations with control actions (animation component)
+        5. Paddle break animation while moving (animation component)
+        6. Capsule move and animate (animation component)
+    - then() calls
+        1. Alien behavior states (general state machine)
+        2. Inlet behavior states (general state machine)
+        3. Kill sprite after death animation (general state machine)
+        4. Register for events after animation finishes (general state machine)
+        5. Finale state machine (general state machine)
+    - set_action to cancel previous
+        1. Aliens, paddle, and Doh all stop behavior while dying (behavior component)
+        2. Ball stops moving when caught (move component)
+        3. Paddle stops behavior on break (behavior component)
+- Result - ECS all the way!  Use state machines for chaining
+
+ECS Architecture
+- Keep an entity class for tracking components, no reason to eliminate
+- Track components on entity in flat structure, with primitive types
+- Systems can listen for component changes for event-driven behavior
+- No need for pygame Sprites or Groups at all!
