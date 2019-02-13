@@ -174,7 +174,7 @@ class Parallel(Action):
 
     def update(self, sprite):
         # Advance each action
-        next_actions = list(map(lambda action: action.update(sprite), self.actions))
+        next_actions = [action.update(sprite) for action in self.actions]
 
         # Issue any stops
         for next_action, prev_action in zip(next_actions, self.actions):
@@ -182,7 +182,7 @@ class Parallel(Action):
                 prev_action.stop(sprite)
 
         # Filter out any actions that finish
-        self.actions = list(filter(None, next_actions))
+        self.actions = [action for action in next_actions if action]
 
         return self if self.actions else None
 

@@ -59,9 +59,9 @@ class CollisionTest(DebugState):
 
         if pygame.sprite.collide_rect(self.ball, self.brick):
             side = engine.collision_side(self.ball, self.brick)
-            print side
+            print(side)
         else:
-            print
+            print()
 
     def update(self):
         self.scene.groups["all"].update()

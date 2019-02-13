@@ -9,9 +9,15 @@ import logging
 import logging.config
 import math
 import os
+import sys
 import time
 
 import pygame
+
+PY2 = sys.version_info[0] < 3
+
+if not PY2:
+    basestring = str
 
 def init():
     global config
@@ -45,7 +51,7 @@ def lerp(pt1, pt2, ratio):
 
 def color(value):
     """Normalize a color value"""
-    if isinstance(value, str) or isinstance(value, unicode):
+    if isinstance(value, basestring):
         mycolor = pygame.Color(value)
         value = [mycolor.r, mycolor.g, mycolor.b, mycolor.a]
     return value
