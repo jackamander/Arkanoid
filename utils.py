@@ -19,12 +19,12 @@ def init():
 
 def set_config(fname, obj):
     """Write a JSON config file"""
-    with file(fname, "wb") as fout:
+    with open(fname, "wb") as fout:
         json.dump(obj, fout)
 
 def get_config(fname):
     """Load a JSON config file"""
-    with file(fname, "rb") as fin:
+    with open(fname, "rb") as fin:
         return json.load(fin)
 
 def setup_logging(fname):
@@ -101,7 +101,8 @@ class Timers:
         self.clear()
 
     def update(self):
-        for handler, [frames, args, kwargs] in self.timers.items():
+        initial_timers = list(self.timers.items())
+        for handler, [frames, args, kwargs] in initial_timers:
             frames -= 1
 
             if frames <= 0:

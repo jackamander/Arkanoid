@@ -780,11 +780,10 @@ class GameState(State):
         self.scene.groups["all"].draw(screen)
 
 def find_closest(projectile, sprites):
-    dsquareds = [rect_distance(projectile.last.center, sprite.last) for sprite in sprites]
-    sortlist = zip(dsquareds, sprites)
-    sortlist.sort()
-    _, final = sortlist.pop(0)
-    return final
+    # Sort by distance from projectile
+    keyfunc = lambda sprite: rect_distance(projectile.last.center, sprite.last)
+    closest = min(sprites, key=keyfunc)
+    return closest
 
 def rect_distance(point, rect):
     dx = 0

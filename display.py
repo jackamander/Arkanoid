@@ -35,7 +35,7 @@ class Window:
         self.screen = pygame.Surface(world_size)
 
         logging.warning("Driver: %s", pygame.display.get_driver())
-        logging.warning("Display Info:\n    %s", pygame.display.Info())
+        logging.warning("Display Info:\n    %s", str(pygame.display.Info()))
 
         pygame.display.set_caption(utils.config["title"])
 
@@ -174,7 +174,7 @@ class Parallel(Action):
 
     def update(self, sprite):
         # Advance each action
-        next_actions = map(lambda action: action.update(sprite), self.actions)
+        next_actions = list(map(lambda action: action.update(sprite), self.actions))
 
         # Issue any stops
         for next_action, prev_action in zip(next_actions, self.actions):
@@ -182,7 +182,7 @@ class Parallel(Action):
                 prev_action.stop(sprite)
 
         # Filter out any actions that finish
-        self.actions = filter(None, next_actions)
+        self.actions = list(filter(None, next_actions))
 
         return self if self.actions else None
 
@@ -256,7 +256,7 @@ class Blink(Action):
     def __init__(self, rate):
         # Convert rate from seconds to frames per half cycle
         fps = utils.config["frame_rate"]
-        self.rate = int(rate * fps) / 2
+        self.rate = int(rate * fps / 2)
         self.frames = 0
 
     def update(self, sprite):

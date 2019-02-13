@@ -62,7 +62,7 @@ def build_alien(num):
 
 def build_bricks(num):
     silver_points = 50 * num
-    silver_hits = 2 + (num - 1) / 8
+    silver_hits = 2 + (num - 1) // 8
 
     bricks = {
         "p" : {
