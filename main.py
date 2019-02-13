@@ -15,6 +15,7 @@ import utils
 
 ENGINE_CLASS = engine.Engine
 
+
 def main():
     """Arkanoid main loop"""
 
@@ -66,6 +67,7 @@ def main():
         else:
             logfunc = logging.debug
         logfunc("%d FPS %.3fs (%d%%)", fps, ftime, utilization)
+
 
 if __name__ == '__main__':
     utils.setup_logging("logging.json")

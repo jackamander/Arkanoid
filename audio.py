@@ -23,7 +23,9 @@ def sound_factory(name):
 
     return sound
 
+
 _audio_cache = utils.Cache(sound_factory)
+
 
 def play_sound(name):
     sound = _audio_cache.get(name)

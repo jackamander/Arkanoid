@@ -21,18 +21,22 @@
             "level": "DEBUG",
             "formatter": "full",
             "filename": "logs/debug.log",
-            "mode" : "w"
+            "mode": "w"
         },
         "production_file_handler": {
             "class": "logging.FileHandler",
             "level": "INFO",
             "formatter": "full",
             "filename": "logs/production.log",
-            "mode" : "w"
+            "mode": "w"
         }
     },
     "root": {
         "level": "DEBUG",
-        "handlers": ["console", "debug_file_handler", "production_file_handler"]
+        "handlers": [
+            "console",
+            "debug_file_handler",
+            "production_file_handler"
+        ]
     }
 }

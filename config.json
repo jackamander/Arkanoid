@@ -1,20 +1,29 @@
 {
-    "title" : "Arkanoid v1.0",
-    "world_size" : [256, 232],
-    "screen_size" : [256, 232],
-    "full_screen" : false,
-    "frame_rate" : 60,
-    "bg_color" : "black",
-    "max_ball_speed" : 4.0,
-    "ball_speed_multiplier" : 1.2,
-    "max_capsule_count" : 10,
-    "mouse_speed" : 1,
-    "kb_speed" : 4,
-    "fonts" : {
-        "white" : {
-            "image" : "nesfont8",
-            "size" : [8,8],
-            "characters" : [
+    "title": "Arkanoid v1.0",
+    "world_size": [
+        256,
+        232
+    ],
+    "screen_size": [
+        256,
+        232
+    ],
+    "full_screen": false,
+    "frame_rate": 60,
+    "bg_color": "black",
+    "max_ball_speed": 4.0,
+    "ball_speed_multiplier": 1.2,
+    "max_capsule_count": 10,
+    "mouse_speed": 1,
+    "kb_speed": 4,
+    "fonts": {
+        "white": {
+            "image": "nesfont8",
+            "size": [
+                8,
+                8
+            ],
+            "characters": [
                 " !\"#$%&'()*+,-./",
                 "0123456789:;<=>?",
                 "@ABCDEFGHIJKLMNO",
@@ -23,10 +32,13 @@
                 "pqrstuvwxyz{|}~"
             ]
         },
-        "red" : {
-            "image" : "nesfont8red",
-            "size" : [8,8],
-            "characters" : [
+        "red": {
+            "image": "nesfont8red",
+            "size": [
+                8,
+                8
+            ],
+            "characters": [
                 " !\"#$%&'()*+,-./",
                 "0123456789:;<=>?",
                 "@ABCDEFGHIJKLMNO",
@@ -36,1409 +48,2809 @@
             ]
         }
     },
-    "images" : {
-        "nesfont8" : {
-            "filename" : "resources\\images\\nesfont8.png"
-        },
-        "nesfont8red" : {
-            "filename" : "resources\\images\\nesfont8red.png"
-        },
-        "paddle" : {
-            "filename" : "resources\\images\\vaus.png",
-            "size" : [32, 8],
-            "offset" : [0, 0]
-        },
-        "paddle_grow1" : {
-            "filename" : "resources\\images\\vaus.png",
-            "size" : [36, 8],
-            "offset" : [0, 24]
-        },
-        "paddle_grow2" : {
-            "filename" : "resources\\images\\vaus.png",
-            "size" : [40, 8],
-            "offset" : [36, 24]
-        },
-        "paddle_grow3" : {
-            "filename" : "resources\\images\\vaus.png",
-            "size" : [44, 8],
-            "offset" : [76, 24]
-        },
-        "paddle_break1" : {
-            "filename" : "resources\\images\\vaus.png",
-            "size" : [24, 8],
-            "offset" : [0, 0]
-        },
-        "paddle_break2" : {
-            "filename" : "resources\\images\\vaus.png",
-            "size" : [16, 8],
-            "offset" : [0, 0]
-        },
-        "paddle_break3" : {
-            "filename" : "resources\\images\\vaus.png",
-            "size" : [8, 8],
-            "offset" : [0, 0]
-        },
-        "laser_break1" : {
-            "filename" : "resources\\images\\vaus.png",
-            "size" : [24, 8],
-            "offset" : [0, 16]
-        },
-        "laser_break2" : {
-            "filename" : "resources\\images\\vaus.png",
-            "size" : [16, 8],
-            "offset" : [0, 16]
-        },
-        "laser_break3" : {
-            "filename" : "resources\\images\\vaus.png",
-            "size" : [8, 8],
-            "offset" : [0, 16]
-        },
-        "paddle_ext_break1" : {
-            "filename" : "resources\\images\\vaus.png",
-            "size" : [40, 8],
-            "offset" : [0, 8]
-        },
-        "paddle_ext_break2" : {
-            "filename" : "resources\\images\\vaus.png",
-            "size" : [32, 8],
-            "offset" : [0, 8]
-        },
-        "paddle_lasershrink1" : {
-            "filename" : "resources\\images\\vaus.png",
-            "size" : [28, 8],
-            "offset" : [48, 0]
-        },
-        "paddle_lasershrink2" : {
-            "filename" : "resources\\images\\vaus.png",
-            "size" : [24, 8],
-            "offset" : [76, 0]
-        },
-        "paddle_lasershrink3" : {
-            "filename" : "resources\\images\\vaus.png",
-            "size" : [20, 8],
-            "offset" : [100, 0]
-        },
-        "paddle_lasershrink4" : {
-            "filename" : "resources\\images\\vaus.png",
-            "size" : [16, 8],
-            "offset" : [8, 0]
-        },
-        "paddle_lasergrow1" : {
-            "filename" : "resources\\images\\vaus.png",
-            "size" : [16, 8],
-            "offset" : [8, 16]
-        },
-        "paddle_lasergrow2" : {
-            "filename" : "resources\\images\\vaus.png",
-            "size" : [20, 8],
-            "offset" : [100, 8]
-        },
-        "paddle_lasergrow3" : {
-            "filename" : "resources\\images\\vaus.png",
-            "size" : [24, 8],
-            "offset" : [76, 8]
-        },
-        "paddle_lasergrow4" : {
-            "filename" : "resources\\images\\vaus.png",
-            "size" : [28, 8],
-            "offset" : [48, 8]
-        },
-        "explode1" : {
-            "filename" : "resources\\images\\vaus.png",
-            "size" : [32, 8],
-            "offset" : [0, 40]
-        },
-        "explode2" : {
-            "filename" : "resources\\images\\vaus.png",
-            "size" : [42, 17],
-            "offset" : [40, 36]
-        },
-        "explode3" : {
-            "filename" : "resources\\images\\vaus.png",
-            "size" : [44, 23],
-            "offset" : [91, 34]
-        },
-        "life" : {
-            "filename" : "resources\\images\\Arkanoid.png",
-            "size" : [16, 5],
-            "offset" : [247, 1838]
-        },
-        "paddle_ext" : {
-            "filename" : "resources\\images\\vaus.png",
-            "size" : [48, 8],
-            "offset" : [0, 8]
-        },
-        "paddle_laser" : {
-            "filename" : "resources\\images\\vaus.png",
-            "size" : [32, 8],
-            "offset" : [0, 16]
-        },
-        "ball" : {
-            "filename" : "resources\\images\\vaus.png",
-            "size" : [5, 4],
-            "offset" : [40, 0]
-        },
-        "laser" : {
-            "filename" : "resources\\images\\vaus.png",
-            "size" : [16, 8],
-            "offset" : [40, 16]
-        },
-        "bg0" : {
-            "filename" : "resources\\images\\fields.png",
-            "size" : [176, 224],
-            "offset" : [8, 8]
-        },
-        "bg1" : {
-            "filename" : "resources\\images\\fields.png",
-            "size" : [176, 224],
-            "offset" : [200, 8]
-        },
-        "bg2" : {
-            "filename" : "resources\\images\\fields.png",
-            "size" : [176, 224],
-            "offset" : [392, 8]
-        },
-        "bg3" : {
-            "filename" : "resources\\images\\fields.png",
-            "size" : [176, 224],
-            "offset" : [584, 8]
-        },
-        "bg_final" : {
-            "filename" : "resources\\images\\fields.png",
-            "size" : [176, 224],
-            "offset" : [776, 8]
-        },
-        "wall_left" : {
-            "filename" : "resources\\images\\fields.png",
-            "size" : [8, 232],
-            "offset" : [0, 0]
-        },
-        "wall_right" : {
-            "filename" : "resources\\images\\fields.png",
-            "size" : [8, 232],
-            "offset" : [184, 0]
-        },
-        "wall_top" : {
-            "filename" : "resources\\images\\fields.png",
-            "size" : [192, 8],
-            "offset" : [0, 0]
-        },
-        "inlet1" : {
-            "filename" : "resources\\images\\blocks and backgrounds.png",
-            "size" : [24, 8],
-            "offset" : [64, 48]
-        },
-        "inlet2" : {
-            "filename" : "resources\\images\\blocks and backgrounds.png",
-            "size" : [24, 8],
-            "offset" : [64, 56]
-        },
-        "inlet3" : {
-            "filename" : "resources\\images\\blocks and backgrounds.png",
-            "size" : [24, 8],
-            "offset" : [64, 64]
-        },
-        "inlet4" : {
-            "filename" : "resources\\images\\blocks and backgrounds.png",
-            "size" : [24, 8],
-            "offset" : [64, 72]
-        },
-        "break1" : {
-            "filename" : "resources\\images\\blocks and backgrounds.png",
-            "size" : [8, 24],
-            "offset" : [104, 32]
-        },
-        "break2" : {
-            "filename" : "resources\\images\\blocks and backgrounds.png",
-            "size" : [8, 24],
-            "offset" : [112, 32]
-        },
-        "break3" : {
-            "filename" : "resources\\images\\blocks and backgrounds.png",
-            "size" : [8, 24],
-            "offset" : [120, 32]
-        },
-        "white" : {
-            "filename" : "resources\\images\\blocks and backgrounds.png",
-            "size" : [16, 8],
-            "offset" : [0, 64]
-        },
-        "pink" : {
-            "filename" : "resources\\images\\blocks and backgrounds.png",
-            "size" : [16, 8],
-            "offset" : [16, 64]
-        },
-        "cyan" : {
-            "filename" : "resources\\images\\blocks and backgrounds.png",
-            "size" : [16, 8],
-            "offset" : [32, 64]
-        },
-        "green" : {
-            "filename" : "resources\\images\\blocks and backgrounds.png",
-            "size" : [16, 8],
-            "offset" : [48, 64]
-        },
-        "red" : {
-            "filename" : "resources\\images\\blocks and backgrounds.png",
-            "size" : [16, 8],
-            "offset" : [0, 72]
-        },
-        "blue" : {
-            "filename" : "resources\\images\\blocks and backgrounds.png",
-            "size" : [16, 8],
-            "offset" : [16, 72]
-        },
-        "purple" : {
-            "filename" : "resources\\images\\blocks and backgrounds.png",
-            "size" : [16, 8],
-            "offset" : [32, 72]
-        },
-        "orange" : {
-            "filename" : "resources\\images\\blocks and backgrounds.png",
-            "size" : [16, 8],
-            "offset" : [48, 72]
-        },
-        "silver" : {
-            "filename" : "resources\\images\\blocks and backgrounds.png",
-            "size" : [16, 8],
-            "offset" : [0, 80]
-        },
-        "silver1" : {
-            "filename" : "resources\\images\\blocks and backgrounds.png",
-            "size" : [16, 8],
-            "offset" : [16, 80]
-        },
-        "silver2" : {
-            "filename" : "resources\\images\\blocks and backgrounds.png",
-            "size" : [16, 8],
-            "offset" : [32, 80]
-        },
-        "silver3" : {
-            "filename" : "resources\\images\\blocks and backgrounds.png",
-            "size" : [16, 8],
-            "offset" : [48, 80]
-        },
-        "silver4" : {
-            "filename" : "resources\\images\\blocks and backgrounds.png",
-            "size" : [16, 8],
-            "offset" : [64, 80]
-        },
-        "silver5" : {
-            "filename" : "resources\\images\\blocks and backgrounds.png",
-            "size" : [16, 8],
-            "offset" : [80, 80]
-        },
-        "gold" : {
-            "filename" : "resources\\images\\blocks and backgrounds.png",
-            "size" : [16, 8],
-            "offset" : [0, 88]
-        },
-        "gold1" : {
-            "filename" : "resources\\images\\blocks and backgrounds.png",
-            "size" : [16, 8],
-            "offset" : [16, 88]
-        },
-        "gold2" : {
-            "filename" : "resources\\images\\blocks and backgrounds.png",
-            "size" : [16, 8],
-            "offset" : [32, 88]
-        },
-        "gold3" : {
-            "filename" : "resources\\images\\blocks and backgrounds.png",
-            "size" : [16, 8],
-            "offset" : [48, 88]
-        },
-        "gold4" : {
-            "filename" : "resources\\images\\blocks and backgrounds.png",
-            "size" : [16, 8],
-            "offset" : [64, 88]
-        },
-        "gold5" : {
-            "filename" : "resources\\images\\blocks and backgrounds.png",
-            "size" : [16, 8],
-            "offset" : [80, 88]
-        },
-        "B0" : {
-            "filename" : "resources\\images\\capsules.png",
-            "size" : [16, 8],
-            "offset" : [0, 0]
-        },
-        "B1" : {
-            "filename" : "resources\\images\\capsules.png",
-            "size" : [16, 8],
-            "offset" : [16, 0]
-        },
-        "B2" : {
-            "filename" : "resources\\images\\capsules.png",
-            "size" : [16, 8],
-            "offset" : [32, 0]
-        },
-        "B3" : {
-            "filename" : "resources\\images\\capsules.png",
-            "size" : [16, 8],
-            "offset" : [48, 0]
-        },
-        "B4" : {
-            "filename" : "resources\\images\\capsules.png",
-            "size" : [16, 8],
-            "offset" : [64, 0]
-        },
-        "B5" : {
-            "filename" : "resources\\images\\capsules.png",
-            "size" : [16, 8],
-            "offset" : [80, 0]
-        },
-        "C0" : {
-            "filename" : "resources\\images\\capsules.png",
-            "size" : [16, 8],
-            "offset" : [0, 8]
-        },
-        "C1" : {
-            "filename" : "resources\\images\\capsules.png",
-            "size" : [16, 8],
-            "offset" : [16, 8]
-        },
-        "C2" : {
-            "filename" : "resources\\images\\capsules.png",
-            "size" : [16, 8],
-            "offset" : [32, 8]
-        },
-        "C3" : {
-            "filename" : "resources\\images\\capsules.png",
-            "size" : [16, 8],
-            "offset" : [48, 8]
-        },
-        "C4" : {
-            "filename" : "resources\\images\\capsules.png",
-            "size" : [16, 8],
-            "offset" : [64, 8]
-        },
-        "C5" : {
-            "filename" : "resources\\images\\capsules.png",
-            "size" : [16, 8],
-            "offset" : [80, 8]
-        },
-        "D0" : {
-            "filename" : "resources\\images\\capsules.png",
-            "size" : [16, 8],
-            "offset" : [0, 16]
-        },
-        "D1" : {
-            "filename" : "resources\\images\\capsules.png",
-            "size" : [16, 8],
-            "offset" : [16, 16]
-        },
-        "D2" : {
-            "filename" : "resources\\images\\capsules.png",
-            "size" : [16, 8],
-            "offset" : [32, 16]
-        },
-        "D3" : {
-            "filename" : "resources\\images\\capsules.png",
-            "size" : [16, 8],
-            "offset" : [48, 16]
-        },
-        "D4" : {
-            "filename" : "resources\\images\\capsules.png",
-            "size" : [16, 8],
-            "offset" : [64, 16]
-        },
-        "D5" : {
-            "filename" : "resources\\images\\capsules.png",
-            "size" : [16, 8],
-            "offset" : [80, 16]
-        },
-        "E0" : {
-            "filename" : "resources\\images\\capsules.png",
-            "size" : [16, 8],
-            "offset" : [0, 24]
-        },
-        "E1" : {
-            "filename" : "resources\\images\\capsules.png",
-            "size" : [16, 8],
-            "offset" : [16, 24]
-        },
-        "E2" : {
-            "filename" : "resources\\images\\capsules.png",
-            "size" : [16, 8],
-            "offset" : [32, 24]
-        },
-        "E3" : {
-            "filename" : "resources\\images\\capsules.png",
-            "size" : [16, 8],
-            "offset" : [48, 24]
-        },
-        "E4" : {
-            "filename" : "resources\\images\\capsules.png",
-            "size" : [16, 8],
-            "offset" : [64, 24]
-        },
-        "E5" : {
-            "filename" : "resources\\images\\capsules.png",
-            "size" : [16, 8],
-            "offset" : [80, 24]
-        },
-        "L0" : {
-            "filename" : "resources\\images\\capsules.png",
-            "size" : [16, 8],
-            "offset" : [0, 32]
-        },
-        "L1" : {
-            "filename" : "resources\\images\\capsules.png",
-            "size" : [16, 8],
-            "offset" : [16, 32]
-        },
-        "L2" : {
-            "filename" : "resources\\images\\capsules.png",
-            "size" : [16, 8],
-            "offset" : [32, 32]
-        },
-        "L3" : {
-            "filename" : "resources\\images\\capsules.png",
-            "size" : [16, 8],
-            "offset" : [48, 32]
-        },
-        "L4" : {
-            "filename" : "resources\\images\\capsules.png",
-            "size" : [16, 8],
-            "offset" : [64, 32]
-        },
-        "L5" : {
-            "filename" : "resources\\images\\capsules.png",
-            "size" : [16, 8],
-            "offset" : [80, 32]
-        },
-        "P0" : {
-            "filename" : "resources\\images\\capsules.png",
-            "size" : [16, 8],
-            "offset" : [0, 40]
-        },
-        "P1" : {
-            "filename" : "resources\\images\\capsules.png",
-            "size" : [16, 8],
-            "offset" : [16, 40]
-        },
-        "P2" : {
-            "filename" : "resources\\images\\capsules.png",
-            "size" : [16, 8],
-            "offset" : [32, 40]
-        },
-        "P3" : {
-            "filename" : "resources\\images\\capsules.png",
-            "size" : [16, 8],
-            "offset" : [48, 40]
-        },
-        "P4" : {
-            "filename" : "resources\\images\\capsules.png",
-            "size" : [16, 8],
-            "offset" : [64, 40]
-        },
-        "P5" : {
-            "filename" : "resources\\images\\capsules.png",
-            "size" : [16, 8],
-            "offset" : [80, 40]
-        },
-        "S0" : {
-            "filename" : "resources\\images\\capsules.png",
-            "size" : [16, 8],
-            "offset" : [0, 48]
-        },
-        "S1" : {
-            "filename" : "resources\\images\\capsules.png",
-            "size" : [16, 8],
-            "offset" : [16, 48]
-        },
-        "S2" : {
-            "filename" : "resources\\images\\capsules.png",
-            "size" : [16, 8],
-            "offset" : [32, 48]
-        },
-        "S3" : {
-            "filename" : "resources\\images\\capsules.png",
-            "size" : [16, 8],
-            "offset" : [48, 48]
-        },
-        "S4" : {
-            "filename" : "resources\\images\\capsules.png",
-            "size" : [16, 8],
-            "offset" : [64, 48]
-        },
-        "S5" : {
-            "filename" : "resources\\images\\capsules.png",
-            "size" : [16, 8],
-            "offset" : [80, 48]
-        },
-        "alien0_0" : {
-            "filename" : "resources\\images\\enemies.png",
-            "size" : [16, 16],
-            "offset" : [0, 0]
-        },
-        "alien0_1" : {
-            "filename" : "resources\\images\\enemies.png",
-            "size" : [16, 16],
-            "offset" : [16, 0]
-        },
-        "alien0_2" : {
-            "filename" : "resources\\images\\enemies.png",
-            "size" : [16, 16],
-            "offset" : [32, 0]
-        },
-        "alien0_3" : {
-            "filename" : "resources\\images\\enemies.png",
-            "size" : [16, 16],
-            "offset" : [48, 0]
-        },
-        "alien0_4" : {
-            "filename" : "resources\\images\\enemies.png",
-            "size" : [16, 16],
-            "offset" : [64, 0]
-        },
-        "alien0_5" : {
-            "filename" : "resources\\images\\enemies.png",
-            "size" : [16, 16],
-            "offset" : [80, 0]
-        },
-        "alien0_6" : {
-            "filename" : "resources\\images\\enemies.png",
-            "size" : [16, 16],
-            "offset" : [96, 0]
-        },
-        "alien0_7" : {
-            "filename" : "resources\\images\\enemies.png",
-            "size" : [16, 16],
-            "offset" : [112, 0]
-        },
-        "alien1_0" : {
-            "filename" : "resources\\images\\enemies.png",
-            "size" : [16, 16],
-            "offset" : [0, 16]
-        },
-        "alien1_1" : {
-            "filename" : "resources\\images\\enemies.png",
-            "size" : [16, 16],
-            "offset" : [16, 16]
-        },
-        "alien1_2" : {
-            "filename" : "resources\\images\\enemies.png",
-            "size" : [16, 16],
-            "offset" : [32, 16]
-        },
-        "alien1_3" : {
-            "filename" : "resources\\images\\enemies.png",
-            "size" : [16, 16],
-            "offset" : [48, 16]
-        },
-        "alien1_4" : {
-            "filename" : "resources\\images\\enemies.png",
-            "size" : [16, 16],
-            "offset" : [64, 16]
-        },
-        "alien1_5" : {
-            "filename" : "resources\\images\\enemies.png",
-            "size" : [16, 16],
-            "offset" : [80, 16]
-        },
-        "alien1_6" : {
-            "filename" : "resources\\images\\enemies.png",
-            "size" : [16, 16],
-            "offset" : [96, 16]
-        },
-        "alien2_0" : {
-            "filename" : "resources\\images\\enemies.png",
-            "size" : [16, 16],
-            "offset" : [0, 32]
-        },
-        "alien2_1" : {
-            "filename" : "resources\\images\\enemies.png",
-            "size" : [16, 16],
-            "offset" : [16, 32]
-        },
-        "alien2_2" : {
-            "filename" : "resources\\images\\enemies.png",
-            "size" : [16, 16],
-            "offset" : [32, 32]
-        },
-        "alien2_3" : {
-            "filename" : "resources\\images\\enemies.png",
-            "size" : [16, 16],
-            "offset" : [48, 32]
-        },
-        "alien2_4" : {
-            "filename" : "resources\\images\\enemies.png",
-            "size" : [16, 16],
-            "offset" : [64, 32]
-        },
-        "alien2_5" : {
-            "filename" : "resources\\images\\enemies.png",
-            "size" : [16, 16],
-            "offset" : [80, 32]
-        },
-        "alien3_0" : {
-            "filename" : "resources\\images\\enemies.png",
-            "size" : [16, 16],
-            "offset" : [0, 48]
-        },
-        "alien3_1" : {
-            "filename" : "resources\\images\\enemies.png",
-            "size" : [16, 16],
-            "offset" : [16, 48]
-        },
-        "alien3_2" : {
-            "filename" : "resources\\images\\enemies.png",
-            "size" : [16, 16],
-            "offset" : [32, 48]
-        },
-        "alien3_3" : {
-            "filename" : "resources\\images\\enemies.png",
-            "size" : [16, 16],
-            "offset" : [48, 48]
-        },
-        "alien3_4" : {
-            "filename" : "resources\\images\\enemies.png",
-            "size" : [16, 16],
-            "offset" : [64, 48]
-        },
-        "alien3_5" : {
-            "filename" : "resources\\images\\enemies.png",
-            "size" : [16, 16],
-            "offset" : [80, 48]
-        },
-        "alien3_6" : {
-            "filename" : "resources\\images\\enemies.png",
-            "size" : [16, 16],
-            "offset" : [96, 48]
-        },
-        "alien3_7" : {
-            "filename" : "resources\\images\\enemies.png",
-            "size" : [16, 16],
-            "offset" : [112, 48]
-        },
-        "dead_0" : {
-            "filename" : "resources\\images\\enemies.png",
-            "size" : [16, 16],
-            "offset" : [0, 64]
-        },
-        "dead_1" : {
-            "filename" : "resources\\images\\enemies.png",
-            "size" : [16, 16],
-            "offset" : [16, 64]
-        },
-        "dead_2" : {
-            "filename" : "resources\\images\\enemies.png",
-            "size" : [16, 16],
-            "offset" : [32, 64]
-        },
-        "dead_3" : {
-            "filename" : "resources\\images\\enemies.png",
-            "size" : [16, 16],
-            "offset" : [48, 64]
-        },
-        "arkanoid" : {
-            "filename" : "resources\\images\\Arkanoid.png",
-            "size" : [122, 23],
-            "offset" : [763, 1685]
-        },
-        "taito" : {
-            "filename" : "resources\\images\\Arkanoid.png",
-            "size" : [72, 15],
-            "offset" : [788, 1797]
-        },
-        "copyright" : {
-            "filename" : "resources\\images\\Arkanoid.png",
-            "size" : [8, 8],
-            "offset" : [728, 1820]
-        },
-        "cursor" : {
-            "filename" : "resources\\images\\Arkanoid.png",
-            "size" : [8, 8],
-            "offset" : [780, 1748]
-        },
-        "doh" : {
-            "filename" : "resources\\images\\doh.png",
-            "size" : [64, 96],
-            "offset" : [0, 0]
-        },
-        "doh_open" : {
-            "filename" : "resources\\images\\doh.png",
-            "size" : [64, 96],
-            "offset" : [64, 0]
-        },
-        "doh_hit" : {
-            "filename" : "resources\\images\\doh.png",
-            "size" : [64, 96],
-            "offset" : [128, 0]
-        },
-        "doh_hit_open" : {
-            "filename" : "resources\\images\\doh.png",
-            "size" : [64, 96],
-            "offset" : [192, 0]
-        },
-        "doh_shot0" : {
-            "filename" : "resources\\images\\doh.png",
-            "size" : [8, 8],
-            "offset" : [0, 96]
-        },
-        "doh_shot1" : {
-            "filename" : "resources\\images\\doh.png",
-            "size" : [8, 8],
-            "offset" : [8, 96]
-        },
-        "doh_shot2" : {
-            "filename" : "resources\\images\\doh.png",
-            "size" : [8, 8],
-            "offset" : [16, 96]
-        },
-        "doh_shot3" : {
-            "filename" : "resources\\images\\doh.png",
-            "size" : [8, 8],
-            "offset" : [24, 96]
-        },
-        "doh_shot4" : {
-            "filename" : "resources\\images\\doh.png",
-            "size" : [8, 8],
-            "offset" : [32, 96]
-        },
-        "doh_shot5" : {
-            "filename" : "resources\\images\\doh.png",
-            "size" : [8, 8],
-            "offset" : [40, 96]
-        },
-        "doh_shot6" : {
-            "filename" : "resources\\images\\doh.png",
-            "size" : [8, 8],
-            "offset" : [48, 96]
-        },
-        "doh_shot7" : {
-            "filename" : "resources\\images\\doh.png",
-            "size" : [8, 8],
-            "offset" : [56, 96]
-        },
-        "doh_dead0" : {
-            "filename" : "resources\\images\\doh.png",
-            "size" : [64, 88],
-            "offset" : [0, 8]
-        },
-        "doh_dead1" : {
-            "filename" : "resources\\images\\doh.png",
-            "size" : [64, 80],
-            "offset" : [0, 16]
-        },
-        "doh_dead2" : {
-            "filename" : "resources\\images\\doh.png",
-            "size" : [64, 72],
-            "offset" : [0, 24]
-        },
-        "doh_dead3" : {
-            "filename" : "resources\\images\\doh.png",
-            "size" : [64, 64],
-            "offset" : [0, 32]
-        },
-        "doh_dead4" : {
-            "filename" : "resources\\images\\doh.png",
-            "size" : [64, 56],
-            "offset" : [0, 40]
-        },
-        "doh_dead5" : {
-            "filename" : "resources\\images\\doh.png",
-            "size" : [64, 48],
-            "offset" : [0, 48]
-        },
-        "doh_dead6" : {
-            "filename" : "resources\\images\\doh.png",
-            "size" : [64, 40],
-            "offset" : [0, 56]
-        },
-        "doh_dead7" : {
-            "filename" : "resources\\images\\doh.png",
-            "size" : [64, 32],
-            "offset" : [0, 64]
-        },
-        "doh_dead8" : {
-            "filename" : "resources\\images\\doh.png",
-            "size" : [64, 24],
-            "offset" : [0, 72]
-        },
-        "doh_dead9" : {
-            "filename" : "resources\\images\\doh.png",
-            "size" : [64, 16],
-            "offset" : [0, 80]
-        },
-        "doh_dead10" : {
-            "filename" : "resources\\images\\doh.png",
-            "size" : [64, 8],
-            "offset" : [0, 88]
-        },
-        "final" : {
-            "filename" : "resources\\images\\ending.png",
-            "size" : [256, 232],
-            "offset" : [0, 0]
-        },
-        "final_doh0" : {
-            "filename" : "resources\\images\\ending.png",
-            "size" : [32, 80],
-            "offset" : [0, 248]
-        },
-        "final_doh1" : {
-            "filename" : "resources\\images\\ending.png",
-            "size" : [32, 80],
-            "offset" : [32, 248]
-        },
-        "final_doh2" : {
-            "filename" : "resources\\images\\ending.png",
-            "size" : [32, 80],
-            "offset" : [64, 248]
-        },
-        "final_doh3" : {
-            "filename" : "resources\\images\\ending.png",
-            "size" : [32, 80],
-            "offset" : [96, 248]
+    "images": {
+        "nesfont8": {
+            "filename": "resources\\images\\nesfont8.png"
+        },
+        "nesfont8red": {
+            "filename": "resources\\images\\nesfont8red.png"
+        },
+        "paddle": {
+            "filename": "resources\\images\\vaus.png",
+            "size": [
+                32,
+                8
+            ],
+            "offset": [
+                0,
+                0
+            ]
+        },
+        "paddle_grow1": {
+            "filename": "resources\\images\\vaus.png",
+            "size": [
+                36,
+                8
+            ],
+            "offset": [
+                0,
+                24
+            ]
+        },
+        "paddle_grow2": {
+            "filename": "resources\\images\\vaus.png",
+            "size": [
+                40,
+                8
+            ],
+            "offset": [
+                36,
+                24
+            ]
+        },
+        "paddle_grow3": {
+            "filename": "resources\\images\\vaus.png",
+            "size": [
+                44,
+                8
+            ],
+            "offset": [
+                76,
+                24
+            ]
+        },
+        "paddle_break1": {
+            "filename": "resources\\images\\vaus.png",
+            "size": [
+                24,
+                8
+            ],
+            "offset": [
+                0,
+                0
+            ]
+        },
+        "paddle_break2": {
+            "filename": "resources\\images\\vaus.png",
+            "size": [
+                16,
+                8
+            ],
+            "offset": [
+                0,
+                0
+            ]
+        },
+        "paddle_break3": {
+            "filename": "resources\\images\\vaus.png",
+            "size": [
+                8,
+                8
+            ],
+            "offset": [
+                0,
+                0
+            ]
+        },
+        "laser_break1": {
+            "filename": "resources\\images\\vaus.png",
+            "size": [
+                24,
+                8
+            ],
+            "offset": [
+                0,
+                16
+            ]
+        },
+        "laser_break2": {
+            "filename": "resources\\images\\vaus.png",
+            "size": [
+                16,
+                8
+            ],
+            "offset": [
+                0,
+                16
+            ]
+        },
+        "laser_break3": {
+            "filename": "resources\\images\\vaus.png",
+            "size": [
+                8,
+                8
+            ],
+            "offset": [
+                0,
+                16
+            ]
+        },
+        "paddle_ext_break1": {
+            "filename": "resources\\images\\vaus.png",
+            "size": [
+                40,
+                8
+            ],
+            "offset": [
+                0,
+                8
+            ]
+        },
+        "paddle_ext_break2": {
+            "filename": "resources\\images\\vaus.png",
+            "size": [
+                32,
+                8
+            ],
+            "offset": [
+                0,
+                8
+            ]
+        },
+        "paddle_lasershrink1": {
+            "filename": "resources\\images\\vaus.png",
+            "size": [
+                28,
+                8
+            ],
+            "offset": [
+                48,
+                0
+            ]
+        },
+        "paddle_lasershrink2": {
+            "filename": "resources\\images\\vaus.png",
+            "size": [
+                24,
+                8
+            ],
+            "offset": [
+                76,
+                0
+            ]
+        },
+        "paddle_lasershrink3": {
+            "filename": "resources\\images\\vaus.png",
+            "size": [
+                20,
+                8
+            ],
+            "offset": [
+                100,
+                0
+            ]
+        },
+        "paddle_lasershrink4": {
+            "filename": "resources\\images\\vaus.png",
+            "size": [
+                16,
+                8
+            ],
+            "offset": [
+                8,
+                0
+            ]
+        },
+        "paddle_lasergrow1": {
+            "filename": "resources\\images\\vaus.png",
+            "size": [
+                16,
+                8
+            ],
+            "offset": [
+                8,
+                16
+            ]
+        },
+        "paddle_lasergrow2": {
+            "filename": "resources\\images\\vaus.png",
+            "size": [
+                20,
+                8
+            ],
+            "offset": [
+                100,
+                8
+            ]
+        },
+        "paddle_lasergrow3": {
+            "filename": "resources\\images\\vaus.png",
+            "size": [
+                24,
+                8
+            ],
+            "offset": [
+                76,
+                8
+            ]
+        },
+        "paddle_lasergrow4": {
+            "filename": "resources\\images\\vaus.png",
+            "size": [
+                28,
+                8
+            ],
+            "offset": [
+                48,
+                8
+            ]
+        },
+        "explode1": {
+            "filename": "resources\\images\\vaus.png",
+            "size": [
+                32,
+                8
+            ],
+            "offset": [
+                0,
+                40
+            ]
+        },
+        "explode2": {
+            "filename": "resources\\images\\vaus.png",
+            "size": [
+                42,
+                17
+            ],
+            "offset": [
+                40,
+                36
+            ]
+        },
+        "explode3": {
+            "filename": "resources\\images\\vaus.png",
+            "size": [
+                44,
+                23
+            ],
+            "offset": [
+                91,
+                34
+            ]
+        },
+        "life": {
+            "filename": "resources\\images\\Arkanoid.png",
+            "size": [
+                16,
+                5
+            ],
+            "offset": [
+                247,
+                1838
+            ]
+        },
+        "paddle_ext": {
+            "filename": "resources\\images\\vaus.png",
+            "size": [
+                48,
+                8
+            ],
+            "offset": [
+                0,
+                8
+            ]
+        },
+        "paddle_laser": {
+            "filename": "resources\\images\\vaus.png",
+            "size": [
+                32,
+                8
+            ],
+            "offset": [
+                0,
+                16
+            ]
+        },
+        "ball": {
+            "filename": "resources\\images\\vaus.png",
+            "size": [
+                5,
+                4
+            ],
+            "offset": [
+                40,
+                0
+            ]
+        },
+        "laser": {
+            "filename": "resources\\images\\vaus.png",
+            "size": [
+                16,
+                8
+            ],
+            "offset": [
+                40,
+                16
+            ]
+        },
+        "bg0": {
+            "filename": "resources\\images\\fields.png",
+            "size": [
+                176,
+                224
+            ],
+            "offset": [
+                8,
+                8
+            ]
+        },
+        "bg1": {
+            "filename": "resources\\images\\fields.png",
+            "size": [
+                176,
+                224
+            ],
+            "offset": [
+                200,
+                8
+            ]
+        },
+        "bg2": {
+            "filename": "resources\\images\\fields.png",
+            "size": [
+                176,
+                224
+            ],
+            "offset": [
+                392,
+                8
+            ]
+        },
+        "bg3": {
+            "filename": "resources\\images\\fields.png",
+            "size": [
+                176,
+                224
+            ],
+            "offset": [
+                584,
+                8
+            ]
+        },
+        "bg_final": {
+            "filename": "resources\\images\\fields.png",
+            "size": [
+                176,
+                224
+            ],
+            "offset": [
+                776,
+                8
+            ]
+        },
+        "wall_left": {
+            "filename": "resources\\images\\fields.png",
+            "size": [
+                8,
+                232
+            ],
+            "offset": [
+                0,
+                0
+            ]
+        },
+        "wall_right": {
+            "filename": "resources\\images\\fields.png",
+            "size": [
+                8,
+                232
+            ],
+            "offset": [
+                184,
+                0
+            ]
+        },
+        "wall_top": {
+            "filename": "resources\\images\\fields.png",
+            "size": [
+                192,
+                8
+            ],
+            "offset": [
+                0,
+                0
+            ]
+        },
+        "inlet1": {
+            "filename": "resources\\images\\blocks and backgrounds.png",
+            "size": [
+                24,
+                8
+            ],
+            "offset": [
+                64,
+                48
+            ]
+        },
+        "inlet2": {
+            "filename": "resources\\images\\blocks and backgrounds.png",
+            "size": [
+                24,
+                8
+            ],
+            "offset": [
+                64,
+                56
+            ]
+        },
+        "inlet3": {
+            "filename": "resources\\images\\blocks and backgrounds.png",
+            "size": [
+                24,
+                8
+            ],
+            "offset": [
+                64,
+                64
+            ]
+        },
+        "inlet4": {
+            "filename": "resources\\images\\blocks and backgrounds.png",
+            "size": [
+                24,
+                8
+            ],
+            "offset": [
+                64,
+                72
+            ]
+        },
+        "break1": {
+            "filename": "resources\\images\\blocks and backgrounds.png",
+            "size": [
+                8,
+                24
+            ],
+            "offset": [
+                104,
+                32
+            ]
+        },
+        "break2": {
+            "filename": "resources\\images\\blocks and backgrounds.png",
+            "size": [
+                8,
+                24
+            ],
+            "offset": [
+                112,
+                32
+            ]
+        },
+        "break3": {
+            "filename": "resources\\images\\blocks and backgrounds.png",
+            "size": [
+                8,
+                24
+            ],
+            "offset": [
+                120,
+                32
+            ]
+        },
+        "white": {
+            "filename": "resources\\images\\blocks and backgrounds.png",
+            "size": [
+                16,
+                8
+            ],
+            "offset": [
+                0,
+                64
+            ]
+        },
+        "pink": {
+            "filename": "resources\\images\\blocks and backgrounds.png",
+            "size": [
+                16,
+                8
+            ],
+            "offset": [
+                16,
+                64
+            ]
+        },
+        "cyan": {
+            "filename": "resources\\images\\blocks and backgrounds.png",
+            "size": [
+                16,
+                8
+            ],
+            "offset": [
+                32,
+                64
+            ]
+        },
+        "green": {
+            "filename": "resources\\images\\blocks and backgrounds.png",
+            "size": [
+                16,
+                8
+            ],
+            "offset": [
+                48,
+                64
+            ]
+        },
+        "red": {
+            "filename": "resources\\images\\blocks and backgrounds.png",
+            "size": [
+                16,
+                8
+            ],
+            "offset": [
+                0,
+                72
+            ]
+        },
+        "blue": {
+            "filename": "resources\\images\\blocks and backgrounds.png",
+            "size": [
+                16,
+                8
+            ],
+            "offset": [
+                16,
+                72
+            ]
+        },
+        "purple": {
+            "filename": "resources\\images\\blocks and backgrounds.png",
+            "size": [
+                16,
+                8
+            ],
+            "offset": [
+                32,
+                72
+            ]
+        },
+        "orange": {
+            "filename": "resources\\images\\blocks and backgrounds.png",
+            "size": [
+                16,
+                8
+            ],
+            "offset": [
+                48,
+                72
+            ]
+        },
+        "silver": {
+            "filename": "resources\\images\\blocks and backgrounds.png",
+            "size": [
+                16,
+                8
+            ],
+            "offset": [
+                0,
+                80
+            ]
+        },
+        "silver1": {
+            "filename": "resources\\images\\blocks and backgrounds.png",
+            "size": [
+                16,
+                8
+            ],
+            "offset": [
+                16,
+                80
+            ]
+        },
+        "silver2": {
+            "filename": "resources\\images\\blocks and backgrounds.png",
+            "size": [
+                16,
+                8
+            ],
+            "offset": [
+                32,
+                80
+            ]
+        },
+        "silver3": {
+            "filename": "resources\\images\\blocks and backgrounds.png",
+            "size": [
+                16,
+                8
+            ],
+            "offset": [
+                48,
+                80
+            ]
+        },
+        "silver4": {
+            "filename": "resources\\images\\blocks and backgrounds.png",
+            "size": [
+                16,
+                8
+            ],
+            "offset": [
+                64,
+                80
+            ]
+        },
+        "silver5": {
+            "filename": "resources\\images\\blocks and backgrounds.png",
+            "size": [
+                16,
+                8
+            ],
+            "offset": [
+                80,
+                80
+            ]
+        },
+        "gold": {
+            "filename": "resources\\images\\blocks and backgrounds.png",
+            "size": [
+                16,
+                8
+            ],
+            "offset": [
+                0,
+                88
+            ]
+        },
+        "gold1": {
+            "filename": "resources\\images\\blocks and backgrounds.png",
+            "size": [
+                16,
+                8
+            ],
+            "offset": [
+                16,
+                88
+            ]
+        },
+        "gold2": {
+            "filename": "resources\\images\\blocks and backgrounds.png",
+            "size": [
+                16,
+                8
+            ],
+            "offset": [
+                32,
+                88
+            ]
+        },
+        "gold3": {
+            "filename": "resources\\images\\blocks and backgrounds.png",
+            "size": [
+                16,
+                8
+            ],
+            "offset": [
+                48,
+                88
+            ]
+        },
+        "gold4": {
+            "filename": "resources\\images\\blocks and backgrounds.png",
+            "size": [
+                16,
+                8
+            ],
+            "offset": [
+                64,
+                88
+            ]
+        },
+        "gold5": {
+            "filename": "resources\\images\\blocks and backgrounds.png",
+            "size": [
+                16,
+                8
+            ],
+            "offset": [
+                80,
+                88
+            ]
+        },
+        "B0": {
+            "filename": "resources\\images\\capsules.png",
+            "size": [
+                16,
+                8
+            ],
+            "offset": [
+                0,
+                0
+            ]
+        },
+        "B1": {
+            "filename": "resources\\images\\capsules.png",
+            "size": [
+                16,
+                8
+            ],
+            "offset": [
+                16,
+                0
+            ]
+        },
+        "B2": {
+            "filename": "resources\\images\\capsules.png",
+            "size": [
+                16,
+                8
+            ],
+            "offset": [
+                32,
+                0
+            ]
+        },
+        "B3": {
+            "filename": "resources\\images\\capsules.png",
+            "size": [
+                16,
+                8
+            ],
+            "offset": [
+                48,
+                0
+            ]
+        },
+        "B4": {
+            "filename": "resources\\images\\capsules.png",
+            "size": [
+                16,
+                8
+            ],
+            "offset": [
+                64,
+                0
+            ]
+        },
+        "B5": {
+            "filename": "resources\\images\\capsules.png",
+            "size": [
+                16,
+                8
+            ],
+            "offset": [
+                80,
+                0
+            ]
+        },
+        "C0": {
+            "filename": "resources\\images\\capsules.png",
+            "size": [
+                16,
+                8
+            ],
+            "offset": [
+                0,
+                8
+            ]
+        },
+        "C1": {
+            "filename": "resources\\images\\capsules.png",
+            "size": [
+                16,
+                8
+            ],
+            "offset": [
+                16,
+                8
+            ]
+        },
+        "C2": {
+            "filename": "resources\\images\\capsules.png",
+            "size": [
+                16,
+                8
+            ],
+            "offset": [
+                32,
+                8
+            ]
+        },
+        "C3": {
+            "filename": "resources\\images\\capsules.png",
+            "size": [
+                16,
+                8
+            ],
+            "offset": [
+                48,
+                8
+            ]
+        },
+        "C4": {
+            "filename": "resources\\images\\capsules.png",
+            "size": [
+                16,
+                8
+            ],
+            "offset": [
+                64,
+                8
+            ]
+        },
+        "C5": {
+            "filename": "resources\\images\\capsules.png",
+            "size": [
+                16,
+                8
+            ],
+            "offset": [
+                80,
+                8
+            ]
+        },
+        "D0": {
+            "filename": "resources\\images\\capsules.png",
+            "size": [
+                16,
+                8
+            ],
+            "offset": [
+                0,
+                16
+            ]
+        },
+        "D1": {
+            "filename": "resources\\images\\capsules.png",
+            "size": [
+                16,
+                8
+            ],
+            "offset": [
+                16,
+                16
+            ]
+        },
+        "D2": {
+            "filename": "resources\\images\\capsules.png",
+            "size": [
+                16,
+                8
+            ],
+            "offset": [
+                32,
+                16
+            ]
+        },
+        "D3": {
+            "filename": "resources\\images\\capsules.png",
+            "size": [
+                16,
+                8
+            ],
+            "offset": [
+                48,
+                16
+            ]
+        },
+        "D4": {
+            "filename": "resources\\images\\capsules.png",
+            "size": [
+                16,
+                8
+            ],
+            "offset": [
+                64,
+                16
+            ]
+        },
+        "D5": {
+            "filename": "resources\\images\\capsules.png",
+            "size": [
+                16,
+                8
+            ],
+            "offset": [
+                80,
+                16
+            ]
+        },
+        "E0": {
+            "filename": "resources\\images\\capsules.png",
+            "size": [
+                16,
+                8
+            ],
+            "offset": [
+                0,
+                24
+            ]
+        },
+        "E1": {
+            "filename": "resources\\images\\capsules.png",
+            "size": [
+                16,
+                8
+            ],
+            "offset": [
+                16,
+                24
+            ]
+        },
+        "E2": {
+            "filename": "resources\\images\\capsules.png",
+            "size": [
+                16,
+                8
+            ],
+            "offset": [
+                32,
+                24
+            ]
+        },
+        "E3": {
+            "filename": "resources\\images\\capsules.png",
+            "size": [
+                16,
+                8
+            ],
+            "offset": [
+                48,
+                24
+            ]
+        },
+        "E4": {
+            "filename": "resources\\images\\capsules.png",
+            "size": [
+                16,
+                8
+            ],
+            "offset": [
+                64,
+                24
+            ]
+        },
+        "E5": {
+            "filename": "resources\\images\\capsules.png",
+            "size": [
+                16,
+                8
+            ],
+            "offset": [
+                80,
+                24
+            ]
+        },
+        "L0": {
+            "filename": "resources\\images\\capsules.png",
+            "size": [
+                16,
+                8
+            ],
+            "offset": [
+                0,
+                32
+            ]
+        },
+        "L1": {
+            "filename": "resources\\images\\capsules.png",
+            "size": [
+                16,
+                8
+            ],
+            "offset": [
+                16,
+                32
+            ]
+        },
+        "L2": {
+            "filename": "resources\\images\\capsules.png",
+            "size": [
+                16,
+                8
+            ],
+            "offset": [
+                32,
+                32
+            ]
+        },
+        "L3": {
+            "filename": "resources\\images\\capsules.png",
+            "size": [
+                16,
+                8
+            ],
+            "offset": [
+                48,
+                32
+            ]
+        },
+        "L4": {
+            "filename": "resources\\images\\capsules.png",
+            "size": [
+                16,
+                8
+            ],
+            "offset": [
+                64,
+                32
+            ]
+        },
+        "L5": {
+            "filename": "resources\\images\\capsules.png",
+            "size": [
+                16,
+                8
+            ],
+            "offset": [
+                80,
+                32
+            ]
+        },
+        "P0": {
+            "filename": "resources\\images\\capsules.png",
+            "size": [
+                16,
+                8
+            ],
+            "offset": [
+                0,
+                40
+            ]
+        },
+        "P1": {
+            "filename": "resources\\images\\capsules.png",
+            "size": [
+                16,
+                8
+            ],
+            "offset": [
+                16,
+                40
+            ]
+        },
+        "P2": {
+            "filename": "resources\\images\\capsules.png",
+            "size": [
+                16,
+                8
+            ],
+            "offset": [
+                32,
+                40
+            ]
+        },
+        "P3": {
+            "filename": "resources\\images\\capsules.png",
+            "size": [
+                16,
+                8
+            ],
+            "offset": [
+                48,
+                40
+            ]
+        },
+        "P4": {
+            "filename": "resources\\images\\capsules.png",
+            "size": [
+                16,
+                8
+            ],
+            "offset": [
+                64,
+                40
+            ]
+        },
+        "P5": {
+            "filename": "resources\\images\\capsules.png",
+            "size": [
+                16,
+                8
+            ],
+            "offset": [
+                80,
+                40
+            ]
+        },
+        "S0": {
+            "filename": "resources\\images\\capsules.png",
+            "size": [
+                16,
+                8
+            ],
+            "offset": [
+                0,
+                48
+            ]
+        },
+        "S1": {
+            "filename": "resources\\images\\capsules.png",
+            "size": [
+                16,
+                8
+            ],
+            "offset": [
+                16,
+                48
+            ]
+        },
+        "S2": {
+            "filename": "resources\\images\\capsules.png",
+            "size": [
+                16,
+                8
+            ],
+            "offset": [
+                32,
+                48
+            ]
+        },
+        "S3": {
+            "filename": "resources\\images\\capsules.png",
+            "size": [
+                16,
+                8
+            ],
+            "offset": [
+                48,
+                48
+            ]
+        },
+        "S4": {
+            "filename": "resources\\images\\capsules.png",
+            "size": [
+                16,
+                8
+            ],
+            "offset": [
+                64,
+                48
+            ]
+        },
+        "S5": {
+            "filename": "resources\\images\\capsules.png",
+            "size": [
+                16,
+                8
+            ],
+            "offset": [
+                80,
+                48
+            ]
+        },
+        "alien0_0": {
+            "filename": "resources\\images\\enemies.png",
+            "size": [
+                16,
+                16
+            ],
+            "offset": [
+                0,
+                0
+            ]
+        },
+        "alien0_1": {
+            "filename": "resources\\images\\enemies.png",
+            "size": [
+                16,
+                16
+            ],
+            "offset": [
+                16,
+                0
+            ]
+        },
+        "alien0_2": {
+            "filename": "resources\\images\\enemies.png",
+            "size": [
+                16,
+                16
+            ],
+            "offset": [
+                32,
+                0
+            ]
+        },
+        "alien0_3": {
+            "filename": "resources\\images\\enemies.png",
+            "size": [
+                16,
+                16
+            ],
+            "offset": [
+                48,
+                0
+            ]
+        },
+        "alien0_4": {
+            "filename": "resources\\images\\enemies.png",
+            "size": [
+                16,
+                16
+            ],
+            "offset": [
+                64,
+                0
+            ]
+        },
+        "alien0_5": {
+            "filename": "resources\\images\\enemies.png",
+            "size": [
+                16,
+                16
+            ],
+            "offset": [
+                80,
+                0
+            ]
+        },
+        "alien0_6": {
+            "filename": "resources\\images\\enemies.png",
+            "size": [
+                16,
+                16
+            ],
+            "offset": [
+                96,
+                0
+            ]
+        },
+        "alien0_7": {
+            "filename": "resources\\images\\enemies.png",
+            "size": [
+                16,
+                16
+            ],
+            "offset": [
+                112,
+                0
+            ]
+        },
+        "alien1_0": {
+            "filename": "resources\\images\\enemies.png",
+            "size": [
+                16,
+                16
+            ],
+            "offset": [
+                0,
+                16
+            ]
+        },
+        "alien1_1": {
+            "filename": "resources\\images\\enemies.png",
+            "size": [
+                16,
+                16
+            ],
+            "offset": [
+                16,
+                16
+            ]
+        },
+        "alien1_2": {
+            "filename": "resources\\images\\enemies.png",
+            "size": [
+                16,
+                16
+            ],
+            "offset": [
+                32,
+                16
+            ]
+        },
+        "alien1_3": {
+            "filename": "resources\\images\\enemies.png",
+            "size": [
+                16,
+                16
+            ],
+            "offset": [
+                48,
+                16
+            ]
+        },
+        "alien1_4": {
+            "filename": "resources\\images\\enemies.png",
+            "size": [
+                16,
+                16
+            ],
+            "offset": [
+                64,
+                16
+            ]
+        },
+        "alien1_5": {
+            "filename": "resources\\images\\enemies.png",
+            "size": [
+                16,
+                16
+            ],
+            "offset": [
+                80,
+                16
+            ]
+        },
+        "alien1_6": {
+            "filename": "resources\\images\\enemies.png",
+            "size": [
+                16,
+                16
+            ],
+            "offset": [
+                96,
+                16
+            ]
+        },
+        "alien2_0": {
+            "filename": "resources\\images\\enemies.png",
+            "size": [
+                16,
+                16
+            ],
+            "offset": [
+                0,
+                32
+            ]
+        },
+        "alien2_1": {
+            "filename": "resources\\images\\enemies.png",
+            "size": [
+                16,
+                16
+            ],
+            "offset": [
+                16,
+                32
+            ]
+        },
+        "alien2_2": {
+            "filename": "resources\\images\\enemies.png",
+            "size": [
+                16,
+                16
+            ],
+            "offset": [
+                32,
+                32
+            ]
+        },
+        "alien2_3": {
+            "filename": "resources\\images\\enemies.png",
+            "size": [
+                16,
+                16
+            ],
+            "offset": [
+                48,
+                32
+            ]
+        },
+        "alien2_4": {
+            "filename": "resources\\images\\enemies.png",
+            "size": [
+                16,
+                16
+            ],
+            "offset": [
+                64,
+                32
+            ]
+        },
+        "alien2_5": {
+            "filename": "resources\\images\\enemies.png",
+            "size": [
+                16,
+                16
+            ],
+            "offset": [
+                80,
+                32
+            ]
+        },
+        "alien3_0": {
+            "filename": "resources\\images\\enemies.png",
+            "size": [
+                16,
+                16
+            ],
+            "offset": [
+                0,
+                48
+            ]
+        },
+        "alien3_1": {
+            "filename": "resources\\images\\enemies.png",
+            "size": [
+                16,
+                16
+            ],
+            "offset": [
+                16,
+                48
+            ]
+        },
+        "alien3_2": {
+            "filename": "resources\\images\\enemies.png",
+            "size": [
+                16,
+                16
+            ],
+            "offset": [
+                32,
+                48
+            ]
+        },
+        "alien3_3": {
+            "filename": "resources\\images\\enemies.png",
+            "size": [
+                16,
+                16
+            ],
+            "offset": [
+                48,
+                48
+            ]
+        },
+        "alien3_4": {
+            "filename": "resources\\images\\enemies.png",
+            "size": [
+                16,
+                16
+            ],
+            "offset": [
+                64,
+                48
+            ]
+        },
+        "alien3_5": {
+            "filename": "resources\\images\\enemies.png",
+            "size": [
+                16,
+                16
+            ],
+            "offset": [
+                80,
+                48
+            ]
+        },
+        "alien3_6": {
+            "filename": "resources\\images\\enemies.png",
+            "size": [
+                16,
+                16
+            ],
+            "offset": [
+                96,
+                48
+            ]
+        },
+        "alien3_7": {
+            "filename": "resources\\images\\enemies.png",
+            "size": [
+                16,
+                16
+            ],
+            "offset": [
+                112,
+                48
+            ]
+        },
+        "dead_0": {
+            "filename": "resources\\images\\enemies.png",
+            "size": [
+                16,
+                16
+            ],
+            "offset": [
+                0,
+                64
+            ]
+        },
+        "dead_1": {
+            "filename": "resources\\images\\enemies.png",
+            "size": [
+                16,
+                16
+            ],
+            "offset": [
+                16,
+                64
+            ]
+        },
+        "dead_2": {
+            "filename": "resources\\images\\enemies.png",
+            "size": [
+                16,
+                16
+            ],
+            "offset": [
+                32,
+                64
+            ]
+        },
+        "dead_3": {
+            "filename": "resources\\images\\enemies.png",
+            "size": [
+                16,
+                16
+            ],
+            "offset": [
+                48,
+                64
+            ]
+        },
+        "arkanoid": {
+            "filename": "resources\\images\\Arkanoid.png",
+            "size": [
+                122,
+                23
+            ],
+            "offset": [
+                763,
+                1685
+            ]
+        },
+        "taito": {
+            "filename": "resources\\images\\Arkanoid.png",
+            "size": [
+                72,
+                15
+            ],
+            "offset": [
+                788,
+                1797
+            ]
+        },
+        "copyright": {
+            "filename": "resources\\images\\Arkanoid.png",
+            "size": [
+                8,
+                8
+            ],
+            "offset": [
+                728,
+                1820
+            ]
+        },
+        "cursor": {
+            "filename": "resources\\images\\Arkanoid.png",
+            "size": [
+                8,
+                8
+            ],
+            "offset": [
+                780,
+                1748
+            ]
+        },
+        "doh": {
+            "filename": "resources\\images\\doh.png",
+            "size": [
+                64,
+                96
+            ],
+            "offset": [
+                0,
+                0
+            ]
+        },
+        "doh_open": {
+            "filename": "resources\\images\\doh.png",
+            "size": [
+                64,
+                96
+            ],
+            "offset": [
+                64,
+                0
+            ]
+        },
+        "doh_hit": {
+            "filename": "resources\\images\\doh.png",
+            "size": [
+                64,
+                96
+            ],
+            "offset": [
+                128,
+                0
+            ]
+        },
+        "doh_hit_open": {
+            "filename": "resources\\images\\doh.png",
+            "size": [
+                64,
+                96
+            ],
+            "offset": [
+                192,
+                0
+            ]
+        },
+        "doh_shot0": {
+            "filename": "resources\\images\\doh.png",
+            "size": [
+                8,
+                8
+            ],
+            "offset": [
+                0,
+                96
+            ]
+        },
+        "doh_shot1": {
+            "filename": "resources\\images\\doh.png",
+            "size": [
+                8,
+                8
+            ],
+            "offset": [
+                8,
+                96
+            ]
+        },
+        "doh_shot2": {
+            "filename": "resources\\images\\doh.png",
+            "size": [
+                8,
+                8
+            ],
+            "offset": [
+                16,
+                96
+            ]
+        },
+        "doh_shot3": {
+            "filename": "resources\\images\\doh.png",
+            "size": [
+                8,
+                8
+            ],
+            "offset": [
+                24,
+                96
+            ]
+        },
+        "doh_shot4": {
+            "filename": "resources\\images\\doh.png",
+            "size": [
+                8,
+                8
+            ],
+            "offset": [
+                32,
+                96
+            ]
+        },
+        "doh_shot5": {
+            "filename": "resources\\images\\doh.png",
+            "size": [
+                8,
+                8
+            ],
+            "offset": [
+                40,
+                96
+            ]
+        },
+        "doh_shot6": {
+            "filename": "resources\\images\\doh.png",
+            "size": [
+                8,
+                8
+            ],
+            "offset": [
+                48,
+                96
+            ]
+        },
+        "doh_shot7": {
+            "filename": "resources\\images\\doh.png",
+            "size": [
+                8,
+                8
+            ],
+            "offset": [
+                56,
+                96
+            ]
+        },
+        "doh_dead0": {
+            "filename": "resources\\images\\doh.png",
+            "size": [
+                64,
+                88
+            ],
+            "offset": [
+                0,
+                8
+            ]
+        },
+        "doh_dead1": {
+            "filename": "resources\\images\\doh.png",
+            "size": [
+                64,
+                80
+            ],
+            "offset": [
+                0,
+                16
+            ]
+        },
+        "doh_dead2": {
+            "filename": "resources\\images\\doh.png",
+            "size": [
+                64,
+                72
+            ],
+            "offset": [
+                0,
+                24
+            ]
+        },
+        "doh_dead3": {
+            "filename": "resources\\images\\doh.png",
+            "size": [
+                64,
+                64
+            ],
+            "offset": [
+                0,
+                32
+            ]
+        },
+        "doh_dead4": {
+            "filename": "resources\\images\\doh.png",
+            "size": [
+                64,
+                56
+            ],
+            "offset": [
+                0,
+                40
+            ]
+        },
+        "doh_dead5": {
+            "filename": "resources\\images\\doh.png",
+            "size": [
+                64,
+                48
+            ],
+            "offset": [
+                0,
+                48
+            ]
+        },
+        "doh_dead6": {
+            "filename": "resources\\images\\doh.png",
+            "size": [
+                64,
+                40
+            ],
+            "offset": [
+                0,
+                56
+            ]
+        },
+        "doh_dead7": {
+            "filename": "resources\\images\\doh.png",
+            "size": [
+                64,
+                32
+            ],
+            "offset": [
+                0,
+                64
+            ]
+        },
+        "doh_dead8": {
+            "filename": "resources\\images\\doh.png",
+            "size": [
+                64,
+                24
+            ],
+            "offset": [
+                0,
+                72
+            ]
+        },
+        "doh_dead9": {
+            "filename": "resources\\images\\doh.png",
+            "size": [
+                64,
+                16
+            ],
+            "offset": [
+                0,
+                80
+            ]
+        },
+        "doh_dead10": {
+            "filename": "resources\\images\\doh.png",
+            "size": [
+                64,
+                8
+            ],
+            "offset": [
+                0,
+                88
+            ]
+        },
+        "final": {
+            "filename": "resources\\images\\ending.png",
+            "size": [
+                256,
+                232
+            ],
+            "offset": [
+                0,
+                0
+            ]
+        },
+        "final_doh0": {
+            "filename": "resources\\images\\ending.png",
+            "size": [
+                32,
+                80
+            ],
+            "offset": [
+                0,
+                248
+            ]
+        },
+        "final_doh1": {
+            "filename": "resources\\images\\ending.png",
+            "size": [
+                32,
+                80
+            ],
+            "offset": [
+                32,
+                248
+            ]
+        },
+        "final_doh2": {
+            "filename": "resources\\images\\ending.png",
+            "size": [
+                32,
+                80
+            ],
+            "offset": [
+                64,
+                248
+            ]
+        },
+        "final_doh3": {
+            "filename": "resources\\images\\ending.png",
+            "size": [
+                32,
+                80
+            ],
+            "offset": [
+                96,
+                248
+            ]
         }
     },
-    "animations" : {
-        "silver" : {
-            "images" : ["silver1", "silver2", "silver3", "silver4", "silver5", "silver"],
-            "speed" : 4
+    "animations": {
+        "silver": {
+            "images": [
+                "silver1",
+                "silver2",
+                "silver3",
+                "silver4",
+                "silver5",
+                "silver"
+            ],
+            "speed": 4
         },
-        "gold" : {
-            "images" : ["gold1", "gold2", "gold3", "gold4", "gold5", "gold"],
-            "speed" : 4
+        "gold": {
+            "images": [
+                "gold1",
+                "gold2",
+                "gold3",
+                "gold4",
+                "gold5",
+                "gold"
+            ],
+            "speed": 4
         },
-        "explode" : {
-            "images" : ["explode1", "explode2", "explode3"],
-            "speed" : 20
+        "explode": {
+            "images": [
+                "explode1",
+                "explode2",
+                "explode3"
+            ],
+            "speed": 20
         },
-        "B" : {
-            "images" : ["B0", "B1", "B2", "B3", "B4", "B5"],
-            "speed" : 10,
-            "loop" : true
+        "B": {
+            "images": [
+                "B0",
+                "B1",
+                "B2",
+                "B3",
+                "B4",
+                "B5"
+            ],
+            "speed": 10,
+            "loop": true
         },
-        "C" : {
-            "images" : ["C0", "C1", "C2", "C3", "C4", "C5"],
-            "speed" : 10,
-            "loop" : true
+        "C": {
+            "images": [
+                "C0",
+                "C1",
+                "C2",
+                "C3",
+                "C4",
+                "C5"
+            ],
+            "speed": 10,
+            "loop": true
         },
-        "D" : {
-            "images" : ["D0", "D1", "D2", "D3", "D4", "D5"],
-            "speed" : 10,
-            "loop" : true
+        "D": {
+            "images": [
+                "D0",
+                "D1",
+                "D2",
+                "D3",
+                "D4",
+                "D5"
+            ],
+            "speed": 10,
+            "loop": true
         },
-        "E" : {
-            "images" : ["E0", "E1", "E2", "E3", "E4", "E5"],
-            "speed" : 10,
-            "loop" : true
+        "E": {
+            "images": [
+                "E0",
+                "E1",
+                "E2",
+                "E3",
+                "E4",
+                "E5"
+            ],
+            "speed": 10,
+            "loop": true
         },
-        "L" : {
-            "images" : ["L0", "L1", "L2", "L3", "L4", "L5"],
-            "speed" : 10,
-            "loop" : true
+        "L": {
+            "images": [
+                "L0",
+                "L1",
+                "L2",
+                "L3",
+                "L4",
+                "L5"
+            ],
+            "speed": 10,
+            "loop": true
         },
-        "P" : {
-            "images" : ["P0", "P1", "P2", "P3", "P4", "P5"],
-            "speed" : 10,
-            "loop" : true
+        "P": {
+            "images": [
+                "P0",
+                "P1",
+                "P2",
+                "P3",
+                "P4",
+                "P5"
+            ],
+            "speed": 10,
+            "loop": true
         },
-        "S" : {
-            "images" : ["S0", "S1", "S2", "S3", "S4", "S5"],
-            "speed" : 10,
-            "loop" : true
+        "S": {
+            "images": [
+                "S0",
+                "S1",
+                "S2",
+                "S3",
+                "S4",
+                "S5"
+            ],
+            "speed": 10,
+            "loop": true
         },
-        "break" : {
-            "images" : ["break1", "break2", "break3", "break2"],
-            "speed" : 3,
-            "loop" : true
+        "break": {
+            "images": [
+                "break1",
+                "break2",
+                "break3",
+                "break2"
+            ],
+            "speed": 3,
+            "loop": true
         },
-        "paddle_break" : {
-            "images" : ["paddle", "paddle_break1", "paddle_break2", "paddle_break3"],
-            "speed" : 10
+        "paddle_break": {
+            "images": [
+                "paddle",
+                "paddle_break1",
+                "paddle_break2",
+                "paddle_break3"
+            ],
+            "speed": 10
         },
-        "laser_break" : {
-            "images" : ["paddle_laser", "laser_break1", "laser_break2", "laser_break3"],
-            "speed" : 10
+        "laser_break": {
+            "images": [
+                "paddle_laser",
+                "laser_break1",
+                "laser_break2",
+                "laser_break3"
+            ],
+            "speed": 10
         },
-        "paddle_ext_break" : {
-            "images" : ["paddle_ext", "paddle_ext_break1", "paddle_ext_break2", "paddle_break1", "paddle_break2", "paddle_break3"],
-            "speed" : 10
+        "paddle_ext_break": {
+            "images": [
+                "paddle_ext",
+                "paddle_ext_break1",
+                "paddle_ext_break2",
+                "paddle_break1",
+                "paddle_break2",
+                "paddle_break3"
+            ],
+            "speed": 10
         },
-        "paddle_grow" : {
-            "images" : ["paddle_grow1", "paddle_grow2", "paddle_grow3", "paddle_ext"],
-            "speed" : 2
+        "paddle_grow": {
+            "images": [
+                "paddle_grow1",
+                "paddle_grow2",
+                "paddle_grow3",
+                "paddle_ext"
+            ],
+            "speed": 2
         },
-        "paddle_shrink" : {
-            "images" : ["paddle_grow3", "paddle_grow2", "paddle_grow1", "paddle"],
-            "speed" : 2
+        "paddle_shrink": {
+            "images": [
+                "paddle_grow3",
+                "paddle_grow2",
+                "paddle_grow1",
+                "paddle"
+            ],
+            "speed": 2
         },
-        "paddle_to_laser" : {
-            "images" : ["paddle_lasershrink1", "paddle_lasershrink2", "paddle_lasershrink3", "paddle_lasershrink4", "paddle_lasergrow1", "paddle_lasergrow2", "paddle_lasergrow3", "paddle_lasergrow4", "paddle_laser"],
-            "speed" : 2
+        "paddle_to_laser": {
+            "images": [
+                "paddle_lasershrink1",
+                "paddle_lasershrink2",
+                "paddle_lasershrink3",
+                "paddle_lasershrink4",
+                "paddle_lasergrow1",
+                "paddle_lasergrow2",
+                "paddle_lasergrow3",
+                "paddle_lasergrow4",
+                "paddle_laser"
+            ],
+            "speed": 2
         },
-        "laser_to_paddle" : {
-            "images" : ["paddle_lasergrow4", "paddle_lasergrow3", "paddle_lasergrow2", "paddle_lasergrow1", "paddle_lasershrink4", "paddle_lasershrink3", "paddle_lasershrink2", "paddle_lasershrink1", "paddle"],
-            "speed" : 2
+        "laser_to_paddle": {
+            "images": [
+                "paddle_lasergrow4",
+                "paddle_lasergrow3",
+                "paddle_lasergrow2",
+                "paddle_lasergrow1",
+                "paddle_lasershrink4",
+                "paddle_lasershrink3",
+                "paddle_lasershrink2",
+                "paddle_lasershrink1",
+                "paddle"
+            ],
+            "speed": 2
         },
-        "inlet_open" : {
-            "images" : ["inlet2", "inlet3", "inlet4"],
-            "speed" : 30
+        "inlet_open": {
+            "images": [
+                "inlet2",
+                "inlet3",
+                "inlet4"
+            ],
+            "speed": 30
         },
-        "inlet_close" : {
-            "images" : ["inlet3", "inlet2", "inlet1"],
-            "speed" : 30
+        "inlet_close": {
+            "images": [
+                "inlet3",
+                "inlet2",
+                "inlet1"
+            ],
+            "speed": 30
         },
-        "alien0" : {
-            "images" : ["alien0_0", "alien0_1", "alien0_2", "alien0_3", "alien0_4", "alien0_5", "alien0_6", "alien0_7"],
-            "speed" : 15,
-            "loop" : true
+        "alien0": {
+            "images": [
+                "alien0_0",
+                "alien0_1",
+                "alien0_2",
+                "alien0_3",
+                "alien0_4",
+                "alien0_5",
+                "alien0_6",
+                "alien0_7"
+            ],
+            "speed": 15,
+            "loop": true
         },
-        "alien1" : {
-            "images" : ["alien1_0", "alien1_1", "alien1_2", "alien1_3", "alien1_4", "alien1_5", "alien1_6"],
-            "speed" : 15,
-            "loop" : true
+        "alien1": {
+            "images": [
+                "alien1_0",
+                "alien1_1",
+                "alien1_2",
+                "alien1_3",
+                "alien1_4",
+                "alien1_5",
+                "alien1_6"
+            ],
+            "speed": 15,
+            "loop": true
         },
-        "alien2" : {
-            "images" : ["alien2_0", "alien2_1", "alien2_2", "alien2_3", "alien2_4", "alien2_5"],
-            "speed" : 15,
-            "loop" : true
+        "alien2": {
+            "images": [
+                "alien2_0",
+                "alien2_1",
+                "alien2_2",
+                "alien2_3",
+                "alien2_4",
+                "alien2_5"
+            ],
+            "speed": 15,
+            "loop": true
         },
-        "alien3" : {
-            "images" : ["alien3_0", "alien3_1", "alien3_2", "alien3_3", "alien3_4", "alien3_5", "alien3_6", "alien3_7"],
-            "speed" : 15,
-            "loop" : true
+        "alien3": {
+            "images": [
+                "alien3_0",
+                "alien3_1",
+                "alien3_2",
+                "alien3_3",
+                "alien3_4",
+                "alien3_5",
+                "alien3_6",
+                "alien3_7"
+            ],
+            "speed": 15,
+            "loop": true
         },
-        "dead" : {
-            "images" : ["dead_0", "dead_1", "dead_2", "dead_3"],
-            "speed" : 15
+        "dead": {
+            "images": [
+                "dead_0",
+                "dead_1",
+                "dead_2",
+                "dead_3"
+            ],
+            "speed": 15
         },
-        "doh_hit" : {
-            "images" : ["doh_hit", "doh"],
-            "speed" : 3
+        "doh_hit": {
+            "images": [
+                "doh_hit",
+                "doh"
+            ],
+            "speed": 3
         },
-        "doh_hit_open" : {
-            "images" : ["doh_hit_open", "doh_open"],
-            "speed" : 3
+        "doh_hit_open": {
+            "images": [
+                "doh_hit_open",
+                "doh_open"
+            ],
+            "speed": 3
         },
-        "doh_shot" : {
-            "images" : ["doh_shot0", "doh_shot1", "doh_shot2", "doh_shot3", "doh_shot4", "doh_shot5", "doh_shot6", "doh_shot7"],
-            "speed" : 2,
-            "loop" : true
+        "doh_shot": {
+            "images": [
+                "doh_shot0",
+                "doh_shot1",
+                "doh_shot2",
+                "doh_shot3",
+                "doh_shot4",
+                "doh_shot5",
+                "doh_shot6",
+                "doh_shot7"
+            ],
+            "speed": 2,
+            "loop": true
         },
-        "doh_dead" : {
-            "images" : ["doh_dead0", "doh_dead1", "doh_dead2", "doh_dead3", "doh_dead4", "doh_dead5", "doh_dead6", "doh_dead7", "doh_dead8", "doh_dead9", "doh_dead10"],
-            "speed" : 15
+        "doh_dead": {
+            "images": [
+                "doh_dead0",
+                "doh_dead1",
+                "doh_dead2",
+                "doh_dead3",
+                "doh_dead4",
+                "doh_dead5",
+                "doh_dead6",
+                "doh_dead7",
+                "doh_dead8",
+                "doh_dead9",
+                "doh_dead10"
+            ],
+            "speed": 15
         },
-        "final_doh" : {
-            "images" : ["final_doh1", "final_doh2", "final_doh3"],
-            "speed" : 10
+        "final_doh": {
+            "images": [
+                "final_doh1",
+                "final_doh2",
+                "final_doh3"
+            ],
+            "speed": 10
         }
     },
-    "sounds" : {
-        "Intro" : {
-            "filename" : "resources\\sounds\\Intro.ogg"
+    "sounds": {
+        "Intro": {
+            "filename": "resources\\sounds\\Intro.ogg"
         },
-        "Ready" : {
-            "filename" : "resources\\sounds\\Ready.ogg"
+        "Ready": {
+            "filename": "resources\\sounds\\Ready.ogg"
         },
-        "High" : {
-            "filename" : "resources\\sounds\\PingHigh.wav"
+        "High": {
+            "filename": "resources\\sounds\\PingHigh.wav"
         },
-        "Low" : {
-            "filename" : "resources\\sounds\\PingLow.wav"
+        "Low": {
+            "filename": "resources\\sounds\\PingLow.wav"
         },
-        "Med" : {
-            "filename" : "resources\\sounds\\PingMed.wav"
+        "Med": {
+            "filename": "resources\\sounds\\PingMed.wav"
         },
-        "Death" : {
-            "filename" : "resources\\sounds\\Death.wav"
+        "Death": {
+            "filename": "resources\\sounds\\Death.wav"
         },
-        "Break" : {
-            "filename" : "resources\\sounds\\Break.wav"
+        "Break": {
+            "filename": "resources\\sounds\\Break.wav"
         },
-        "Enlarge" : {
-            "filename" : "resources\\sounds\\Enlarge.wav"
+        "Enlarge": {
+            "filename": "resources\\sounds\\Enlarge.wav"
         },
-        "Laser" : {
-            "filename" : "resources\\sounds\\Laser.wav"
+        "Laser": {
+            "filename": "resources\\sounds\\Laser.wav"
         },
-        "Life" : {
-            "filename" : "resources\\sounds\\ExtraLife.wav"
+        "Life": {
+            "filename": "resources\\sounds\\ExtraLife.wav"
         },
-        "Alien" : {
-            "filename" : "resources\\sounds\\Alien.wav"
+        "Alien": {
+            "filename": "resources\\sounds\\Alien.wav"
         },
-        "GameOver" : {
-            "filename" : "resources\\sounds\\GameOver.ogg"
+        "GameOver": {
+            "filename": "resources\\sounds\\GameOver.ogg"
         },
-        "DohStart" : {
-            "filename" : "resources\\sounds\\DohStart.ogg"
+        "DohStart": {
+            "filename": "resources\\sounds\\DohStart.ogg"
         },
-        "DohHit" : {
-            "filename" : "resources\\sounds\\DohHit.wav"
+        "DohHit": {
+            "filename": "resources\\sounds\\DohHit.wav"
         },
-        "DohDead" : {
-            "filename" : "resources\\sounds\\DohDead.wav"
+        "DohDead": {
+            "filename": "resources\\sounds\\DohDead.wav"
         },
-        "Victory" : {
-            "filename" : "resources\\sounds\\Victory.ogg"
+        "Victory": {
+            "filename": "resources\\sounds\\Victory.ogg"
         }
     },
     "scenes": {
-        "banner" : [
+        "banner": [
             {
-                "text" : "1UP",
-                "font" : "red",
-                "position" : [32, 8]
+                "text": "1UP",
+                "font": "red",
+                "position": [
+                    32,
+                    8
+                ]
             },
             {
-                "var" : "score1",
-                "fmt" : "%6d",
-                "position" : [16, 16]
+                "var": "score1",
+                "fmt": "%6d",
+                "position": [
+                    16,
+                    16
+                ]
             },
             {
-                "text" : "HIGH SCORE",
-                "font" : "red",
-                "position" : [88, 8]
+                "text": "HIGH SCORE",
+                "font": "red",
+                "position": [
+                    88,
+                    8
+                ]
             },
             {
-                "var" : "high",
-                "fmt" : "%6d",
-                "position" : [104, 16]
+                "var": "high",
+                "fmt": "%6d",
+                "position": [
+                    104,
+                    16
+                ]
             },
             {
-                "name" : "2UP",
-                "text" : "2UP",
-                "font" : "red",
-                "position" : [216, 8]
+                "name": "2UP",
+                "text": "2UP",
+                "font": "red",
+                "position": [
+                    216,
+                    8
+                ]
             },
             {
-                "name" : "score2",
-                "var" : "score2",
-                "fmt" : "%6d",
-                "position" : [200, 16]
+                "name": "score2",
+                "var": "score2",
+                "fmt": "%6d",
+                "position": [
+                    200,
+                    16
+                ]
             }
         ],
-        "splash" : [
+        "splash": [
             {
-                "name" : "splash",
-                "text" : "THE ERA AND TIME OF\n\nTHIS STORY IS UNKNOWN.\n\n\nAFTER THE MOTHER SHIP\n\n\"ARKANOID\" WAS DESTROYED,\n\nA SPACECRAFT \"VAUS\"\n\nSCRAMBLED AWAY FROM IT.\n\n\nBUT ONLY TO BE\n\nTRAPPED IN SPACE WARPED\n\nBY SOMEONE......",
-                "position" : [24, 224]
+                "name": "splash",
+                "text": "THE ERA AND TIME OF\n\nTHIS STORY IS UNKNOWN.\n\n\nAFTER THE MOTHER SHIP\n\n\"ARKANOID\" WAS DESTROYED,\n\nA SPACECRAFT \"VAUS\"\n\nSCRAMBLED AWAY FROM IT.\n\n\nBUT ONLY TO BE\n\nTRAPPED IN SPACE WARPED\n\nBY SOMEONE......",
+                "position": [
+                    24,
+                    224
+                ]
             }
         ],
-        "title" : [
+        "title": [
             {
-                "name" : "p1",
-                "text" : "1 PLAYER",
-                "position" : [96, 120]
+                "name": "p1",
+                "text": "1 PLAYER",
+                "position": [
+                    96,
+                    120
+                ]
             },
             {
-                "name" : "p2",
-                "text" : "2 PLAYERS",
-                "position" : [96, 136]
+                "name": "p2",
+                "text": "2 PLAYERS",
+                "position": [
+                    96,
+                    136
+                ]
             },
             {
-                "text" : "  TAITO CORPORATION 1987\n      LICENSED BY\nNINTENDO OF AMERICA INC.",
-                "position" : [32, 192]
+                "text": "  TAITO CORPORATION 1987\n      LICENSED BY\nNINTENDO OF AMERICA INC.",
+                "position": [
+                    32,
+                    192
+                ]
             },
             {
-                "image" : "arkanoid",
-                "position" : [67, 61]
+                "image": "arkanoid",
+                "position": [
+                    67,
+                    61
+                ]
             },
             {
-                "image" : "taito",
-                "position" : [92, 169]
+                "image": "taito",
+                "position": [
+                    92,
+                    169
+                ]
             },
             {
-                "image" : "copyright",
-                "position" : [32, 192]
+                "image": "copyright",
+                "position": [
+                    32,
+                    192
+                ]
             },
             {
-                "name" : "cursor",
-                "image" : "cursor",
-                "position" : [80, 120],
-                "locations" : [[80, 120], [80, 136]]
+                "name": "cursor",
+                "image": "cursor",
+                "position": [
+                    80,
+                    120
+                ],
+                "locations": [
+                    [
+                        80,
+                        120
+                    ],
+                    [
+                        80,
+                        136
+                    ]
+                ]
             }
         ],
-        "victory" : [
+        "victory": [
             {
-                "name" : "victory",
-                "text" : "DIMENSION-CONTROLLING FORT\n\n\"DOH\" HAS NOW BEEN\n\nDEMOLISHED, AND TIME\n\nSTARTED FLOWING REVERSLY.\n\n\n\"VAUS\" MANAGED TO ESCAPE\n\nFROM THE DISTORTED SPACE.\n\n\nBUT THE REAL VOYAGE OF\n\n\"ARKANOID\" IN THE GALAXY\n\nHAS ONLY STARTED......",
-                "position" : [24, 224]
+                "name": "victory",
+                "text": "DIMENSION-CONTROLLING FORT\n\n\"DOH\" HAS NOW BEEN\n\nDEMOLISHED, AND TIME\n\nSTARTED FLOWING REVERSLY.\n\n\n\"VAUS\" MANAGED TO ESCAPE\n\nFROM THE DISTORTED SPACE.\n\n\nBUT THE REAL VOYAGE OF\n\n\"ARKANOID\" IN THE GALAXY\n\nHAS ONLY STARTED......",
+                "position": [
+                    24,
+                    224
+                ]
             }
         ],
-        "final" : [
+        "final": [
             {
-                "image" : "final",
-                "position" : [0, 0]
+                "image": "final",
+                "position": [
+                    0,
+                    0
+                ]
             },
             {
-                "name" : "doh",
-                "image" : "final_doh0",
-                "animation" : "final_doh",
-                "position" : [112, 128]
+                "name": "doh",
+                "image": "final_doh0",
+                "animation": "final_doh",
+                "position": [
+                    112,
+                    128
+                ]
             }
         ],
-        "round" : [
+        "round": [
             {
-                "text" : "ROUND ",
-                "position" : [96, 108]
+                "text": "ROUND ",
+                "position": [
+                    96,
+                    108
+                ]
             },
             {
-                "var" : "level",
-                "fmt" : "%2d",
-                "position" : [144, 108]
+                "var": "level",
+                "fmt": "%2d",
+                "position": [
+                    144,
+                    108
+                ]
             }
         ],
-        "gameover" : [
+        "gameover": [
             {
-                "text" : "GAME OVER",
-                "position" : [68, 176]
+                "text": "GAME OVER",
+                "position": [
+                    68,
+                    176
+                ]
             }
         ],
-        "hud" : [
+        "hud": [
             {
-                "text" : "HIGH\n SCORE",
-                "font" : "red",
-                "position" : [200, 16]
+                "text": "HIGH\n SCORE",
+                "font": "red",
+                "position": [
+                    200,
+                    16
+                ]
             },
             {
-                "name" : "high",
-                "var" : "high",
-                "fmt" : "%6d",
-                "position" : [200, 32]
+                "name": "high",
+                "var": "high",
+                "fmt": "%6d",
+                "position": [
+                    200,
+                    32
+                ]
             },
             {
-                "name" : "1UP",
-                "text" : "1UP",
-                "font" : "red",
-                "position" : [200, 48]
+                "name": "1UP",
+                "text": "1UP",
+                "font": "red",
+                "position": [
+                    200,
+                    48
+                ]
             },
             {
-                "name" : "score1",
-                "var" : "score1",
-                "fmt" : "%6d",
-                "position" : [200, 56]
+                "name": "score1",
+                "var": "score1",
+                "fmt": "%6d",
+                "position": [
+                    200,
+                    56
+                ]
             },
             {
-                "name" : "2UP",
-                "text" : "2UP",
-                "font" : "red",
-                "position" : [200, 48]
+                "name": "2UP",
+                "text": "2UP",
+                "font": "red",
+                "position": [
+                    200,
+                    48
+                ]
             },
             {
-                "name" : "score2",
-                "var" : "score2",
-                "fmt" : "%6d",
-                "position" : [200, 56]
+                "name": "score2",
+                "var": "score2",
+                "fmt": "%6d",
+                "position": [
+                    200,
+                    56
+                ]
             },
             {
-                "text" : "ROUND",
-                "font" : "red",
-                "position" : [208, 192]
+                "text": "ROUND",
+                "font": "red",
+                "position": [
+                    208,
+                    192
+                ]
             },
             {
-                "var" : "level",
-                "fmt" : "%2d",
-                "position" : [232, 200]
+                "var": "level",
+                "fmt": "%2d",
+                "position": [
+                    232,
+                    200
+                ]
             },
             {
-                "name" : "life1",
-                "image" : "life",
-                "position" : [200, 104]
+                "name": "life1",
+                "image": "life",
+                "position": [
+                    200,
+                    104
+                ]
             },
             {
-                "name" : "life2",
-                "image" : "life",
-                "position" : [220, 104]
+                "name": "life2",
+                "image": "life",
+                "position": [
+                    220,
+                    104
+                ]
             },
             {
-                "name" : "life3",
-                "image" : "life",
-                "position" : [240, 104]
+                "name": "life3",
+                "image": "life",
+                "position": [
+                    240,
+                    104
+                ]
             },
             {
-                "name" : "life4",
-                "image" : "life",
-                "position" : [200, 112]
+                "name": "life4",
+                "image": "life",
+                "position": [
+                    200,
+                    112
+                ]
             },
             {
-                "name" : "life5",
-                "image" : "life",
-                "position" : [220, 112]
+                "name": "life5",
+                "image": "life",
+                "position": [
+                    220,
+                    112
+                ]
             },
             {
-                "name" : "life6",
-                "image" : "life",
-                "position" : [240, 112]
+                "name": "life6",
+                "image": "life",
+                "position": [
+                    240,
+                    112
+                ]
             }
         ],
-        "tools" : [
+        "tools": [
             {
-                "name" : "paddle",
-                "image" : "paddle",
-                "position" : [ 80, 201],
-                "layer" : 30
+                "name": "paddle",
+                "image": "paddle",
+                "position": [
+                    80,
+                    201
+                ],
+                "layer": 30
             },
             {
-                "name" : "ball1",
-                "image" : "ball",
-                "paddle_bounce" : true,
-                "position" : [ 96, 197],
-                "groups" : ["balls"]
+                "name": "ball1",
+                "image": "ball",
+                "paddle_bounce": true,
+                "position": [
+                    96,
+                    197
+                ],
+                "groups": [
+                    "balls"
+                ]
             },
             {
-                "name" : "ball2",
-                "image" : "ball",
-                "paddle_bounce" : true
+                "name": "ball2",
+                "image": "ball",
+                "paddle_bounce": true
             },
             {
-                "name" : "ball3",
-                "image" : "ball",
-                "paddle_bounce" : true
+                "name": "ball3",
+                "image": "ball",
+                "paddle_bounce": true
             },
             {
-                "name" : "laser",
-                "image" : "laser",
-                "position" : [0, 0],
-                "groups" : ["lasers"],
-                "hits" : 1
+                "name": "laser",
+                "image": "laser",
+                "position": [
+                    0,
+                    0
+                ],
+                "groups": [
+                    "lasers"
+                ],
+                "hits": 1
             },
             {
-                "name" : "capsuleB",
-                "image" : "B0",
-                "layer" : 20,
-                "animation" : "B",
-                "groups" : ["capsules", "paddle"],
-                "effect" : "break",
-                "weight" : 1,
-                "points" : 1000
+                "name": "capsuleB",
+                "image": "B0",
+                "layer": 20,
+                "animation": "B",
+                "groups": [
+                    "capsules",
+                    "paddle"
+                ],
+                "effect": "break",
+                "weight": 1,
+                "points": 1000
             },
             {
-                "name" : "capsuleC",
-                "image" : "C0",
-                "layer" : 20,
-                "animation" : "C",
-                "groups" : ["capsules", "paddle"],
-                "effect" : "catch",
-                "weight" : 1,
-                "points" : 1000
+                "name": "capsuleC",
+                "image": "C0",
+                "layer": 20,
+                "animation": "C",
+                "groups": [
+                    "capsules",
+                    "paddle"
+                ],
+                "effect": "catch",
+                "weight": 1,
+                "points": 1000
             },
             {
-                "name" : "capsuleD",
-                "image" : "D0",
-                "layer" : 20,
-                "animation" : "D",
-                "groups" : ["capsules", "paddle"],
-                "effect" : "disrupt",
-                "weight" : 1,
-                "points" : 1000
+                "name": "capsuleD",
+                "image": "D0",
+                "layer": 20,
+                "animation": "D",
+                "groups": [
+                    "capsules",
+                    "paddle"
+                ],
+                "effect": "disrupt",
+                "weight": 1,
+                "points": 1000
             },
             {
-                "name" : "capsuleE",
-                "image" : "E0",
-                "layer" : 20,
-                "animation" : "E",
-                "groups" : ["capsules", "paddle"],
-                "effect" : "enlarge",
-                "weight" : 1,
-                "points" : 1000
+                "name": "capsuleE",
+                "image": "E0",
+                "layer": 20,
+                "animation": "E",
+                "groups": [
+                    "capsules",
+                    "paddle"
+                ],
+                "effect": "enlarge",
+                "weight": 1,
+                "points": 1000
             },
             {
-                "name" : "capsuleL",
-                "image" : "L0",
-                "layer" : 20,
-                "animation" : "L",
-                "groups" : ["capsules", "paddle"],
-                "effect" : "laser",
-                "weight" : 1,
-                "points" : 1000
+                "name": "capsuleL",
+                "image": "L0",
+                "layer": 20,
+                "animation": "L",
+                "groups": [
+                    "capsules",
+                    "paddle"
+                ],
+                "effect": "laser",
+                "weight": 1,
+                "points": 1000
             },
             {
-                "name" : "capsuleP",
-                "image" : "P0",
-                "layer" : 20,
-                "animation" : "P",
-                "groups" : ["capsules", "paddle"],
-                "effect" : "player",
-                "weight" : 1,
-                "points" : 1000
+                "name": "capsuleP",
+                "image": "P0",
+                "layer": 20,
+                "animation": "P",
+                "groups": [
+                    "capsules",
+                    "paddle"
+                ],
+                "effect": "player",
+                "weight": 1,
+                "points": 1000
             },
             {
-                "name" : "capsuleS",
-                "image" : "S0",
-                "layer" : 20,
-                "animation" : "S",
-                "groups" : ["capsules", "paddle"],
-                "effect" : "slow",
-                "weight" : 1,
-                "points" : 1000
+                "name": "capsuleS",
+                "image": "S0",
+                "layer": 20,
+                "animation": "S",
+                "groups": [
+                    "capsules",
+                    "paddle"
+                ],
+                "effect": "slow",
+                "weight": 1,
+                "points": 1000
             },
             {
-                "name" : "inlet_left",
-                "image" : "inlet1",
-                "position" : [48, 0],
-                "layer" : 20,
-                "groups" : ["inlets"],
-                "max_delay" : 20,
-                "max_aliens" : 3
+                "name": "inlet_left",
+                "image": "inlet1",
+                "position": [
+                    48,
+                    0
+                ],
+                "layer": 20,
+                "groups": [
+                    "inlets"
+                ],
+                "max_delay": 20,
+                "max_aliens": 3
             },
             {
-                "name" : "inlet_right",
-                "image" : "inlet1",
-                "position" : [136, 0],
-                "layer" : 20,
-                "groups" : ["inlets"],
-                "max_delay" : 20,
-                "max_aliens" : 3
+                "name": "inlet_right",
+                "image": "inlet1",
+                "position": [
+                    136,
+                    0
+                ],
+                "layer": 20,
+                "groups": [
+                    "inlets"
+                ],
+                "max_delay": 20,
+                "max_aliens": 3
             },
             {
-                "name" : "break",
-                "image" : "break1",
-                "position" : [192, 192],
-                "animation" : "break",
-                "layer" : 20,
-                "groups" : ["break"]
+                "name": "break",
+                "image": "break1",
+                "position": [
+                    192,
+                    192
+                ],
+                "animation": "break",
+                "layer": 20,
+                "groups": [
+                    "break"
+                ]
             }
         ],
-        "walls" : [
+        "walls": [
             {
-                "name" : "left",
-                "image" : "wall_left",
-                "position" : [  8,  0],
-                "groups" : ["ball"]
+                "name": "left",
+                "image": "wall_left",
+                "position": [
+                    8,
+                    0
+                ],
+                "groups": [
+                    "ball"
+                ]
             },
             {
-                "name" : "right",
-                "image" : "wall_right",
-                "position" : [192,  0],
-                "groups" : ["ball"]
+                "name": "right",
+                "image": "wall_right",
+                "position": [
+                    192,
+                    0
+                ],
+                "groups": [
+                    "ball"
+                ]
             },
             {
-                "name" : "top",
-                "image" : "wall_top",
-                "position" : [  8,  0],
-                "groups" : ["ball"]
+                "name": "top",
+                "image": "wall_top",
+                "position": [
+                    8,
+                    0
+                ],
+                "groups": [
+                    "ball"
+                ]
             }
         ],
-        "ready" : [
+        "ready": [
             {
-                "name" : "start1",
-                "text" : "PLAYER ",
-                "position" : [ 72, 160],
-                "layer" : 20
+                "name": "start1",
+                "text": "PLAYER ",
+                "position": [
+                    72,
+                    160
+                ],
+                "layer": 20
             },
             {
-                "name" : "start2",
-                "var" : "player",
-                "position" : [128, 160],
-                "layer" : 20
+                "name": "start2",
+                "var": "player",
+                "position": [
+                    128,
+                    160
+                ],
+                "layer": 20
             },
             {
-                "name" : "start3",
-                "text" : "READY",
-                "position" : [84, 176],
-                "layer" : 20
+                "name": "start3",
+                "text": "READY",
+                "position": [
+                    84,
+                    176
+                ],
+                "layer": 20
             }
         ]
     },
-    "levels" : {
-        "level1" : [
+    "levels": {
+        "level1": [
             "",
             "",
             "",
@@ -1450,7 +2862,7 @@
             "ppppppppppp",
             "ggggggggggg"
         ],
-        "level2" : [
+        "level2": [
             "",
             "",
             "p",
@@ -1465,7 +2877,7 @@
             "pcgbrpcgbr",
             "SSSSSSSSSSp"
         ],
-        "level3" : [
+        "level3": [
             "",
             "",
             "",
@@ -1485,7 +2897,7 @@
             "",
             "rrrrrrrrrrr"
         ],
-        "level4" : [
+        "level4": [
             "",
             "",
             "",
@@ -1505,7 +2917,7 @@
             " rogb ogpr ",
             " pgoS gorp "
         ],
-        "level5" : [
+        "level5": [
             "",
             "",
             "   o   o   ",
@@ -1523,7 +2935,7 @@
             "    S S    ",
             "    S S    "
         ],
-        "level6" : [
+        "level6": [
             "",
             "",
             "",
@@ -1539,7 +2951,7 @@
             "p G G G G p",
             "b r g g r b"
         ],
-        "level7" : [
+        "level7": [
             "",
             "",
             "",
@@ -1557,7 +2969,7 @@
             "   cbgop   ",
             "    cog    "
         ],
-        "level8" : [
+        "level8": [
             "",
             "",
             "",
@@ -1573,7 +2985,7 @@
             " GG     GG ",
             " G  G G  G "
         ],
-        "level9" : [
+        "level9": [
             "",
             "",
             " G G   G G ",
@@ -1588,7 +3000,7 @@
             "   pcgco   ",
             "   pbbbo   "
         ],
-        "level10" : [
+        "level10": [
             " G         ",
             "           ",
             " G         ",
@@ -1606,7 +3018,7 @@
             " G         ",
             " GGGGGGGGGG"
         ],
-        "level11" : [
+        "level11": [
             "           ",
             "           ",
             "           ",
@@ -1621,7 +3033,7 @@
             " S       S ",
             " SSSSSSSSS "
         ],
-        "level12" : [
+        "level12": [
             "           ",
             "           ",
             "GGGGGGGGGGG",
@@ -1638,7 +3050,7 @@
             " G    G   p",
             " GGGGGGGGGG"
         ],
-        "level13" : [
+        "level13": [
             "           ",
             "           ",
             "           ",
@@ -1652,7 +3064,7 @@
             " oo www oo ",
             " ww ooo ww "
         ],
-        "level14" : [
+        "level14": [
             "           ",
             "           ",
             "           ",
@@ -1671,7 +3083,7 @@
             "rrrrrrrrrrr",
             "G         G"
         ],
-        "level15" : [
+        "level15": [
             "           ",
             "           ",
             "           ",
@@ -1688,7 +3100,7 @@
             "cccSoSgSccc",
             "ccccSSScccc"
         ],
-        "level16" : [
+        "level16": [
             "           ",
             "           ",
             "     G     ",
@@ -1706,7 +3118,7 @@
             " gg     gg ",
             "g         g"
         ],
-        "level17" : [
+        "level17": [
             "           ",
             "           ",
             "     S     ",
@@ -1722,7 +3134,7 @@
             "   GGG     ",
             "    G      "
         ],
-        "level18" : [
+        "level18": [
             "           ",
             "           ",
             "           ",
@@ -1737,7 +3149,7 @@
             "p G g g G p",
             "pGGGg gGGGp"
         ],
-        "level19" : [
+        "level19": [
             "           ",
             "           ",
             "           ",
@@ -1751,7 +3163,7 @@
             "  grbGbrg  ",
             "  GGGGGGG  "
         ],
-        "level20" : [
+        "level20": [
             "           ",
             "           ",
             "           ",
@@ -1767,7 +3179,7 @@
             "  mG G G   ",
             "m    G     "
         ],
-        "level21" : [
+        "level21": [
             "           ",
             "           ",
             "           ",
@@ -1783,7 +3195,7 @@
             " G       G ",
             " GGGGGGGGG "
         ],
-        "level22" : [
+        "level22": [
             "           ",
             "           ",
             "           ",
@@ -1798,7 +3210,7 @@
             "wwwwwwwwwww",
             "wwwwwwwwwww"
         ],
-        "level23" : [
+        "level23": [
             "           ",
             "           ",
             "bbbbbbbbbbb",
@@ -1815,7 +3227,7 @@
             "SbS SbS SbS",
             "SSS SSS SSS"
         ],
-        "level24" : [
+        "level24": [
             "           ",
             "           ",
             "           ",
@@ -1830,7 +3242,7 @@
             " bbbbbbbbb ",
             "bbbbbbbbbbb"
         ],
-        "level25" : [
+        "level25": [
             "           ",
             "           ",
             "           ",
@@ -1846,7 +3258,7 @@
             "G  GgggG  G",
             "GSSGGGGGSSG"
         ],
-        "level26" : [
+        "level26": [
             "           ",
             "           ",
             "           ",
@@ -1859,7 +3271,7 @@
             " G    G    ",
             "  GGGG     "
         ],
-        "level27" : [
+        "level27": [
             "           ",
             "           ",
             "           ",
@@ -1875,7 +3287,7 @@
             "rrrrrrrrrrr",
             "SSSSSSSSSSS"
         ],
-        "level28" : [
+        "level28": [
             "           ",
             "           ",
             "           ",
@@ -1890,7 +3302,7 @@
             "    bmb    ",
             "     b     "
         ],
-        "level29" : [
+        "level29": [
             "           ",
             "           ",
             "           ",
@@ -1905,7 +3317,7 @@
             "ppppG Gpppp",
             "ggggG Ggggg"
         ],
-        "level30" : [
+        "level30": [
             "           ",
             "           ",
             "           ",
@@ -1921,7 +3333,7 @@
             "       GSpc",
             "         GS"
         ],
-        "level31" : [
+        "level31": [
             "           ",
             "           ",
             "           ",
@@ -1940,7 +3352,7 @@
             "r g o b r g",
             "S S S S S S"
         ],
-        "level32" : [
+        "level32": [
             "           ",
             "           ",
             "           ",
@@ -1956,7 +3368,7 @@
             "  ooooooo  ",
             "  SSSSSSS  "
         ],
-        "level33" : [
+        "level33": [
             "           ",
             "           ",
             "     rr    ",
@@ -1974,7 +3386,7 @@
             "  ggggbbbb ",
             "   gg  bb  "
         ],
-        "level34" : [
+        "level34": [
             "           ",
             "           ",
             "           ",
@@ -1994,7 +3406,7 @@
             " ooo       ",
             " oo        "
         ],
-        "level35" : [
+        "level35": [
             "         w ",
             "         ww",
             "   wwww    ",
@@ -2012,25 +3424,35 @@
             "GGgGg  gg  "
         ]
     },
-    "levels_custom" : {
-        "level36" : [
+    "levels_custom": {
+        "level36": [
             {
-                "name" : "inlet_left",
-                "image" : "inlet1",
-                "position" : [48, 0],
-                "layer" : 20,
-                "groups" : ["inlets"],
-                "max_delay" : 20,
-                "max_aliens" : 0
+                "name": "inlet_left",
+                "image": "inlet1",
+                "position": [
+                    48,
+                    0
+                ],
+                "layer": 20,
+                "groups": [
+                    "inlets"
+                ],
+                "max_delay": 20,
+                "max_aliens": 0
             },
             {
-                "name" : "inlet_right",
-                "image" : "inlet1",
-                "position" : [136, 0],
-                "layer" : 20,
-                "groups" : ["inlets"],
-                "max_delay" : 20,
-                "max_aliens" : 0
+                "name": "inlet_right",
+                "image": "inlet1",
+                "position": [
+                    136,
+                    0
+                ],
+                "layer": 20,
+                "groups": [
+                    "inlets"
+                ],
+                "max_delay": 20,
+                "max_aliens": 0
             },
             {
                 "groups": [
@@ -2050,13 +3472,18 @@
                 "points": 100
             },
             {
-                "groups": ["paddle"],
+                "groups": [
+                    "paddle"
+                ],
                 "layer": 30,
                 "animation": "doh_shot",
                 "image": "doh_shot0",
                 "kill_paddle": true,
                 "name": "doh_shot",
-                "position": [1000, 1000]
+                "position": [
+                    1000,
+                    1000
+                ]
             },
             {
                 "position": [
@@ -2070,12 +3497,18 @@
             {
                 "hits": 16,
                 "hit_points": 1000,
-                "groups": ["ball", "bricks"],
+                "groups": [
+                    "ball",
+                    "bricks"
+                ],
                 "hit_sound": "DohHit",
                 "hit_animation": "doh_hit",
                 "death_animation": "doh_dead",
                 "death_animation_align": "bottomleft",
-                "position": [72, 32],
+                "position": [
+                    72,
+                    32
+                ],
                 "image": "doh",
                 "name": "doh"
             }

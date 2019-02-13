@@ -15,12 +15,15 @@ import utils
 
 os.environ['SDL_VIDEODRIVER'] = 'directx'
 
-def set_cursor(cursor_strings, hotspot=[0,0], scale=1):
+
+def set_cursor(cursor_strings, hotspot=[0, 0], scale=1):
     # Scale the strings larger if requested
-    cursor_strings = ["".join([ch * scale for ch in line]) for line in cursor_strings for _ in range(scale)]
+    cursor_strings = ["".join([ch * scale for ch in line])
+                      for line in cursor_strings for _ in range(scale)]
     size = [len(cursor_strings[0]), len(cursor_strings)]
     xormask, andmask = pygame.cursors.compile(cursor_strings)
     pygame.mouse.set_cursor(size, hotspot, xormask, andmask)
+
 
 class Window:
     def __init__(self):
@@ -49,13 +52,16 @@ class Window:
     def clear(self):
         self.screen.fill(utils.color(utils.config["bg_color"]))
 
+
 def grab_mouse():
     pygame.mouse.set_visible(0)
     pygame.event.set_grab(1)
 
+
 def release_mouse():
     pygame.mouse.set_visible(1)
     pygame.event.set_grab(0)
+
 
 def _find_char_offset(char, characters):
     for row, data in enumerate(characters):
@@ -64,6 +70,7 @@ def _find_char_offset(char, characters):
             return [col, row]
 
     raise ValueError("Unsupported Character: %s" % char)
+
 
 def draw_text(text, font):
     config = utils.config["fonts"][font]
@@ -75,16 +82,19 @@ def draw_text(text, font):
     rows = len(text_split)
     cols = max(map(len, text_split))
 
-    surf = pygame.Surface([size[0] * cols, size[1] * rows], pygame.SRCALPHA).convert_alpha()
+    surf = pygame.Surface([size[0] * cols, size[1] * rows],
+                          pygame.SRCALPHA).convert_alpha()
     image = get_image(name)
     for row, line in enumerate(text_split):
         for col, char in enumerate(line):
             offset = _find_char_offset(char, characters)
             offset = [offset[i] * size[i] for i in range(2)]
 
-            surf.blit(image, [col * size[0], row * size[1]], pygame.Rect(offset, size), pygame.BLEND_RGBA_MAX)
+            surf.blit(image, [col * size[0], row * size[1]],
+                      pygame.Rect(offset, size), pygame.BLEND_RGBA_MAX)
 
     return surf
+
 
 def image_factory(name):
     cfg = utils.config["images"][name]
@@ -106,12 +116,15 @@ def image_factory(name):
 
     return image
 
+
 _image_cache = utils.Cache(image_factory)
+
 
 def get_image(name):
     image = _image_cache.get(name)
 
     return image
+
 
 class Action:
     def then(self, action):
@@ -128,6 +141,7 @@ class Action:
 
     def stop(self, sprite):
         pass
+
 
 class Series(Action):
     def __init__(self, actions):
@@ -160,6 +174,7 @@ class Series(Action):
 
         return None
 
+
 class Parallel(Action):
     def __init__(self, actions):
         self.actions = list(actions)
@@ -186,6 +201,7 @@ class Parallel(Action):
 
         return self if self.actions else None
 
+
 class PaddleMove(Action):
     def __init__(self, region):
         self.rect = region.copy()
@@ -202,17 +218,19 @@ class PaddleMove(Action):
         self.delta = 0
         return self
 
+
 class Move(Action):
     def __init__(self, delta):
         self.delta = delta
-        self.total = [0,0]
+        self.total = [0, 0]
 
     def update(self, sprite):
-        total = [t + d for t,d in zip(self.total, self.delta)]
+        total = [t + d for t, d in zip(self.total, self.delta)]
         delta = [int(i) for i in total]
-        self.total = [t-m for t,m in zip(total, delta)]
+        self.total = [t-m for t, m in zip(total, delta)]
         sprite.rect.move_ip(delta)
         return self
+
 
 class MoveLimited(Move):
     def __init__(self, delta, frames):
@@ -226,6 +244,7 @@ class MoveLimited(Move):
             self.frames -= 1
 
         return None if self.frames == 0 else self
+
 
 class Follow(Action):
     def __init__(self, target):
@@ -252,6 +271,7 @@ class Follow(Action):
             self.last = pos
         return self
 
+
 class Blink(Action):
     def __init__(self, rate):
         # Convert rate from seconds to frames per half cycle
@@ -266,6 +286,7 @@ class Blink(Action):
             sprite.visible ^= 1
             self.frames = 0
         return self
+
 
 class Animate(Action):
     def __init__(self, name, align="center"):
@@ -293,10 +314,12 @@ class Animate(Action):
 
         return self if self.frame < len(self.images) else None
 
+
 class Die(Action):
     def update(self, sprite):
         sprite.kill()
         return None
+
 
 class PlaySound(Action):
     def __init__(self, sound):
@@ -305,6 +328,7 @@ class PlaySound(Action):
     def update(self, sprite):
         done = self.sound is None or not self.sound.get_busy()
         return None if done else self
+
 
 class FireEvent(Action):
     def __init__(self, event, **kwargs):
@@ -317,6 +341,7 @@ class FireEvent(Action):
             self.event = None
         return None
 
+
 class Callback(Action):
     def __init__(self, callback, *args, **kwargs):
         self.callback = callback
@@ -328,6 +353,7 @@ class Callback(Action):
             self.callback(*self.args, **self.kwargs)
             self.callback = None
         return None
+
 
 class UpdateVar(Action):
     def __init__(self, name, font="white", fmt="%s"):
@@ -351,6 +377,7 @@ class UpdateVar(Action):
             sprite.set_image(image)
         return self
 
+
 class Delay(Action):
     def __init__(self, delay):
         fps = utils.config["frame_rate"]
@@ -359,6 +386,7 @@ class Delay(Action):
     def update(self, sprite):
         self.frames -= 1
         return self if self.frames > 0 else None
+
 
 class Spawn(Action):
     def __init__(self, name, scene):
@@ -371,7 +399,7 @@ class Spawn(Action):
         clone.rect.center = sprite.rect.center
         clone.rect.bottom = sprite.rect.top
 
-        action = MoveLimited([0,0.25], 96).then(AlienEscape(self.scene))
+        action = MoveLimited([0, 0.25], 96).then(AlienEscape(self.scene))
 
         animation = clone.cfg["animation"]
         if animation:
@@ -385,20 +413,22 @@ class Spawn(Action):
 
         return None
 
+
 class AlienEscape(Move):
     def __init__(self, scene):
         self.scene = scene
-        self.states = [("down", "left"), ("left", "up"),  ("down", "right"), ("right", "up")]
+        self.states = [("down", "left"), ("left", "up"),
+                       ("down", "right"), ("right", "up")]
         self.index = 0
         self.tests = {
-            "up" : [0, -1],
-            "down" : [0, 1],
-            "left" : [-1, 0],
-            "right" : [1, 0],
+            "up": [0, -1],
+            "down": [0, 1],
+            "left": [-1, 0],
+            "right": [1, 0],
         }
         self.speed = 0.25
 
-        Move.__init__(self, [0,0])
+        Move.__init__(self, [0, 0])
 
     def attempt(self, sprite, direction):
         success = False
@@ -408,7 +438,9 @@ class AlienEscape(Move):
         sprite.rect.move_ip(delta)
 
         # if it only collides with itself, we're good
-        others = pygame.sprite.spritecollide(sprite, self.scene.groups["ball"], False)
+        others = pygame.sprite.spritecollide(sprite,
+                                             self.scene.groups["ball"],
+                                             False)
         if len(others) == 1:
             success = True
 
@@ -425,7 +457,8 @@ class AlienEscape(Move):
             # Try the preferred directions first
             for direction in [first, second]:
                 if self.attempt(sprite, direction):
-                    self.delta = [i * self.speed for i in self.tests[direction]]
+                    self.delta = [i * self.speed
+                                  for i in self.tests[direction]]
                     Move.update(self, sprite)
                     return
 
@@ -440,7 +473,7 @@ class AlienEscape(Move):
         self.move(sprite)
 
         # check whether to change behavior
-        rect = pygame.Rect(0,0,0,0)
+        rect = pygame.Rect(0, 0, 0, 0)
         for brick in self.scene.groups["bricks"].sprites():
             rect.union_ip(brick.rect)
 
@@ -448,6 +481,7 @@ class AlienEscape(Move):
             return AlienDescend(self.scene)
 
         return self
+
 
 class AlienDescend(MoveLimited):
     def __init__(self, scene):
@@ -475,11 +509,12 @@ class AlienDescend(MoveLimited):
 
         return self
 
+
 class AlienJuke(MoveLimited):
     def __init__(self, scene, xdir):
         self.scene = scene
         self.init()
-        self.deltas = [[x * xdir, y] for x,y in self.deltas]
+        self.deltas = [[x * xdir, y] for x, y in self.deltas]
         self.index = 0
         self.set()
 
@@ -503,10 +538,13 @@ class AlienJuke(MoveLimited):
 
         return self
 
+
 class AlienCircle(AlienJuke):
     def init(self):
-        self.deltas = [[0.25, 0.5], [0.5, 0.5], [0.5, 0.25], [0.5, -0.25], [0.5, -0.5], [0.25, -0.5], [-0.25, -0.5], [-0.5, -0.5], [-0.5, -0.25], [-0.5, 0.25], [-0.5, 0.5], [-0.25, 0.5]]
+        self.deltas = [[0.25, 0.5], [0.5, 0.5], [0.5, 0.25], [0.5, -0.25], [0.5, -0.5], [0.25, -0.5],
+                       [-0.25, -0.5], [-0.5, -0.5], [-0.5, -0.25], [-0.5, 0.25], [-0.5, 0.5], [-0.25, 0.5]]
         self.frame_counts = [10, 30, 10, 10, 30, 10, 10, 30, 10, 10, 30, 10]
+
 
 class InletMgr(Action):
     def __init__(self, scene):
@@ -528,6 +566,7 @@ class InletMgr(Action):
                 return Animate("inlet_open").then(Spawn("alien", self.scene).then(Delay(1.0).then(Animate("inlet_close").then(InletMgr(self.scene)))))
             self._randomize()
         return self
+
 
 class DohMgr(Action):
     def __init__(self, scene):
@@ -601,6 +640,7 @@ class DohMgr(Action):
     def state_close(self, sprite):
         self.set_closed(sprite)
         self.set_state(self.state_open, 4)
+
 
 class Sprite(pygame.sprite.DirtySprite):
     def __init__(self, image, cfg={}):
@@ -688,12 +728,14 @@ class Sprite(pygame.sprite.DirtySprite):
                 death_animation = self.cfg.get("death_animation")
                 if death_animation:
                     align = self.cfg.get("death_animation_align", "center")
-                    self.set_action(Animate(death_animation, align).then(Die()))
+                    self.set_action(
+                        Animate(death_animation, align).then(Die()))
                     scene.groups["all"].add(self)
 
                 death_action = self.cfg.get("on_death")
                 if death_action == "create_capsule":
-                    utils.events.generate(utils.EVT_CAPSULE, position=self.rect.topleft)
+                    utils.events.generate(utils.EVT_CAPSULE,
+                                          position=self.rect.topleft)
 
                 points = self.cfg.get("points", 0)
                 if points:
@@ -705,8 +747,11 @@ class Sprite(pygame.sprite.DirtySprite):
 # - single group for rendering everything
 # - share definitions for block reuse
 # - control persistence - some need to be reinstantiated, others need persistence
+
+
 class Scene:
     Group = pygame.sprite.LayeredDirty
+
     def __init__(self, names, var_dict={}):
         self.groups = {}
         self.names = {}
@@ -736,7 +781,7 @@ class Scene:
                 if key:
                     image = get_image(key)
 
-                position = cfg.pop("position", [0,0])
+                position = cfg.pop("position", [0, 0])
 
                 group_names = cfg.pop("groups", [])
 

@@ -21,12 +21,13 @@ CollisionSide_Left = 4
 CollisionSide_Right = 8
 
 CollisionSide_Text = {
-    CollisionSide_None : "None",
-    CollisionSide_Top : "Top",
-    CollisionSide_Bottom : "Bottom",
-    CollisionSide_Left : "Left",
-    CollisionSide_Right : "Right",
+    CollisionSide_None: "None",
+    CollisionSide_Top: "Top",
+    CollisionSide_Bottom: "Bottom",
+    CollisionSide_Left: "Left",
+    CollisionSide_Right: "Right",
 }
+
 
 class State(object):
     def __init__(self, engine, data):
@@ -85,6 +86,7 @@ class State(object):
         else:
             self.engine.set_state(TitleState)
 
+
 class SplashState(State):
     def __init__(self, engine, data):
         State.__init__(self, engine, data)
@@ -94,7 +96,7 @@ class SplashState(State):
         self.fix_banner()
 
         self.splash = self.scene.names["splash"]
-        self.splash.set_action(display.MoveLimited([0,-2], (224-48)/2))
+        self.splash.set_action(display.MoveLimited([0, -2], (224-48)/2))
         utils.timers.start(10.0, self.engine.set_state, TitleState)
 
         utils.events.register(utils.EVT_MOUSEBUTTONDOWN, self.on_click)
@@ -113,6 +115,7 @@ class SplashState(State):
 
     def draw(self, screen):
         self.scene.groups["all"].draw(screen)
+
 
 class TitleState(State):
     def __init__(self, engine, data):
@@ -159,6 +162,7 @@ class TitleState(State):
     def draw(self, screen):
         self.scene.groups["all"].draw(screen)
 
+
 class BlinkState(State):
     def __init__(self, engine, data):
         State.__init__(self, engine, data)
@@ -189,6 +193,7 @@ class BlinkState(State):
     def draw(self, screen):
         self.scene.groups["all"].draw(screen)
 
+
 class RoundState(State):
     def __init__(self, engine, data):
         State.__init__(self, engine, data)
@@ -202,12 +207,14 @@ class RoundState(State):
     def draw(self, screen):
         self.scene.groups["all"].draw(screen)
 
+
 class StartState(State):
     def __init__(self, engine, data):
         State.__init__(self, engine, data)
 
         self.scene = display.Scene(["hud", "walls", "ready"], engine.vars)
-        self.scene.merge(engine.scenes[engine.vars["player"]][engine.vars["level"]])
+        self.scene.merge(
+            engine.scenes[engine.vars["player"]][engine.vars["level"]])
 
         self.fix_hud()
 
@@ -227,6 +234,7 @@ class StartState(State):
 
     def draw(self, screen):
         self.scene.groups["all"].draw(screen)
+
 
 class BreakState(State):
     def __init__(self, engine, data):
@@ -250,6 +258,7 @@ class BreakState(State):
     def draw(self, screen):
         self.scene.groups["all"].draw(screen)
 
+
 class DeathState(State):
     def __init__(self, engine, data):
         State.__init__(self, engine, data)
@@ -267,12 +276,13 @@ class DeathState(State):
             lives = self.engine.get_lives() - 1
             self.engine.set_lives(lives)
             if lives == 0:
-                self.engine.set_state(GameOverState, {"scene" : self.scene})
+                self.engine.set_state(GameOverState, {"scene": self.scene})
             else:
                 self.next_player()
 
     def draw(self, screen):
         self.scene.groups["all"].draw(screen)
+
 
 class GameOverState(State):
     def __init__(self, engine, data):
@@ -286,6 +296,7 @@ class GameOverState(State):
 
     def draw(self, screen):
         self.scene.groups["all"].draw(screen)
+
 
 class ClearState(State):
     def __init__(self, engine, data):
@@ -313,6 +324,7 @@ class ClearState(State):
     def draw(self, screen):
         self.scene.groups["all"].draw(screen)
 
+
 class Paddle:
     def __init__(self, sprite, playspace, state):
         self.state = state
@@ -329,29 +341,35 @@ class Paddle:
 
     def normal_handler(self, event):
         if event == "expand":
-            self.sprite.set_action(self.sprite.action.plus(display.Animate("paddle_grow")))
+            self.sprite.set_action(self.sprite.action.plus(
+                display.Animate("paddle_grow")))
             audio.play_sound("Enlarge")
             self.handler = self.expanded_handler
         elif event == "laser":
-            self.sprite.set_action(self.sprite.action.plus(display.Animate("paddle_to_laser").then(display.Callback(utils.events.register, utils.EVT_FIRE, self.fire_laser))))
+            self.sprite.set_action(self.sprite.action.plus(display.Animate("paddle_to_laser").then(
+                display.Callback(utils.events.register, utils.EVT_FIRE, self.fire_laser))))
             self.handler = self.laser_handler
 
     def expanded_handler(self, event):
         if event == "normal":
-            self.sprite.set_action(self.sprite.action.plus(display.Animate("paddle_shrink")))
+            self.sprite.set_action(self.sprite.action.plus(
+                display.Animate("paddle_shrink")))
             self.handler = self.normal_handler
         elif event == "laser":
-            self.sprite.set_action(self.sprite.action.plus(display.Animate("paddle_shrink").then(display.Animate("paddle_to_laser").then(display.Callback(utils.events.register, utils.EVT_FIRE, self.fire_laser)))))
+            self.sprite.set_action(self.sprite.action.plus(display.Animate("paddle_shrink").then(display.Animate(
+                "paddle_to_laser").then(display.Callback(utils.events.register, utils.EVT_FIRE, self.fire_laser)))))
             self.handler = self.laser_handler
 
     def laser_handler(self, event):
         if event == "expand":
-            self.sprite.set_action(self.sprite.action.plus(display.Animate("laser_to_paddle").then(display.Animate("paddle_grow"))))
+            self.sprite.set_action(self.sprite.action.plus(display.Animate(
+                "laser_to_paddle").then(display.Animate("paddle_grow"))))
             audio.play_sound("Enlarge")
             self.handler = self.expanded_handler
             utils.events.unregister(utils.EVT_FIRE, self.fire_laser)
         elif event == "normal":
-            self.sprite.set_action(self.sprite.action.plus(display.Animate("laser_to_paddle")))
+            self.sprite.set_action(self.sprite.action.plus(
+                display.Animate("laser_to_paddle")))
             self.handler = self.normal_handler
             utils.events.unregister(utils.EVT_FIRE, self.fire_laser)
 
@@ -361,7 +379,7 @@ class Paddle:
         sprite.rect.center = self.sprite.rect.center
         sprite.rect.bottom = self.sprite.rect.top
 
-        sprite.set_action(display.Move([0,-4]))
+        sprite.set_action(display.Move([0, -4]))
         self.state.scene.groups["all"].add(sprite)
         self.state.scene.groups["lasers"].add(sprite)
 
@@ -400,7 +418,8 @@ class Paddle:
             self.hit_ball(ball)
 
     def hit_ball(self, ball):
-        delta = [ball.rect.centerx - self.sprite.rect.centerx, ball.rect.centery - self.sprite.rect.centery]
+        delta = [ball.rect.centerx - self.sprite.rect.centerx,
+                 ball.rect.centery - self.sprite.rect.centery]
         half_width = self.sprite.rect.width / 2
         sharp_thresh = half_width - 3
         mid_thresh = half_width - 8
@@ -409,20 +428,20 @@ class Paddle:
             if delta[1] > 0:
                 vel = [-2, 1]
             else:
-                vel = [-2,-1]
+                vel = [-2, -1]
         elif delta[0] < -mid_thresh:
-            vel = [-1.6,-1.6]
+            vel = [-1.6, -1.6]
         elif delta[0] < 0:
-            vel = [-1,-2]
+            vel = [-1, -2]
         elif delta[0] <= mid_thresh:
-            vel = [1,-2]
+            vel = [1, -2]
         elif delta[0] <= sharp_thresh:
-            vel = [1.6,-1.6]
+            vel = [1.6, -1.6]
         else:
             if delta[1] > 0:
                 vel = [2, 1]
             else:
-                vel = [2,-1]
+                vel = [2, -1]
 
         vel = [i * self.state.ball_speed for i in vel]
 
@@ -443,11 +462,13 @@ class Paddle:
         elif self.handler == self.laser_handler:
             animation = "laser_break"
 
-        self.sprite.set_action(display.Animate(animation).then(display.Die()).plus(display.Move([0.5,0])))
+        self.sprite.set_action(display.Animate(animation).then(
+            display.Die()).plus(display.Move([0.5, 0])))
         self.sound = audio.play_sound("Break")
 
     def alive(self):
         return self.sprite.alive() or (self.sound is not None and self.sound.get_busy())
+
 
 class Capsules:
     def __init__(self, state, paddle):
@@ -517,8 +538,10 @@ class Capsules:
             vel = ball0.action.delta
 
             signs = [1 if vel[i] > 0 else -1 for i in range(2)]
-            vels = [[1,2], [1.6,1.6], [2,1]]
-            vels = [[x * signs[0] * self.state.ball_speed, y * signs[1] * self.state.ball_speed] for x,y in vels]
+            vels = [[1, 2], [1.6, 1.6], [2, 1]]
+            vels = [[x * signs[0] * self.state.ball_speed,
+                     y * signs[1] * self.state.ball_speed]
+                    for x, y in vels]
 
             for name, vel in zip(["ball1", "ball2", "ball3"], vels):
                 ball = self.scene.names[name]
@@ -538,7 +561,8 @@ class Capsules:
 
             for ball in self.scene.groups["balls"]:
                 if isinstance(ball.action, display.Move):
-                    ball.action.delta = [i / utils.config["ball_speed_multiplier"] for i in ball.action.delta]
+                    ball.action.delta = [i / utils.config["ball_speed_multiplier"]
+                                         for i in ball.action.delta]
 
             self.state.speed_timer()
 
@@ -559,7 +583,7 @@ class Capsules:
 
     def kill(self, capsule):
         logging.info("Kill %s", capsule.cfg["effect"])
-        capsule.rect.topleft = [0,0]
+        capsule.rect.topleft = [0, 0]
         capsule.set_action(None)
         capsule.kill()
         self.scene.groups["capsules"].add(capsule)
@@ -569,7 +593,8 @@ class Capsules:
     def spawn(self, capsule, position):
         logging.info("Spawn %s", capsule.cfg["effect"])
         capsule.rect.topleft = position
-        capsule.set_action(display.Move([0,1]).plus(display.Animate(capsule.cfg["animation"])))
+        capsule.set_action(display.Move([0, 1]).plus(
+            display.Animate(capsule.cfg["animation"])))
         self.scene.groups["capsules"].remove(capsule)
         self.scene.groups["paddle"].add(capsule)
         self.scene.groups["all"].add(capsule)
@@ -579,16 +604,19 @@ class Capsules:
             self.count -= 1
 
             if self.count == 0:
-                choices = [capsule for capsule in self.scene.groups["capsules"] for _ in range(capsule.cfg["weight"])]
+                choices = [capsule for capsule in self.scene.groups["capsules"]
+                           for _ in range(capsule.cfg["weight"])]
                 capsule = random.choice(choices)
                 self.spawn(capsule, event.position)
+
 
 class GameState(State):
     def __init__(self, engine, data):
         State.__init__(self, engine, data)
 
         self.scene = display.Scene(["hud", "walls", "tools"], engine.vars)
-        self.scene.merge(engine.scenes[engine.vars["player"]][engine.vars["level"]])
+        self.scene.merge(
+            engine.scenes[engine.vars["player"]][engine.vars["level"]])
 
         self.fix_hud()
 
@@ -641,7 +669,8 @@ class GameState(State):
 
             for ball in self.scene.groups["balls"]:
                 if isinstance(ball.action, display.Move):
-                    ball.action.delta = [i * utils.config["ball_speed_multiplier"] for i in ball.action.delta]
+                    ball.action.delta = [i * utils.config["ball_speed_multiplier"]
+                                         for i in ball.action.delta]
 
         self.speed_timer()
 
@@ -695,7 +724,9 @@ class GameState(State):
 
         # Paddle collisions
         for group in [self.scene.groups["balls"], self.scene.groups["paddle"]]:
-            sprites = pygame.sprite.spritecollide(self.paddle.sprite, group, False)
+            sprites = pygame.sprite.spritecollide(self.paddle.sprite,
+                                                  group,
+                                                  False)
             for sprite in sprites:
                 sprite.hit(self.scene)
 
@@ -706,7 +737,8 @@ class GameState(State):
                 if sprite.cfg.get("kill_paddle", False):
                     # Drain all the lives and die!
                     self.engine.set_lives(1)
-                    self.engine.set_state(DeathState, {"scene" : self.scene, "paddle" : self.paddle})
+                    self.engine.set_state(DeathState,
+                                          {"scene": self.scene, "paddle": self.paddle})
 
                 if sprite.cfg.get("paddle_bounce", False):
                     self.paddle.hit(sprite)
@@ -716,7 +748,9 @@ class GameState(State):
             # Hit the closest object and slide along the collsion edge.  Repeat a few more times
             # in case the slide hits other objects
             for attempt in range(3):
-                sprites = pygame.sprite.spritecollide(projectile, self.scene.groups["ball"], False)
+                sprites = pygame.sprite.spritecollide(projectile,
+                                                      self.scene.groups["ball"],
+                                                      False)
 
                 if len(sprites) > 0:
                     closest = find_closest(projectile, sprites)
@@ -732,18 +766,18 @@ class GameState(State):
                     # Bounce the balls
                     if projectile.alive() and isinstance(projectile.action, display.Move):
                         side = collision_side(projectile, closest)
-
+                        delta = projectile.action.delta
                         if side == CollisionSide_Bottom:
-                            projectile.action.delta[1] = abs(projectile.action.delta[1])
+                            delta[1] = abs(delta[1])
                             projectile.rect.top = closest.rect.bottom
                         elif side == CollisionSide_Top:
-                            projectile.action.delta[1] = -abs(projectile.action.delta[1])
+                            delta[1] = -abs(delta[1])
                             projectile.rect.bottom = closest.rect.top
                         elif side == CollisionSide_Right:
-                            projectile.action.delta[0] = abs(projectile.action.delta[0])
+                            delta[0] = abs(delta[0])
                             projectile.rect.left = closest.rect.right
                         elif side == CollisionSide_Left:
-                            projectile.action.delta[0] = -abs(projectile.action.delta[0])
+                            delta[0] = -abs(delta[0])
                             projectile.rect.right = closest.rect.left
                 else:
                     break
@@ -763,27 +797,33 @@ class GameState(State):
 
         # Check for death
         if len(self.scene.groups["balls"].sprites()) == 0:
-            self.engine.set_state(DeathState, {"scene" : self.scene, "paddle" : self.paddle})
+            self.engine.set_state(DeathState,
+                                  {"scene": self.scene, "paddle": self.paddle})
 
         # Level completion detection
-        remaining = sum([brick.cfg.get("hits", 0) for brick in self.scene.groups["bricks"].sprites()])
+        remaining = sum([brick.cfg.get("hits", 0)
+                         for brick in self.scene.groups["bricks"].sprites()])
         if remaining == 0:
-            self.engine.set_state(ClearState, {"scene" : self.scene})
+            self.engine.set_state(ClearState, {"scene": self.scene})
 
         # Break support
         for sprite in self.scene.groups["break"]:
             if self.paddle.sprite.rect.right >= sprite.rect.left:
                 utils.events.generate(utils.EVT_POINTS, points=10000)
-                self.engine.set_state(BreakState, {"scene" : self.scene, "paddle" : self.paddle})
+                self.engine.set_state(BreakState,
+                                      {"scene": self.scene, "paddle": self.paddle})
 
     def draw(self, screen):
         self.scene.groups["all"].draw(screen)
 
+
 def find_closest(projectile, sprites):
     # Sort by distance from projectile
-    keyfunc = lambda sprite: rect_distance(projectile.last.center, sprite.last)
+    def keyfunc(sprite): return rect_distance(projectile.last.center,
+                                              sprite.last)
     closest = min(sprites, key=keyfunc)
     return closest
+
 
 def rect_distance(point, rect):
     dx = 0
@@ -799,6 +839,7 @@ def rect_distance(point, rect):
         dy = point[1] - (rect.bottom - 1)
 
     return dx**2 + dy**2
+
 
 def collision_move_to_edge(sprite1, sprite2):
     "sprite1 is projectile, sprite2 is the other.  Move sprite1 to be out of contact based on velocity"
@@ -846,12 +887,14 @@ def collision_move_to_edge(sprite1, sprite2):
 
     sprite1.rect.move_ip(int(dx), int(dy))
 
+
 def collision_side(sprite1, sprite2):
     result = collision_side_worker(sprite1, sprite2)
     logging.info("collision curr %s %s", sprite1.rect, sprite2.rect)
     logging.info("collision prev %s %s", sprite1.last, sprite2.last)
     logging.info("collision side %s", CollisionSide_Text[result])
     return result
+
 
 def collision_side_worker(sprite1, sprite2):
     # Code adapted from https://hopefultoad.blogspot.com/2017/09/code-example-for-2d-aabb-collision.html
@@ -921,7 +964,11 @@ def collision_side_worker(sprite1, sprite2):
     # Corner case might have collided with more than one side
     # Compare slopes to see which side was collided with
     return GetCollisionSideFromSlopeComparison(potentialCollisionSide,
-        velocityRise, velocityRun, cornerSlopeRise, cornerSlopeRun)
+                                               velocityRise,
+                                               velocityRun,
+                                               cornerSlopeRise,
+                                               cornerSlopeRun)
+
 
 def GetCollisionSideFromSlopeComparison(potentialSides, velocityRise, velocityRun, nearestCornerRise, nearestCornerRun):
     if velocityRun == 0:
@@ -957,6 +1004,7 @@ def GetCollisionSideFromSlopeComparison(potentialSides, velocityRise, velocityRu
                 return CollisionSide_Right
     return CollisionSide_None
 
+
 class VictoryState(State):
     def __init__(self, engine, data):
         State.__init__(self, engine, data)
@@ -968,7 +1016,7 @@ class VictoryState(State):
         self.sound = audio.play_sound("Victory")
 
         self.victory = self.scene.names["victory"]
-        self.victory.set_action(display.MoveLimited([0,-2], (224-48)/2))
+        self.victory.set_action(display.MoveLimited([0, -2], (224-48)/2))
 
         display.grab_mouse()
 
@@ -991,6 +1039,7 @@ class VictoryState(State):
     def draw(self, screen):
         self.scene.groups["all"].draw(screen)
 
+
 class FinalState(State):
     def __init__(self, engine, data):
         State.__init__(self, engine, data)
@@ -1004,7 +1053,10 @@ class FinalState(State):
         utils.timers.start(3.0, self.animate)
 
     def animate(self):
-        self.doh.set_action(display.Animate(self.doh.cfg["animation"]).then(display.PlaySound("High").then(display.Callback(utils.timers.start, 3.0, self.done))))
+        self.doh.set_action(
+            display.Animate(self.doh.cfg["animation"]).then(
+                display.PlaySound("High").then(
+                    display.Callback(utils.timers.start, 3.0, self.done))))
 
     def done(self):
         self.engine.set_lives(0)
@@ -1015,6 +1067,7 @@ class FinalState(State):
 
     def draw(self, screen):
         self.scene.groups["all"].draw(screen)
+
 
 class Vars:
     def __init__(self, initial={}):
@@ -1027,14 +1080,15 @@ class Vars:
         self.data[key] = value
         utils.events.generate(utils.EVT_VAR_CHANGE, name=key, value=value)
 
+
 class Engine(object):
 
     INITIAL_STATE = SplashState
 
     def __init__(self):
         self.vars = Vars({
-            "high":0,
-            "players":1,
+            "high": 0,
+            "players": 1,
         })
 
         # Load the level scene configurations into the global config structure
@@ -1061,7 +1115,8 @@ class Engine(object):
         # Create independent scenes for all levels for each player to track progress
         self.scenes = {}
         for player in range(1, self.vars["players"]+1):
-            self.scenes[player] = {levels.parse_num(key) : display.Scene([key], self.vars) for key in self.level_data}
+            self.scenes[player] = {levels.parse_num(key): display.Scene([key], self.vars)
+                                   for key in self.level_data}
 
     def set_lives(self, lives):
         player = self.vars["player"]
@@ -1084,7 +1139,6 @@ class Engine(object):
             logging.info("P%d Score %d (h)", player, score)
         else:
             logging.info("P%d Score %d", player, score)
-
 
     def get_score(self):
         key = "score1" if self.vars["player"] == 1 else "score2"

@@ -11,19 +11,20 @@ import main
 import utils
 
 SCENES = {
-    "collision_test" : [
+    "collision_test": [
         {
-            "name" : "ball",
-            "image" : "ball",
-            "position" : [100, 80]
+            "name": "ball",
+            "image": "ball",
+            "position": [100, 80]
         },
         {
-            "name" : "brick",
-            "image" : "red",
-            "position" : [100, 100]
+            "name": "brick",
+            "image": "red",
+            "position": [100, 100]
         }
     ]
 }
+
 
 class DebugState(engine.State):
     def __init__(self, eng, data):
@@ -31,6 +32,7 @@ class DebugState(engine.State):
 
         # Register the faux JSON from the debug file
         utils.config["scenes"].update(SCENES)
+
 
 class CollisionTest(DebugState):
     def __init__(self, eng, data):
@@ -44,16 +46,16 @@ class CollisionTest(DebugState):
         utils.events.register(utils.EVT_KEYDOWN, self.on_keydown)
 
     def on_keydown(self, event):
-        delta = [0,0]
+        delta = [0, 0]
 
         if event.key == pygame.K_UP:
-            delta = [0,-1]
+            delta = [0, -1]
         elif event.key == pygame.K_DOWN:
-            delta = [0,1]
+            delta = [0, 1]
         elif event.key == pygame.K_LEFT:
-            delta = [-1,0]
+            delta = [-1, 0]
         elif event.key == pygame.K_RIGHT:
-            delta = [1,0]
+            delta = [1, 0]
 
         self.scene.names["ball"].rect.move_ip(delta)
 
@@ -68,6 +70,7 @@ class CollisionTest(DebugState):
 
     def draw(self, screen):
         self.scene.groups["all"].draw(screen)
+
 
 class DebugEngine(engine.Engine):
     def __init__(self):
@@ -113,6 +116,7 @@ class DebugEngine(engine.Engine):
 
     def step(self):
         engine.Engine.update(self)
+
 
 if __name__ == "__main__":
     utils.setup_logging("logging.json")
