@@ -181,23 +181,6 @@ class Delta:
         return delta
 
 
-class Cache:
-    """Cache objects whose creation is expensive.  Replace with lru_cache"""
-
-    def __init__(self, factory):
-        self.cache = {}
-        self.factory = factory
-
-    def get(self, key):
-        """Fetch the item from the cache if present, else create it with the factory"""
-        item = self.cache.get(key)
-        if item is None:
-            item = self.factory(key)
-            self.cache[key] = item
-            logging.warning("Cache miss: %s", key)
-        return item
-
-
 # Globals
 # pylint: disable=invalid-name
 config = {}     # initialized in main

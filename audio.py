@@ -1,6 +1,8 @@
 """
 Support for audio
 """
+
+import functools
 import logging
 
 import pygame
@@ -11,7 +13,8 @@ import utils
 pygame.mixer.pre_init(frequency=44100, buffer=512)
 
 
-def sound_factory(name):
+@functools.lru_cache(maxsize=None)
+def get_sound(name):
     "Load and configure a sound"
     cfg = utils.config["sounds"][name]
 
@@ -21,17 +24,14 @@ def sound_factory(name):
     sound = pygame.mixer.Sound(fname)
     sound.set_volume(volume)
 
+    logging.warning("Sound cache miss: %s", name)
+
     return sound
-
-
-# pylint: disable=invalid-name; not a constant
-_audio_cache = utils.Cache(sound_factory)
-# pylint: enable=invalid-name
 
 
 def play_sound(name):
     """Play the given sound"""
-    sound = _audio_cache.get(name)
+    sound = get_sound(name)
 
     sound.stop()            # Stop any previous instance of this sound
     channel = sound.play()

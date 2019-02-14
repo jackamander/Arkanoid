@@ -3,6 +3,8 @@ display.py
 
 Display functionality
 """
+
+import functools
 import logging
 import os
 
@@ -101,8 +103,9 @@ def draw_text(text, font):
     return surf
 
 
-def image_factory(name):
-    "Load an image file from disk"
+@functools.lru_cache(maxsize=None)
+def get_image(name):
+    "Fetch an image from cache or disk"
     cfg = utils.config["images"][name]
 
     fname = cfg["filename"]
@@ -120,16 +123,6 @@ def image_factory(name):
     if scaled:
         image = pygame.transform.smoothscale(image, scaled)
 
-    return image
-
-
-# pylint: disable=invalid-name; not a constant
-_image_cache = utils.Cache(image_factory)
-# pylint: enable=invalid-name
-
-
-def get_image(name):
-    "Fetch an image from cache or disk"
-    image = _image_cache.get(name)
+    logging.warning("Image cache miss: %s", name)
 
     return image
