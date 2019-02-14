@@ -11,7 +11,7 @@ import utils
 EngineClass = engine.Engine
 
 
-def main():
+def main_loop():
     """Arkanoid main loop"""
 
     utils.init()                    # Lazy initialization to give time to set up logging
@@ -66,10 +66,16 @@ def main():
         logfunc("%d FPS %.3fs (%d%%)", fps, ftime, utilization)
 
 
-if __name__ == '__main__':
+def main():
+    """Top level function!"""
     utils.setup_logging("logging.json")
 
+    # Run the game
     try:
-        main()
-    except Exception as exc:    # pylint: disable=broad-except
+        main_loop()
+    except Exception:    # pylint: disable=broad-except
         logging.exception("Uncaught exception!")
+
+
+if __name__ == '__main__':
+    main()
