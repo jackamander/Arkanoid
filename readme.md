@@ -74,3 +74,11 @@ Some high-level requirements:
 ### Refactor
 - OOP clean-up
 - ECS redesign
+
+## Set up
+1. python -m venv venv
+2. venv\Scripts\activate
+3. pip install -r requirements.txt
+4. .vscode folder - settings.json:
+    * ```"python.pythonPath": C:\\Users\\jacka\\OneDrive\\Code\\Arkanoid\\venv\\Scripts\\python.exe"```
+    * ```"python.linting.pylintArgs" : ["--extension-pkg-whitelist=pygame", "--ignore=.vscode"]```
