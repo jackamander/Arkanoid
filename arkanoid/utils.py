@@ -8,7 +8,6 @@ import enum
 import json
 import logging
 import logging.config
-import os
 import pathlib
 import sys
 import time
