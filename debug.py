@@ -5,8 +5,10 @@ import logging
 
 import pygame
 
+import collision
 import display
 import engine
+import entities
 import main
 import utils
 
@@ -27,6 +29,8 @@ SCENES = {
 
 
 class DebugState(engine.State):
+    "Special engine state for debugging"
+
     def __init__(self, eng, data):
         engine.State.__init__(self, eng, data)
 
@@ -35,10 +39,12 @@ class DebugState(engine.State):
 
 
 class CollisionTest(DebugState):
+    "State to test collisions"
+
     def __init__(self, eng, data):
         DebugState.__init__(self, eng, data)
 
-        self.scene = display.Scene(["collision_test"], eng.vars)
+        self.scene = entities.Scene(["collision_test"], eng.vars)
 
         self.ball = self.scene.names["ball"]
         self.brick = self.scene.names["brick"]
@@ -46,6 +52,7 @@ class CollisionTest(DebugState):
         utils.events.register(utils.EVT_KEYDOWN, self.on_keydown)
 
     def on_keydown(self, event):
+        "Respond to keypress events"
         delta = [0, 0]
 
         if event.key == pygame.K_UP:
@@ -60,7 +67,7 @@ class CollisionTest(DebugState):
         self.scene.names["ball"].rect.move_ip(delta)
 
         if pygame.sprite.collide_rect(self.ball, self.brick):
-            side = engine.collision_side(self.ball, self.brick)
+            side = collision.collision_side(self.ball, self.brick)
             print(side)
         else:
             print()
@@ -73,19 +80,24 @@ class CollisionTest(DebugState):
 
 
 class DebugEngine(engine.Engine):
+    "Special engine for debugging"
+
     def __init__(self):
         engine.Engine.__init__(self)
         self.__running = True
 
     def pause_on(self):
+        "Pause the simulation"
         self.__running = False
         display.release_mouse()
 
     def pause_off(self):
+        "Unpause the simulation"
         self.__running = True
         display.grab_mouse()
 
     def pause_toggle(self):
+        "Toggle simulation pause"
         if self.__running:
             self.pause_on()
         else:
@@ -98,7 +110,7 @@ class DebugEngine(engine.Engine):
             elif event.key == pygame.K_l:
                 self.state.jump_level(36)
             elif event.key == pygame.K_r:
-                self.set_state(engine.StartState)
+                self.set_state(engine.StartState, {})
             elif event.key == pygame.K_p:
                 self.pause_toggle()
             elif event.key == pygame.K_s:
@@ -115,17 +127,18 @@ class DebugEngine(engine.Engine):
             self.step()
 
     def step(self):
+        "single step the engine for one frame"
         engine.Engine.update(self)
 
 
 if __name__ == "__main__":
     utils.setup_logging("logging.json")
 
-    main.ENGINE_CLASS = DebugEngine
+    main.EngineClass = DebugEngine
 
     # engine.Engine.INITIAL_STATE = CollisionTest
 
     try:
         main.main()
-    except Exception as exc:
+    except Exception as exc:  # pylint: disable=broad-except
         logging.exception("Uncaught exception!")

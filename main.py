@@ -1,11 +1,6 @@
-"""
-Arkanoid clone
-
-Goal is to produce a complete game without having to worry about any game design or resources.  Just code!
-"""
+"""Arkanoid clone"""
 
 import logging
-import os
 
 import pygame
 
@@ -13,7 +8,7 @@ import display
 import engine
 import utils
 
-ENGINE_CLASS = engine.Engine
+EngineClass = engine.Engine
 
 
 def main():
@@ -25,7 +20,7 @@ def main():
 
     window = display.Window()
 
-    eng = ENGINE_CLASS()
+    eng = EngineClass()
 
     clock = pygame.time.Clock()
     frame_timer = utils.Delta()
@@ -38,7 +33,9 @@ def main():
         for event in pygame.event.get():
             logging.debug("Event: %s", pygame.event.event_name(event.type))
 
-            if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
+            if event.type == pygame.QUIT:
+                return
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                 return
 
             eng.input(event)
@@ -74,5 +71,5 @@ if __name__ == '__main__':
 
     try:
         main()
-    except Exception as exc:
+    except Exception as exc:    # pylint: disable=broad-except
         logging.exception("Uncaught exception!")

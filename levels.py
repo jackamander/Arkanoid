@@ -17,7 +17,6 @@ S = silver
 G = gold
 """
 
-import json
 import re
 
 
@@ -37,17 +36,19 @@ def create_sprites(num, data):
 
 
 def build_bg(num):
+    """Create a background config"""
     bg_index = (num - 1) % 4
-    bg = {
+    background = {
         "name": "bg",
         "image": "bg%d" % bg_index,
         "position": [16, 8],
         "layer": 0
     }
-    return bg
+    return background
 
 
 def build_alien(num):
+    """Create an alien config"""
     alien_index = (num - 1) % 4
     alien = {
         "name": "alien",
@@ -65,6 +66,7 @@ def build_alien(num):
 
 
 def build_bricks(num):
+    """Build brick configs"""
     silver_points = 50 * num
     silver_hits = 2 + (num - 1) // 8
 
@@ -163,7 +165,7 @@ def build_bricks(num):
 def parse_num(key):
     "Parse the level number from the JSON key"
     mobj = re.match(r"level(\d+)", key)
-    assert mobj != None, "Bad level key %s" % key
+    assert mobj is not None, "Bad level key %s" % key
     return int(mobj.group(1))
 
 

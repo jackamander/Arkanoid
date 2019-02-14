@@ -7,7 +7,6 @@ General utilities
 import json
 import logging
 import logging.config
-import math
 import os
 import sys
 import time
@@ -17,10 +16,13 @@ import pygame
 PY2 = sys.version_info[0] < 3
 
 if not PY2:
-    basestring = str
+    # Hack to support tests for strings
+    basestring = str  # pylint: disable=invalid-name
 
 
 def init():
+    """Initialize the global config structure"""
+    # pylint: disable=global-statement, invalid-name
     global config
     config = get_config("config.json")
 
@@ -40,8 +42,8 @@ def get_config(fname):
 def setup_logging(fname):
     """Load logging configuration from JSON file."""
     if os.path.exists(fname):
-        config = get_config(fname)
-        logging.config.dictConfig(config)
+        cfg = get_config(fname)
+        logging.config.dictConfig(cfg)
     else:
         logging.basicConfig(level=logging.INFO)
         logging.error("Missing logging config <%s>", fname)
@@ -86,6 +88,8 @@ EVT_PADDLEMOVE = pygame.USEREVENT + 5           # delta
 
 
 class Events:
+    """Synchronous event dispatcher"""
+
     def __init__(self):
         self.clear()
 
@@ -95,6 +99,7 @@ class Events:
         handlers.add(handler)
 
     def unregister(self, eventtype, handler):
+        """Unregister a handler method for the given event"""
         handlers = self.handlers.setdefault(eventtype, set())
         if handler in handlers:
             handlers.remove(handler)
@@ -106,18 +111,23 @@ class Events:
             handler(event)
 
     def generate(self, event_type, **kwargs):
+        """Generate the given event"""
         event = pygame.event.Event(event_type, **kwargs)
         self.handle(event)
 
     def clear(self):
+        """Clear all event handlers"""
         self.handlers = {}
 
 
 class Timers:
+    """Invokes callbacks after a specified delay in frames"""
+
     def __init__(self):
         self.clear()
 
     def update(self):
+        """Invoke any pending timers"""
         initial_timers = list(self.timers.items())
         for handler, [frames, args, kwargs] in initial_timers:
             frames -= 1
@@ -129,20 +139,24 @@ class Timers:
                 self.timers[handler] = [frames, args, kwargs]
 
     def start(self, delay, handler, *args, **kwargs):
+        """Start a timer callback with the specified delay and arguments"""
         fps = config["frame_rate"]
         frames = int(delay * fps)
         self.timers[handler] = [frames, args, kwargs]
 
     def cancel(self, handler):
+        """Cancel a timer callback"""
         self.timers.pop(handler, None)
 
     def clear(self):
+        """Clear all pending timer callbacks"""
         self.timers = {}
 
 
 class Delta:
+    """Track time between calls to the millisecond"""
+
     def __init__(self):
-        """Track time deltas to the millisecond"""
         self.last = time.time()
 
     def get(self):
@@ -154,11 +168,14 @@ class Delta:
 
 
 class Cache:
+    """Cache objects whose creation is expensive.  Replace with lru_cache"""
+
     def __init__(self, factory):
         self.cache = {}
         self.factory = factory
 
     def get(self, key):
+        """Fetch the item from the cache if present, else create it with the factory"""
         item = self.cache.get(key)
         if item is None:
             item = self.factory(key)
@@ -168,6 +185,7 @@ class Cache:
 
 
 # Globals
+# pylint: disable=invalid-name
 config = {}     # initialized in main
 events = Events()
 timers = Timers()
