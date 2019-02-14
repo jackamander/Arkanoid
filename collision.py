@@ -1,22 +1,17 @@
 """
 Collision handling
 """
-
+import enum
 import logging
 
-COLLISIONSIDE_NONE = 0
-COLLISIONSIDE_TOP = 1
-COLLISIONSIDE_BOTTOM = 2
-COLLISIONSIDE_LEFT = 4
-COLLISIONSIDE_RIGHT = 8
 
-COLLISIONSIDE_TEXT = {
-    COLLISIONSIDE_NONE: "None",
-    COLLISIONSIDE_TOP: "Top",
-    COLLISIONSIDE_BOTTOM: "Bottom",
-    COLLISIONSIDE_LEFT: "Left",
-    COLLISIONSIDE_RIGHT: "Right",
-}
+class Side(enum.IntFlag):
+    """Flags for collision side checking"""
+    NONE = 0
+    TOP = 1
+    BOTTOM = 2
+    LEFT = 4
+    RIGHT = 8
 
 
 def find_closest(projectile, sprites):
@@ -103,7 +98,7 @@ def collision_side(sprite1, sprite2):
     result = collision_side_worker(sprite1, sprite2)
     logging.info("collision curr %s %s", sprite1.rect, sprite2.rect)
     logging.info("collision prev %s %s", sprite1.last, sprite2.last)
-    logging.info("collision side %s", COLLISIONSIDE_TEXT[result])
+    logging.info("collision side %s", str(result))
     return result
 
 
@@ -127,52 +122,52 @@ def collision_side_worker(sprite1, sprite2):
     sprite1_prev = sprite1.last.move(vel_run_2, vel_rise_2)
 
     # Stores what sides might have been collided with
-    potential = COLLISIONSIDE_NONE
+    potential = Side.NONE
 
     if sprite1_prev.right <= sprite2.rect.left:
         # Did not collide with right side might have collided with left side
-        potential |= COLLISIONSIDE_LEFT
+        potential |= Side.LEFT
 
         corner_run = sprite2.rect.left - sprite1_prev.right
 
         if sprite1_prev.bottom <= sprite2.rect.top:
             # Might have collided with top side
-            potential |= COLLISIONSIDE_TOP
+            potential |= Side.TOP
             corner_rise = sprite2.rect.top - sprite1_prev.bottom
         elif sprite1_prev.top >= sprite2.rect.bottom:
             # Might have collided with bottom side
-            potential |= COLLISIONSIDE_BOTTOM
+            potential |= Side.BOTTOM
             corner_rise = sprite2.rect.bottom - sprite1_prev.top
         else:
             # Did not collide with top side or bottom side or right side
-            return COLLISIONSIDE_LEFT
+            return Side.LEFT
     elif sprite1_prev.left >= sprite2.rect.right:
         # Did not collide with left side might have collided with right side
-        potential |= COLLISIONSIDE_RIGHT
+        potential |= Side.RIGHT
 
         corner_run = sprite1_prev.left - sprite2.rect.right
 
         if sprite1_prev.bottom <= sprite2.rect.top:
             # Might have collided with top side
-            potential |= COLLISIONSIDE_TOP
+            potential |= Side.TOP
             corner_rise = sprite1_prev.bottom - sprite2.rect.top
         elif sprite1_prev.top >= sprite2.rect.bottom:
             # Might have collided with bottom side
-            potential |= COLLISIONSIDE_BOTTOM
+            potential |= Side.BOTTOM
             corner_rise = sprite1_prev.top - sprite2.rect.bottom
         else:
             # Did not collide with top side or bottom side or left side
-            return COLLISIONSIDE_RIGHT
+            return Side.RIGHT
     else:
         # Did not collide with either left or right side
         # must be top side, bottom side, or none
         if sprite1_prev.bottom <= sprite2.rect.top:
-            return COLLISIONSIDE_TOP
+            return Side.TOP
         elif sprite1_prev.top >= sprite2.rect.bottom:
-            return COLLISIONSIDE_BOTTOM
+            return Side.BOTTOM
         else:
             # Previous hitbox of moving object was already colliding with stationary object
-            return COLLISIONSIDE_NONE
+            return Side.NONE
 
     # Corner case might have collided with more than one side
     # Compare slopes to see which side was collided with
@@ -194,26 +189,26 @@ def collide_slopes(potential, vel_rise, vel_run, corner_rise, corner_run):
     vel_slope = vel_rise / vel_run
     corner_slope = corner_rise / corner_run
 
-    if (potential & COLLISIONSIDE_TOP) == COLLISIONSIDE_TOP:
-        if (potential & COLLISIONSIDE_LEFT) == COLLISIONSIDE_LEFT:
+    if (potential & Side.TOP) == Side.TOP:
+        if (potential & Side.LEFT) == Side.LEFT:
             if vel_slope < corner_slope:
-                return COLLISIONSIDE_TOP
+                return Side.TOP
             else:
-                return COLLISIONSIDE_LEFT
-        elif (potential & COLLISIONSIDE_RIGHT) == COLLISIONSIDE_RIGHT:
+                return Side.LEFT
+        elif (potential & Side.RIGHT) == Side.RIGHT:
             if vel_slope > corner_slope:
-                return COLLISIONSIDE_TOP
+                return Side.TOP
             else:
-                return COLLISIONSIDE_RIGHT
-    elif (potential & COLLISIONSIDE_BOTTOM) == COLLISIONSIDE_BOTTOM:
-        if (potential & COLLISIONSIDE_LEFT) == COLLISIONSIDE_LEFT:
+                return Side.RIGHT
+    elif (potential & Side.BOTTOM) == Side.BOTTOM:
+        if (potential & Side.LEFT) == Side.LEFT:
             if vel_slope > corner_slope:
-                return COLLISIONSIDE_BOTTOM
+                return Side.BOTTOM
             else:
-                return COLLISIONSIDE_LEFT
-        elif (potential & COLLISIONSIDE_RIGHT) == COLLISIONSIDE_RIGHT:
+                return Side.LEFT
+        elif (potential & Side.RIGHT) == Side.RIGHT:
             if vel_slope < corner_slope:
-                return COLLISIONSIDE_BOTTOM
+                return Side.BOTTOM
             else:
-                return COLLISIONSIDE_RIGHT
-    return COLLISIONSIDE_NONE
+                return Side.RIGHT
+    return Side.NONE

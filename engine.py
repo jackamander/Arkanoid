@@ -518,16 +518,16 @@ class GameState(State):
                     if projectile.alive() and isinstance(projectile.action, entities.Move):
                         side = collision.collision_side(projectile, closest)
                         delta = projectile.action.delta
-                        if side == collision.COLLISIONSIDE_BOTTOM:
+                        if side == collision.Side.BOTTOM:
                             delta[1] = abs(delta[1])
                             projectile.rect.top = closest.rect.bottom
-                        elif side == collision.COLLISIONSIDE_TOP:
+                        elif side == collision.Side.TOP:
                             delta[1] = -abs(delta[1])
                             projectile.rect.bottom = closest.rect.top
-                        elif side == collision.COLLISIONSIDE_RIGHT:
+                        elif side == collision.Side.RIGHT:
                             delta[0] = abs(delta[0])
                             projectile.rect.left = closest.rect.right
-                        elif side == collision.COLLISIONSIDE_LEFT:
+                        elif side == collision.Side.LEFT:
                             delta[0] = -abs(delta[0])
                             projectile.rect.right = closest.rect.left
                 else:
