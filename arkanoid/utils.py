@@ -9,6 +9,7 @@ import json
 import logging
 import logging.config
 import pathlib
+from random import Random
 import sys
 import time
 
@@ -26,6 +27,9 @@ def init():
     # pylint: disable=global-statement, invalid-name
     global config
     config = get_config("config.json")
+
+    global random
+    random.seed(config["seed"])
 
 
 def set_config(fname, obj):
@@ -188,3 +192,4 @@ class Delta:
 config = {}     # initialized in main
 events = Events()
 timers = Timers()
+random = Random()

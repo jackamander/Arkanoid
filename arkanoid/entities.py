@@ -3,7 +3,6 @@ Sprites, scenes, and their actions
 """
 
 import math
-import random
 
 import pygame
 
@@ -438,7 +437,7 @@ class AlienDescend(MoveLimited):
             if sprite.rect.left > playspace.left + 40:
                 actions += [AlienCircle(self.scene, -1)]
 
-            return random.choice(actions)
+            return utils.random.choice(actions)
 
         return self
 
@@ -514,7 +513,7 @@ class InletMgr(Action):
         self._randomize()
 
     def _randomize(self):
-        self.frames = random.random() * self.max_delay
+        self.frames = utils.random.random() * self.max_delay
 
     def update(self, sprite):
         if self.frames > 0:

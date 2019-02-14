@@ -2,7 +2,6 @@
 Critical game systems
 """
 import logging
-import random
 
 import audio
 import collision
@@ -50,7 +49,9 @@ class Paddle:
             action = self.sprite.action.plus(
                 entities.Animate("paddle_shrink").then(
                     entities.Animate("paddle_to_laser").then(
-                        entities.Callback(utils.events.register, utils.Event.FIRE, self.fire_laser))))
+                        entities.Callback(utils.events.register,
+                                          utils.Event.FIRE,
+                                          self.fire_laser))))
             self.sprite.set_action(action)
             self.handler = self.laser_handler
 
@@ -221,7 +222,8 @@ class Capsules:
     def enable(self):
         """Enable capsule creation"""
         if self.count == 0:
-            self.count = random.randint(1, utils.config["max_capsule_count"])
+            self.count = utils.random.randint(1,
+                                              utils.config["max_capsule_count"])
             logging.info("Capsule in %d", self.count)
 
     def block(self, names):
@@ -333,5 +335,5 @@ class Capsules:
             if self.count == 0:
                 choices = [capsule for capsule in self.scene.groups["capsules"]
                            for _ in range(capsule.cfg["weight"])]
-                capsule = random.choice(choices)
+                capsule = utils.random.choice(choices)
                 self.spawn(capsule, event.position)
