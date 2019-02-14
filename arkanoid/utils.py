@@ -9,6 +9,7 @@ import json
 import logging
 import logging.config
 import os
+import pathlib
 import sys
 import time
 
@@ -36,16 +37,18 @@ def set_config(fname, obj):
 
 def get_config(fname):
     """Load a JSON config file"""
-    with open(fname, "rb") as fin:
+    fpath = pathlib.Path("cfg") / fname
+    with fpath.open("rb") as fin:
         return json.load(fin)
 
 
 def setup_logging(fname):
     """Load logging configuration from JSON file."""
-    if os.path.exists(fname):
+    try:
+        pathlib.Path("logs").mkdir(exist_ok=True)
         cfg = get_config(fname)
         logging.config.dictConfig(cfg)
-    else:
+    except FileNotFoundError:
         logging.basicConfig(level=logging.INFO)
         logging.error("Missing logging config <%s>", fname)
 
