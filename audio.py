@@ -24,10 +24,13 @@ def sound_factory(name):
     return sound
 
 
+# pylint: disable=invalid-name; not a constant
 _audio_cache = utils.Cache(sound_factory)
+# pylint: enable=invalid-name
 
 
 def play_sound(name):
+    """Play the given sound"""
     sound = _audio_cache.get(name)
 
     sound.stop()            # Stop any previous instance of this sound
