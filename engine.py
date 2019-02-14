@@ -101,8 +101,8 @@ class SplashState(State):
         self.splash.set_action(entities.MoveLimited([0, -2], (224-48)/2))
         utils.timers.start(10.0, self.engine.set_state, TitleState, {})
 
-        utils.events.register(utils.EVT_MOUSEBUTTONDOWN, self.on_click)
-        utils.events.register(utils.EVT_KEYDOWN, self.on_keydown)
+        utils.events.register(utils.Event.MOUSEBUTTONDOWN, self.on_click)
+        utils.events.register(utils.Event.KEYDOWN, self.on_keydown)
 
     def on_click(self, event):
         """Skip to title menu when clicked"""
@@ -131,10 +131,10 @@ class TitleState(State):
 
         self.fix_banner()
 
-        utils.events.register(utils.EVT_MOUSEBUTTONDOWN, self.on_click)
-        utils.events.register(utils.EVT_MOUSEMOTION, self.on_motion)
-        utils.events.register(utils.EVT_KEYDOWN, self.on_keydown)
-        utils.events.register(utils.EVT_VAR_CHANGE, self.on_var_change)
+        utils.events.register(utils.Event.MOUSEBUTTONDOWN, self.on_click)
+        utils.events.register(utils.Event.MOUSEMOTION, self.on_motion)
+        utils.events.register(utils.Event.KEYDOWN, self.on_keydown)
+        utils.events.register(utils.Event.VAR_CHANGE, self.on_var_change)
 
         display.release_mouse()
 
@@ -373,11 +373,11 @@ class GameState(State):
 
         self.capsules = systems.Capsules(self, self.paddle)
 
-        utils.events.register(utils.EVT_MOUSEBUTTONDOWN, self.on_click)
-        utils.events.register(utils.EVT_MOUSEMOTION, self.on_motion)
-        utils.events.register(utils.EVT_KEYDOWN, self.on_keydown)
-        utils.events.register(utils.EVT_POINTS, self.on_points)
-        utils.events.register(utils.EVT_EXTRA_LIFE, self.on_extra_life)
+        utils.events.register(utils.Event.MOUSEBUTTONDOWN, self.on_click)
+        utils.events.register(utils.Event.MOUSEMOTION, self.on_motion)
+        utils.events.register(utils.Event.KEYDOWN, self.on_keydown)
+        utils.events.register(utils.Event.POINTS, self.on_points)
+        utils.events.register(utils.Event.EXTRA_LIFE, self.on_extra_life)
 
         self.speed_timer()
 
@@ -422,17 +422,17 @@ class GameState(State):
     def on_click(self, event):
         """Generate a fire event on a mouse click"""
         if event.button == 1:
-            utils.events.generate(utils.EVT_FIRE)
+            utils.events.generate(utils.Event.FIRE)
 
     def on_motion(self, event):
         """Generate a paddle move event on mouse motion"""
         delta = utils.config["mouse_speed"] * event.rel[0]
-        utils.events.generate(utils.EVT_PADDLEMOVE, delta=delta)
+        utils.events.generate(utils.Event.PADDLEMOVE, delta=delta)
 
     def on_keydown(self, event):
         """Generate a fire event on key presses"""
         if event.key in [pygame.K_SPACE, pygame.K_RETURN]:
-            utils.events.generate(utils.EVT_FIRE)
+            utils.events.generate(utils.Event.FIRE)
 
     def on_points(self, event):
         """Respond to points events"""
@@ -441,7 +441,7 @@ class GameState(State):
 
         # Check for extra lives
         if score >= self.threshold:
-            utils.events.generate(utils.EVT_EXTRA_LIFE)
+            utils.events.generate(utils.Event.EXTRA_LIFE)
             self.threshold = self.next_life_threshold()
 
     def on_extra_life(self, _event):
@@ -464,7 +464,7 @@ class GameState(State):
 
         # Send the motion event
         delta = utils.config["kb_speed"] * direction
-        utils.events.generate(utils.EVT_PADDLEMOVE, delta=delta)
+        utils.events.generate(utils.Event.PADDLEMOVE, delta=delta)
 
     def update(self):
         self.keyboard_input()
@@ -561,7 +561,7 @@ class GameState(State):
         # Break support
         for sprite in self.scene.groups["break"]:
             if self.paddle.sprite.rect.right >= sprite.rect.left:
-                utils.events.generate(utils.EVT_POINTS, points=10000)
+                utils.events.generate(utils.Event.POINTS, points=10000)
                 self.engine.set_state(BreakState,
                                       {"scene": self.scene, "paddle": self.paddle})
 
@@ -586,8 +586,8 @@ class VictoryState(State):
 
         display.grab_mouse()
 
-        utils.events.register(utils.EVT_MOUSEBUTTONDOWN, self.on_click)
-        utils.events.register(utils.EVT_KEYDOWN, self.on_keydown)
+        utils.events.register(utils.Event.MOUSEBUTTONDOWN, self.on_click)
+        utils.events.register(utils.Event.KEYDOWN, self.on_keydown)
 
     def on_click(self, event):
         """Abort victory song on click"""
@@ -652,7 +652,7 @@ class Vars:
 
     def __setitem__(self, key, value):
         self.data[key] = value
-        utils.events.generate(utils.EVT_VAR_CHANGE, name=key, value=value)
+        utils.events.generate(utils.Event.VAR_CHANGE, name=key, value=value)
 
 
 class Engine(object):

@@ -107,7 +107,7 @@ class PaddleMove(Action):
         self.rect = region.copy()
         self.delta = 0
 
-        utils.events.register(utils.EVT_PADDLEMOVE, self.on_paddlemove)
+        utils.events.register(utils.Event.PADDLEMOVE, self.on_paddlemove)
 
     def on_paddlemove(self, event):
         "Event handler for EVT_PADDLEMOVE"
@@ -285,7 +285,7 @@ class UpdateVar(Action):
         self.text = ""
         self.dirty = False
 
-        utils.events.register(utils.EVT_VAR_CHANGE, self.on_var_change)
+        utils.events.register(utils.Event.VAR_CHANGE, self.on_var_change)
 
     def on_var_change(self, event):
         "Event handler for EVT_VAR_CHANGE"
@@ -696,7 +696,7 @@ class Sprite(pygame.sprite.DirtySprite):
 
         hit_points = self.cfg.get("hit_points")
         if hit_points:
-            utils.events.generate(utils.EVT_POINTS, points=hit_points)
+            utils.events.generate(utils.Event.POINTS, points=hit_points)
 
         hits = self.cfg.get("hits")
         if hits:
@@ -714,12 +714,12 @@ class Sprite(pygame.sprite.DirtySprite):
 
                 death_action = self.cfg.get("on_death")
                 if death_action == "create_capsule":
-                    utils.events.generate(utils.EVT_CAPSULE,
+                    utils.events.generate(utils.Event.CAPSULE,
                                           position=self.rect.topleft)
 
                 points = self.cfg.get("points", 0)
                 if points:
-                    utils.events.generate(utils.EVT_POINTS, points=points)
+                    utils.events.generate(utils.Event.POINTS, points=points)
 
 
 class Scene:

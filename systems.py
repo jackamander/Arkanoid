@@ -36,7 +36,7 @@ class Paddle:
         elif event == "laser":
             action = self.sprite.action.plus(
                 entities.Animate("paddle_to_laser").then(
-                    entities.Callback(utils.events.register, utils.EVT_FIRE, self.fire_laser)))
+                    entities.Callback(utils.events.register, utils.Event.FIRE, self.fire_laser)))
             self.sprite.set_action(action)
             self.handler = self.laser_handler
 
@@ -50,7 +50,7 @@ class Paddle:
             action = self.sprite.action.plus(
                 entities.Animate("paddle_shrink").then(
                     entities.Animate("paddle_to_laser").then(
-                        entities.Callback(utils.events.register, utils.EVT_FIRE, self.fire_laser))))
+                        entities.Callback(utils.events.register, utils.Event.FIRE, self.fire_laser))))
             self.sprite.set_action(action)
             self.handler = self.laser_handler
 
@@ -63,13 +63,13 @@ class Paddle:
             self.sprite.set_action(action)
             audio.play_sound("Enlarge")
             self.handler = self.expanded_handler
-            utils.events.unregister(utils.EVT_FIRE, self.fire_laser)
+            utils.events.unregister(utils.Event.FIRE, self.fire_laser)
         elif event == "normal":
             action = self.sprite.action.plus(
                 entities.Animate("laser_to_paddle"))
             self.sprite.set_action(action)
             self.handler = self.normal_handler
-            utils.events.unregister(utils.EVT_FIRE, self.fire_laser)
+            utils.events.unregister(utils.Event.FIRE, self.fire_laser)
 
     def fire_laser(self, _event):
         """Fire laser"""
@@ -98,13 +98,13 @@ class Paddle:
         if self.stuck_ball is None:
             self.stuck_ball = ball
             self.stuck_ball.set_action(entities.Follow(self.sprite))
-            utils.events.register(utils.EVT_FIRE, self.release_ball)
+            utils.events.register(utils.Event.FIRE, self.release_ball)
             utils.timers.start(3.0, self.release_ball)
 
     def release_ball(self, _event=None):
         """Release the caught ball"""
         if self.stuck_ball is not None:
-            utils.events.unregister(utils.EVT_FIRE, self.release_ball)
+            utils.events.unregister(utils.Event.FIRE, self.release_ball)
             utils.timers.cancel(self.release_ball)
             self.hit_ball(self.stuck_ball)
             self.stuck_ball = None
@@ -207,7 +207,7 @@ class Capsules:
         self.break_.set_action(entities.Animate(self.break_.cfg["animation"]))
         self.break_.kill()
 
-        utils.events.register(utils.EVT_CAPSULE, self.on_brick)
+        utils.events.register(utils.Event.CAPSULE, self.on_brick)
 
     def available(self):
         """Return # of capusules available to deploy"""
@@ -279,7 +279,7 @@ class Capsules:
 
             logging.info("Vels: %s", vels)
         elif effect == "player":
-            utils.events.generate(utils.EVT_EXTRA_LIFE)
+            utils.events.generate(utils.Event.EXTRA_LIFE)
         elif effect == "slow":
             self.state.ball_speed /= utils.config["ball_speed_multiplier"]
 
@@ -303,7 +303,7 @@ class Capsules:
             self.unblock(["capsuleE", "capsuleL"])
 
         points = capsule.cfg.get("points", 0)
-        utils.events.generate(utils.EVT_POINTS, points=points)
+        utils.events.generate(utils.Event.POINTS, points=points)
 
     def kill(self, capsule):
         """Kill a capsule - either off the screen or hit the paddle"""

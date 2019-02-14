@@ -49,7 +49,7 @@ class CollisionTest(DebugState):
         self.ball = self.scene.names["ball"]
         self.brick = self.scene.names["brick"]
 
-        utils.events.register(utils.EVT_KEYDOWN, self.on_keydown)
+        utils.events.register(utils.Event.KEYDOWN, self.on_keydown)
 
     def on_keydown(self, event):
         "Respond to keypress events"
@@ -104,7 +104,7 @@ class DebugEngine(engine.Engine):
             self.pause_off()
 
     def input(self, event):
-        if event.type == utils.EVT_KEYDOWN:
+        if event.type == utils.Event.KEYDOWN:
             if event.key == pygame.K_n:
                 self.state.next_level()
             elif event.key == pygame.K_l:

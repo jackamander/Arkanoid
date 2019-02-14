@@ -4,6 +4,7 @@ utils.py
 General utilities
 """
 
+import enum
 import json
 import logging
 import logging.config
@@ -75,16 +76,28 @@ def blend(color1, color2, ratio):
 
 
 # Events:
-EVT_KEYDOWN = pygame.KEYDOWN
-EVT_KEYUP = pygame.KEYUP
-EVT_MOUSEBUTTONDOWN = pygame.MOUSEBUTTONDOWN
-EVT_MOUSEMOTION = pygame.MOUSEMOTION
-EVT_VAR_CHANGE = pygame.USEREVENT               # name, value
-EVT_POINTS = pygame.USEREVENT + 1               # points
-EVT_CAPSULE = pygame.USEREVENT + 2              # position
-EVT_EXTRA_LIFE = pygame.USEREVENT + 3           # none
-EVT_FIRE = pygame.USEREVENT + 4                 # none
-EVT_PADDLEMOVE = pygame.USEREVENT + 5           # delta
+class Event(enum.IntEnum):
+    """Game events for use with the Events class below"""
+    QUIT = pygame.QUIT                          # none
+    ACTIVEEVENT = pygame.ACTIVEEVENT            # gain, state
+    KEYDOWN = pygame.KEYDOWN                    # unicode, key, mod
+    KEYUP = pygame.KEYUP                        # key, mod
+    MOUSEMOTION = pygame.MOUSEMOTION            # pos, rel, buttons
+    MOUSEBUTTONUP = pygame.MOUSEBUTTONUP        # pos, button
+    MOUSEBUTTONDOWN = pygame.MOUSEBUTTONDOWN    # pos, button
+    JOYAXISMOTION = pygame.JOYAXISMOTION        # joy, axis, value
+    JOYBALLMOTION = pygame.JOYBALLMOTION        # joy, ball, rel
+    JOYHATMOTION = pygame.JOYHATMOTION          # joy, hat, value
+    JOYBUTTONUP = pygame.JOYBUTTONUP            # joy, button
+    JOYBUTTONDOWN = pygame.JOYBUTTONDOWN        # joy, button
+    VIDEORESIZE = pygame.VIDEORESIZE            # size, w, h
+    VIDEOEXPOSE = pygame.VIDEOEXPOSE            # none
+    VAR_CHANGE = pygame.USEREVENT               # name, value
+    POINTS = pygame.USEREVENT + 1               # points
+    CAPSULE = pygame.USEREVENT + 2              # position
+    EXTRA_LIFE = pygame.USEREVENT + 3           # none
+    FIRE = pygame.USEREVENT + 4                 # none
+    PADDLEMOVE = pygame.USEREVENT + 5           # delta
 
 
 class Events:
@@ -106,6 +119,7 @@ class Events:
 
     def handle(self, event):
         """Handle an incoming event"""
+        logging.debug("%s", Event(event.type))
         handlers = self.handlers.get(event.type, set())
         for handler in handlers.copy():
             handler(event)
