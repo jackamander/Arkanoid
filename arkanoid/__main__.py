@@ -1,6 +1,9 @@
 """Arkanoid clone"""
 
+import inspect
 import logging
+import os
+import sys
 
 import pygame
 
@@ -66,8 +69,27 @@ def main_loop():
         logfunc("%d FPS %.3fs (%d%%)", fps, ftime, utilization)
 
 
+def get_script_dir():
+    """Get directory that includes this script.  Pulled from
+    https://stackoverflow.com/questions/3718657/how-to-properly-determine-current-script-directory/22881871#22881871
+    """
+    if getattr(sys, 'frozen', False):  # py2exe, PyInstaller, cx_Freeze
+        path = os.path.abspath(sys.executable)
+    else:
+        path = inspect.getabsfile(get_script_dir)
+    path = os.path.realpath(path)
+    return os.path.dirname(path)
+
+
 def main():
     """Top level function!"""
+
+    # No PYC files
+    sys.dont_write_bytecode = True
+
+    # Switch to the install directory to load data files
+    os.chdir(get_script_dir())
+
     utils.setup_logging("logging.json")
 
     # Run the game
