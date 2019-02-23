@@ -9,7 +9,6 @@ import collision
 import display
 import engine
 import entities
-import main
 import utils
 
 SCENES = {
@@ -134,11 +133,11 @@ class DebugEngine(engine.Engine):
 if __name__ == "__main__":
     utils.setup_logging("logging.json")
 
-    main.EngineClass = DebugEngine
+    engine.EngineClass = DebugEngine
 
     # engine.Engine.INITIAL_STATE = CollisionTest
 
     try:
-        main.main()
-    except Exception as exc:  # pylint: disable=broad-except
+        engine.main_loop()
+    except:  # pylint: disable=bare-except
         logging.exception("Uncaught exception!")
