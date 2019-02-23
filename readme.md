@@ -20,7 +20,7 @@ Arknoid is an old game, so performance won't be an issue.  I want to focus on co
 3. **Github**.  I love git, and want to use this for my first Github project.  I'll try to follow best practices for setting up a good folder structure.
 4. **Virtualenv**.  I'll use a virtual environment to try to control dependencies.  I plan to use the built-in **venv** from the Python standard library.
 5. **unittest**.  I like the built-in unittest, and see no reason to use a 3rd party package.
-6. **py2exe**.  I will freeze the scripts into a stand-alone Windows executable for "distribution."
+6. **py2exe/cx_freeze/pyInstaller**.  I will freeze the scripts into a stand-alone Windows executable for "distribution."  My goto has always been py2exe, but it hasn't been updated for Python 3.6.  I tried cx_Freeze, but it hasn't been updated for 3.7.  pyInstaller fails too.  Sheesh.  I'll do this later.
 7. **logging**.  No hacky print statements - let's use the logging capabilities in Python like an adult.
 8. **cProfile, pdb, trace, tracemalloc, gc**.  The Python standard library is awesome!
 9. **pydoc**.  I don't need docs for this, but I plan to experiment with PyDoc to document the design for my own reference.
@@ -82,3 +82,18 @@ Some high-level requirements:
 4. .vscode folder - settings.json:
     * ```"python.pythonPath": C:\\Users\\jacka\\OneDrive\\Code\\Arkanoid\\venv\\Scripts\\python.exe"```
     * ```"python.linting.pylintArgs" : ["--extension-pkg-whitelist=pygame", "--ignore=.vscode"]```
+
+## Launching Use Cases
+1. Frozen executable, double click
+2. Frozen executable, command line
+3. __main__.py, double click
+4. __main__.py, command line
+5. Folder, command line
+6. debug.py, double click
+7. debug.py, command line
+8. Unit tests
+9. Integration tests
+10. Imports from interpreter
+
+## Notes
+* As of 2/22/19, none of the freezing solutions seem to work with Python 3.7.  I don't want to downgrade, so I'll just postpone that item until they are resolved.  cx_freeze looks the best.
