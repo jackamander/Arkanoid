@@ -69,38 +69,66 @@ def release_mouse():
     pygame.event.set_grab(0)
 
 
-def _find_char_offset(char, characters):
-    for row, data in enumerate(characters):
-        col = data.find(char)
-        if col > -1:
-            return [col, row]
+class Font:
+    """Create a font object for rendering text"""
 
-    raise ValueError("Unsupported Character: %s" % char)
+    def __init__(self, name=None):
+        self.config = self._load_config(name)
+        self.size = self.config["size"]
+        self.image = get_image(self.config["image"])
+
+    def _load_config(self, name=None):
+        "Load the named font config (default if None)"
+        fonts = utils.config["fonts"]
+
+        if name is None:
+            defaults = [config for name, config in fonts.items()
+                        if config.get("default", False)]
+            assert len(defaults) == 1, "Must specify one default font!"
+            config = defaults[0]
+        else:
+            config = fonts[name]
+
+        return config
+
+    def _find_char_offset(self, char):
+        "Calculate the offset of the character in the image"
+        for row, data in enumerate(self.config["characters"]):
+            col = data.find(char)
+            if col > -1:
+                return [col * self.size[0], row * self.size[1]]
+
+        raise ValueError("Unsupported Character: %s" % char)
+
+    def render(self, text):
+        "Create a new surface with the text rendered"
+        text_split = text.split('\n')
+        rows = len(text_split)
+        cols = max(map(len, text_split))
+
+        surf = pygame.Surface(
+            [self.size[0] * cols, self.size[1] * rows], pygame.SRCALPHA).convert_alpha()
+        for row, line in enumerate(text_split):
+            for col, char in enumerate(line):
+                dest = [col * self.size[0], row * self.size[1]]
+                src = pygame.Rect(self._find_char_offset(char), self.size)
+                surf.blit(self.image, dest, src, pygame.BLEND_RGBA_MAX)
+
+        return surf
 
 
-def draw_text(text, font):
-    "Return a surface with the given text"
-    config = utils.config["fonts"][font]
-    name = config["image"]
-    size = config["size"]
-    characters = config["characters"]
+@functools.lru_cache(maxsize=None)
+def get_font(name):
+    """Font factory with caching"""
+    font = Font(name)
+    return font
 
-    text_split = text.split('\n')
-    rows = len(text_split)
-    cols = max(map(len, text_split))
 
-    surf = pygame.Surface([size[0] * cols, size[1] * rows],
-                          pygame.SRCALPHA).convert_alpha()
-    image = get_image(name)
-    for row, line in enumerate(text_split):
-        for col, char in enumerate(line):
-            offset = _find_char_offset(char, characters)
-            offset = [offset[i] * size[i] for i in range(2)]
-
-            surf.blit(image, [col * size[0], row * size[1]],
-                      pygame.Rect(offset, size), pygame.BLEND_RGBA_MAX)
-
-    return surf
+def draw_text(text, font_name=None):
+    """Return a surface with the given text"""
+    font = get_font(font_name)
+    surface = font.render(text)
+    return surface
 
 
 @functools.lru_cache(maxsize=None)
