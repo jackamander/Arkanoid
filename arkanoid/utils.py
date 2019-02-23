@@ -4,6 +4,7 @@ utils.py
 General utilities
 """
 
+import collections
 import enum
 import json
 import logging
@@ -104,29 +105,29 @@ class Event(enum.IntEnum):
     EXTRA_LIFE = pygame.USEREVENT + 3           # none
     FIRE = pygame.USEREVENT + 4                 # none
     PADDLEMOVE = pygame.USEREVENT + 5           # delta
+    VAR_REQUEST = pygame.USEREVENT + 6          # name
 
 
 class Events:
     """Synchronous event dispatcher"""
 
     def __init__(self):
-        self.clear()
+        self.handlers = collections.defaultdict(set)
 
     def register(self, eventtype, handler):
         """Register a handler method for the given event"""
-        handlers = self.handlers.setdefault(eventtype, set())
+        handlers = self.handlers[eventtype]
         handlers.add(handler)
 
     def unregister(self, eventtype, handler):
         """Unregister a handler method for the given event"""
-        handlers = self.handlers.setdefault(eventtype, set())
-        if handler in handlers:
-            handlers.remove(handler)
+        handlers = self.handlers[eventtype]
+        handlers.discard(handler)
 
     def handle(self, event):
         """Handle an incoming event"""
         logging.debug("%s", Event(event.type))
-        handlers = self.handlers.get(event.type, set())
+        handlers = self.handlers[event.type]
         for handler in handlers.copy():
             handler(event)
 
@@ -135,16 +136,12 @@ class Events:
         event = pygame.event.Event(event_type, **kwargs)
         self.handle(event)
 
-    def clear(self):
-        """Clear all event handlers"""
-        self.handlers = {}
-
 
 class Timers:
     """Invokes callbacks after a specified delay in frames"""
 
     def __init__(self):
-        self.clear()
+        self.timers = {}
 
     def update(self):
         """Invoke any pending timers"""
@@ -167,10 +164,6 @@ class Timers:
     def cancel(self, handler):
         """Cancel a timer callback"""
         self.timers.pop(handler, None)
-
-    def clear(self):
-        """Clear all pending timer callbacks"""
-        self.timers = {}
 
 
 class Delta:

@@ -2369,6 +2369,11 @@
                 "position": [
                     24,
                     224
+                ],
+                "move": [
+                    0,
+                    -2,
+                    88
                 ]
             }
         ],
@@ -2443,6 +2448,11 @@
                 "position": [
                     24,
                     224
+                ],
+                "move": [
+                    0,
+                    -2,
+                    88
                 ]
             }
         ],
@@ -2457,7 +2467,6 @@
             {
                 "name": "doh",
                 "image": "final_doh0",
-                "animation": "final_doh",
                 "position": [
                     112,
                     128
@@ -2651,11 +2660,15 @@
                 "groups": [
                     "lasers"
                 ],
+                "move": [
+                    0,
+                    -4,
+                    0
+                ],
                 "hits": 1
             },
             {
                 "name": "capsuleB",
-                "image": "B0",
                 "layer": 20,
                 "animation": "B",
                 "groups": [
@@ -2664,11 +2677,15 @@
                 ],
                 "effect": "break",
                 "weight": 1,
+                "move": [
+                    0,
+                    1,
+                    0
+                ],
                 "points": 1000
             },
             {
                 "name": "capsuleC",
-                "image": "C0",
                 "layer": 20,
                 "animation": "C",
                 "groups": [
@@ -2677,11 +2694,15 @@
                 ],
                 "effect": "catch",
                 "weight": 1,
+                "move": [
+                    0,
+                    1,
+                    0
+                ],
                 "points": 1000
             },
             {
                 "name": "capsuleD",
-                "image": "D0",
                 "layer": 20,
                 "animation": "D",
                 "groups": [
@@ -2690,11 +2711,15 @@
                 ],
                 "effect": "disrupt",
                 "weight": 1,
+                "move": [
+                    0,
+                    1,
+                    0
+                ],
                 "points": 1000
             },
             {
                 "name": "capsuleE",
-                "image": "E0",
                 "layer": 20,
                 "animation": "E",
                 "groups": [
@@ -2703,11 +2728,15 @@
                 ],
                 "effect": "enlarge",
                 "weight": 1,
+                "move": [
+                    0,
+                    1,
+                    0
+                ],
                 "points": 1000
             },
             {
                 "name": "capsuleL",
-                "image": "L0",
                 "layer": 20,
                 "animation": "L",
                 "groups": [
@@ -2716,11 +2745,15 @@
                 ],
                 "effect": "laser",
                 "weight": 1,
+                "move": [
+                    0,
+                    1,
+                    0
+                ],
                 "points": 1000
             },
             {
                 "name": "capsuleP",
-                "image": "P0",
                 "layer": 20,
                 "animation": "P",
                 "groups": [
@@ -2729,11 +2762,15 @@
                 ],
                 "effect": "player",
                 "weight": 1,
+                "move": [
+                    0,
+                    1,
+                    0
+                ],
                 "points": 1000
             },
             {
                 "name": "capsuleS",
-                "image": "S0",
                 "layer": 20,
                 "animation": "S",
                 "groups": [
@@ -2742,6 +2779,11 @@
                 ],
                 "effect": "slow",
                 "weight": 1,
+                "move": [
+                    0,
+                    1,
+                    0
+                ],
                 "points": 1000
             },
             {
@@ -2774,7 +2816,6 @@
             },
             {
                 "name": "break",
-                "image": "break1",
                 "position": [
                     192,
                     192
@@ -3468,7 +3509,6 @@
                     1000,
                     1000
                 ],
-                "image": "alien0_0",
                 "death_animation": "dead",
                 "hits": 1,
                 "points": 100

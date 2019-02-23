@@ -25,6 +25,11 @@ class Paddle:
 
         self.handler = self.normal_handler
 
+    def stop(self):
+        """Deregister the paddle"""
+        utils.events.unregister(utils.Event.FIRE, self.fire_laser)
+        utils.events.unregister(utils.Event.FIRE, self.release_ball)
+
     def normal_handler(self, event):
         """Event handler for normal paddle"""
         if event == "expand":
@@ -79,7 +84,6 @@ class Paddle:
         sprite.rect.center = self.sprite.rect.center
         sprite.rect.bottom = self.sprite.rect.top
 
-        sprite.set_action(entities.Move([0, -4]))
         self.state.scene.groups["all"].add(sprite)
         self.state.scene.groups["lasers"].add(sprite)
 
@@ -159,12 +163,15 @@ class Paddle:
 
     def kill(self):
         """Kill the paddle"""
+        self.stop()
         action = entities.Animate("explode").then(entities.Die())
         self.sprite.set_action(action)
         self.sound = audio.play_sound("Death")
 
     def break_(self):
         """Break out of the level"""
+        self.stop()
+
         # pylint: disable=comparison-with-callable
         if self.handler == self.normal_handler:
             animation = "paddle_break"
@@ -205,10 +212,13 @@ class Capsules:
         self.enable()
 
         self.break_ = self.scene.names["break"]
-        self.break_.set_action(entities.Animate(self.break_.cfg["animation"]))
         self.break_.kill()
 
         utils.events.register(utils.Event.CAPSULE, self.on_brick)
+
+    def stop(self):
+        """Deregister before teardown"""
+        utils.events.unregister(utils.Event.CAPSULE, self.on_brick)
 
     def available(self):
         """Return # of capusules available to deploy"""
@@ -310,8 +320,6 @@ class Capsules:
     def kill(self, capsule):
         """Kill a capsule - either off the screen or hit the paddle"""
         logging.info("Kill %s", capsule.cfg["effect"])
-        capsule.rect.topleft = [0, 0]
-        capsule.set_action(None)
         capsule.kill()
         self.scene.groups["capsules"].add(capsule)
 
@@ -321,8 +329,6 @@ class Capsules:
         """Spawn a new capsule after a brick was destroyed"""
         logging.info("Spawn %s", capsule.cfg["effect"])
         capsule.rect.topleft = position
-        capsule.set_action(entities.Move([0, 1]).plus(
-            entities.Animate(capsule.cfg["animation"])))
         self.scene.groups["capsules"].remove(capsule)
         self.scene.groups["paddle"].add(capsule)
         self.scene.groups["all"].add(capsule)

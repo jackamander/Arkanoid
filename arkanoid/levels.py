@@ -52,7 +52,6 @@ def build_alien(num):
     alien_index = (num - 1) % 4
     alien = {
         "name": "alien",
-        "image": "alien%d_0" % alien_index,
         "hit_sound": "Alien",
         "animation": "alien%d" % alien_index,
         "death_animation": "dead",

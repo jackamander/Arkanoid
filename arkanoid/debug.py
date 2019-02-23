@@ -43,7 +43,7 @@ class CollisionTest(DebugState):
     def __init__(self, eng, data):
         DebugState.__init__(self, eng, data)
 
-        self.scene = entities.Scene(["collision_test"], eng.vars)
+        self.scene = entities.Scene(["collision_test"])
 
         self.ball = self.scene.names["ball"]
         self.brick = self.scene.names["brick"]

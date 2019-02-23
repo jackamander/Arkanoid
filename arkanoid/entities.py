@@ -2,6 +2,7 @@
 Sprites, scenes, and their actions
 """
 
+import logging
 import math
 
 import pygame
@@ -106,7 +107,11 @@ class PaddleMove(Action):
         self.rect = region.copy()
         self.delta = 0
 
+    def start(self, sprite):
         utils.events.register(utils.Event.PADDLEMOVE, self.on_paddlemove)
+
+    def stop(self, sprite):
+        utils.events.unregister(utils.Event.PADDLEMOVE, self.on_paddlemove)
 
     def on_paddlemove(self, event):
         "Event handler for EVT_PADDLEMOVE"
@@ -122,32 +127,22 @@ class PaddleMove(Action):
 class Move(Action):
     "Move a sprite"
 
-    def __init__(self, delta):
+    def __init__(self, delta, frames=0):
         self.delta = delta
         self.total = [0, 0]
+        self.frames = frames
 
     def update(self, sprite):
         total = [t + d for t, d in zip(self.total, self.delta)]
         delta = [int(i) for i in total]
         self.total = [t-m for t, m in zip(total, delta)]
         sprite.rect.move_ip(delta)
-        return self
-
-
-class MoveLimited(Move):
-    "Move a sprite for the given number of frames"
-
-    def __init__(self, delta, frames):
-        Move.__init__(self, delta)
-        self.frames = frames
-
-    def update(self, sprite):
-        Move.update(self, sprite)
 
         if self.frames > 0:
             self.frames -= 1
-
-        return None if self.frames == 0 else self
+            return None if self.frames == 0 else self
+        else:
+            return self
 
 
 class Follow(Action):
@@ -278,25 +273,28 @@ class UpdateVar(Action):
     "Update a sprite with rendered text from a given variable"
 
     def __init__(self, name, font="white", fmt="%s"):
+        self.sprite = None
         self.name = name
         self.font = font
         self.fmt = fmt
-        self.text = ""
-        self.dirty = False
 
+    def start(self, sprite):
+        self.sprite = sprite
         utils.events.register(utils.Event.VAR_CHANGE, self.on_var_change)
+        utils.events.generate(utils.Event.VAR_REQUEST, name=self.name)
+
+    def stop(self, sprite):
+        self.sprite = None
+        utils.events.unregister(utils.Event.VAR_CHANGE, self.on_var_change)
 
     def on_var_change(self, event):
-        "Event handler for EVT_VAR_CHANGE"
+        """Event handler for EVT_VAR_CHANGE"""
         if event.name == self.name:
-            self.dirty = True
-            self.text = self.fmt % event.value
+            text = self.fmt % event.value
+            image = display.draw_text(text, self.font)
+            self.sprite.set_image(image)
 
     def update(self, sprite):
-        if self.dirty:
-            self.dirty = False
-            image = display.draw_text(self.text, self.font)
-            sprite.set_image(image)
         return self
 
 
@@ -325,13 +323,10 @@ class Spawn(Action):
         clone.rect.center = sprite.rect.center
         clone.rect.bottom = sprite.rect.top
 
-        action = MoveLimited([0, 0.25], 96).then(AlienEscape(self.scene))
-
-        animation = clone.cfg["animation"]
-        if animation:
-            action = action.plus(Animate(animation))
+        action = Move([0, 0.25], 96).then(AlienEscape(self.scene))
 
         clone.set_action(action)
+
         self.scene.groups["all"].add(clone)
         self.scene.groups["ball"].add(clone)
         self.scene.groups["paddle"].add(clone)
@@ -413,15 +408,15 @@ class AlienEscape(Move):
         return self
 
 
-class AlienDescend(MoveLimited):
+class AlienDescend(Move):
     "Algorithm for alien behavior on descend"
 
     def __init__(self, scene):
-        MoveLimited.__init__(self, [0, 0.25], 60)
+        Move.__init__(self, [0, 0.25], 60)
         self.scene = scene
 
     def update(self, sprite):
-        if MoveLimited.update(self, sprite) is None:
+        if Move.update(self, sprite) is None:
             actions = [AlienDescend(self.scene)]
             playspace = self.scene.names["bg"].rect
 
@@ -442,7 +437,7 @@ class AlienDescend(MoveLimited):
         return self
 
 
-class AlienJuke(MoveLimited):
+class AlienJuke(Move):
     "Action for alien's juke move"
 
     def __init__(self, scene, xdir):
@@ -462,10 +457,10 @@ class AlienJuke(MoveLimited):
         "Reset the limited move action to the currently selected parameters"
         delta = self.deltas[self.index]
         frames = self.frame_counts[self.index]
-        MoveLimited.__init__(self, delta, frames)
+        Move.__init__(self, delta, frames)
 
     def update(self, sprite):
-        if MoveLimited.update(self, sprite) is None:
+        if Move.update(self, sprite) is None:
             self.index += 1
 
             if self.index < len(self.deltas):
@@ -577,12 +572,8 @@ class DohMgr(Action):
         delta = [speed * value / magnitude for value in delta]
 
         action = Move(delta)
-
-        animation = shot.cfg["animation"]
-        if animation:
-            action = action.plus(Animate(animation))
-
         shot.set_action(action)
+
         self.scene.groups["all"].add(shot)
         self.scene.groups["paddle"].add(shot)
 
@@ -615,12 +606,14 @@ class DohMgr(Action):
 class Sprite(pygame.sprite.DirtySprite):
     "Base class for all game entities"
 
-    def __init__(self, image, cfg):
+    def __init__(self, cfg):
         pygame.sprite.DirtySprite.__init__(self)
 
-        self.image = image
-        self.rect = image.get_rect()
-        self.last = self.rect
+        self.cfg = cfg.copy()
+
+        self.action = None
+        self.animation = None
+        self.callbacks = set()
         self.dirty = 2
         self.blendmode = 0
         self.source_rect = None
@@ -628,14 +621,40 @@ class Sprite(pygame.sprite.DirtySprite):
 
         self._layer = cfg.get("layer", 10)
 
-        self.action = None
+        key = self.cfg.get("text", "")
+        if key:
+            font = self.cfg.get("font", "white")
+            self.image = display.draw_text(key, font)
 
-        self.cfg = cfg
-        self.callbacks = set()
+        key = self.cfg.get("var", "")
+        if key:
+            fmt = self.cfg.get("fmt", "%s")
+            font = self.cfg.get("font", "white")
+            self.set_action(UpdateVar(key, font, fmt))
+
+        key = self.cfg.get("image", "")
+        if key:
+            self.image = display.get_image(key)
+
+        key = self.cfg.get("animation", "")
+        if key:
+            name = utils.config["animations"][key]["images"][0]
+            self.image = display.get_image(name)
+            self.animation = Animate(key)
+
+        self.rect = self.image.get_rect()
+        self.last = self.rect
+
+        position = self.cfg.get("position", [0, 0])
+        self.rect.topleft = position
+
+        move = self.cfg.get("move")
+        if move:
+            self.set_action(Move(move[0:2], move[2]))
 
     def clone(self):
         "Create a clone of this sprite"
-        return Sprite(self.image, self.cfg.copy())
+        return Sprite(self.cfg)
 
     def set_action(self, new_action=None):
         "Start an action for this sprite"
@@ -656,6 +675,10 @@ class Sprite(pygame.sprite.DirtySprite):
         # Update the previous position
         self.last = self.rect.copy()
 
+        # Update the animation
+        if self.animation:
+            self.animation = self.animation.update(self)
+
         # Update any active actions
         if self.action:
             new_action = self.action.update(self)
@@ -675,10 +698,12 @@ class Sprite(pygame.sprite.DirtySprite):
 
     def set_image(self, image, align="center"):
         "Update the sprite's image"
-        old_rect = self.rect.copy()
         self.image = image
-        self.rect.size = image.get_size()
-        setattr(self.rect, align, getattr(old_rect, align))
+        rect = getattr(self, "rect", None)
+        if rect:
+            old_rect = rect.copy()
+            rect.size = image.get_size()
+            setattr(rect, align, getattr(old_rect, align))
 
     def hit(self, scene):
         "Respond to a hit event"
@@ -688,10 +713,7 @@ class Sprite(pygame.sprite.DirtySprite):
 
         animation = self.cfg.get("hit_animation")
         if animation:
-            action = Animate(animation)
-            if self.action:
-                action = self.action.plus(action)
-            self.set_action(action)
+            self.animation = Animate(animation)
 
         hit_points = self.cfg.get("hit_points")
         if hit_points:
@@ -706,6 +728,7 @@ class Sprite(pygame.sprite.DirtySprite):
 
                 death_animation = self.cfg.get("death_animation")
                 if death_animation:
+                    self.animation = None
                     align = self.cfg.get("death_animation_align", "center")
                     self.set_action(
                         Animate(death_animation, align).then(Die()))
@@ -733,7 +756,7 @@ class Scene:
     """
     Group = pygame.sprite.LayeredDirty
 
-    def __init__(self, names, var_dict):
+    def __init__(self, names):
         self.groups = {}
         self.names = {}
 
@@ -741,35 +764,8 @@ class Scene:
             sprites = utils.config["scenes"][name]
 
             for cfg in sprites:
-                cfg = cfg.copy()
-
-                action = None
-
-                key = cfg.pop("text", "")
-                if key:
-                    font = cfg.pop("font", "white")
-                    image = display.draw_text(key, font)
-
-                key = cfg.pop("var", "")
-                if key:
-                    fmt = cfg.pop("fmt", "%s")
-                    text = fmt % var_dict[key]
-                    font = cfg.pop("font", "white")
-                    image = display.draw_text(text, font)
-                    action = UpdateVar(key, font, fmt)
-
-                key = cfg.pop("image", "")
-                if key:
-                    image = display.get_image(key)
-
-                position = cfg.pop("position", [0, 0])
-
-                group_names = cfg.pop("groups", [])
-
-                sprite = Sprite(image, cfg)
-                sprite.rect.topleft = position
-                sprite.set_action(action)
-
+                sprite = Sprite(cfg)
+                group_names = cfg.get("groups", [])
                 for group_name in group_names + ["all"]:
                     group = self.groups.setdefault(group_name, Scene.Group())
                     group.add(sprite)

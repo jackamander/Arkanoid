@@ -25,6 +25,10 @@ class State(object):
         self.engine = engine
         self.scene = None
 
+    def stop(self):
+        """Stop handler"""
+        pass
+
     def input(self, event):
         """Process input event"""
         pass
@@ -93,16 +97,20 @@ class SplashState(State):
     def __init__(self, engine, data):
         State.__init__(self, engine, data)
 
-        self.scene = entities.Scene(["banner", "splash"], engine.vars)
+        self.scene = entities.Scene(["banner", "splash"])
 
         self.fix_banner()
 
         self.splash = self.scene.names["splash"]
-        self.splash.set_action(entities.MoveLimited([0, -2], (224-48)/2))
         utils.timers.start(10.0, self.engine.set_state, TitleState, {})
 
         utils.events.register(utils.Event.MOUSEBUTTONDOWN, self.on_click)
         utils.events.register(utils.Event.KEYDOWN, self.on_keydown)
+
+    def stop(self):
+        utils.events.unregister(utils.Event.MOUSEBUTTONDOWN, self.on_click)
+        utils.events.unregister(utils.Event.KEYDOWN, self.on_keydown)
+        utils.timers.cancel(self.engine.set_state)
 
     def on_click(self, event):
         """Skip to title menu when clicked"""
@@ -127,7 +135,7 @@ class TitleState(State):
     def __init__(self, engine, data):
         State.__init__(self, engine, data)
 
-        self.scene = entities.Scene(["title", "banner"], engine.vars)
+        self.scene = entities.Scene(["title", "banner"])
 
         self.fix_banner()
 
@@ -137,6 +145,12 @@ class TitleState(State):
         utils.events.register(utils.Event.VAR_CHANGE, self.on_var_change)
 
         display.release_mouse()
+
+    def stop(self):
+        utils.events.unregister(utils.Event.MOUSEBUTTONDOWN, self.on_click)
+        utils.events.unregister(utils.Event.MOUSEMOTION, self.on_motion)
+        utils.events.unregister(utils.Event.KEYDOWN, self.on_keydown)
+        utils.events.unregister(utils.Event.VAR_CHANGE, self.on_var_change)
 
     def on_var_change(self, event):
         """Update cursor position if number of players changed"""
@@ -178,7 +192,7 @@ class BlinkState(State):
     def __init__(self, engine, data):
         State.__init__(self, engine, data)
 
-        self.scene = entities.Scene(["title", "banner"], engine.vars)
+        self.scene = entities.Scene(["title", "banner"])
 
         self.fix_banner()
 
@@ -211,7 +225,7 @@ class RoundState(State):
     def __init__(self, engine, data):
         State.__init__(self, engine, data)
 
-        self.scene = entities.Scene(["round", "banner"], engine.vars)
+        self.scene = entities.Scene(["round", "banner"])
 
         self.fix_banner()
 
@@ -227,7 +241,7 @@ class StartState(State):
     def __init__(self, engine, data):
         State.__init__(self, engine, data)
 
-        self.scene = entities.Scene(["hud", "walls", "ready"], engine.vars)
+        self.scene = entities.Scene(["hud", "walls", "ready"])
         self.scene.merge(
             engine.scenes[engine.vars["player"]][engine.vars["level"]])
 
@@ -310,7 +324,7 @@ class GameOverState(State):
         State.__init__(self, engine, data)
 
         self.scene = data["scene"]
-        self.scene.merge(entities.Scene(["gameover"], engine.vars))
+        self.scene.merge(entities.Scene(["gameover"]))
 
         self.sound = audio.play_sound("GameOver")
         utils.timers.start(4.0, self.next_player)
@@ -354,7 +368,7 @@ class GameState(State):
     def __init__(self, engine, data):
         State.__init__(self, engine, data)
 
-        self.scene = entities.Scene(["hud", "walls", "tools"], engine.vars)
+        self.scene = entities.Scene(["hud", "walls", "tools"])
         self.scene.merge(
             engine.scenes[engine.vars["player"]][engine.vars["level"]])
 
@@ -392,6 +406,15 @@ class GameState(State):
         self.scene.names["alien"].kill()
 
         self.threshold = self.next_life_threshold()
+
+    def stop(self):
+        self.capsules.stop()
+        utils.events.unregister(utils.Event.MOUSEBUTTONDOWN, self.on_click)
+        utils.events.unregister(utils.Event.MOUSEMOTION, self.on_motion)
+        utils.events.unregister(utils.Event.KEYDOWN, self.on_keydown)
+        utils.events.unregister(utils.Event.POINTS, self.on_points)
+        utils.events.unregister(utils.Event.EXTRA_LIFE, self.on_extra_life)
+        utils.timers.cancel(self.on_timer)
 
     def next_life_threshold(self):
         """Calculate next score threshold for a free life"""
@@ -556,6 +579,7 @@ class GameState(State):
         remaining = sum([brick.cfg.get("hits", 0)
                          for brick in self.scene.groups["bricks"].sprites()])
         if remaining == 0:
+            self.paddle.stop()
             self.engine.set_state(ClearState, {"scene": self.scene})
 
         # Break support
@@ -575,19 +599,22 @@ class VictoryState(State):
     def __init__(self, engine, data):
         State.__init__(self, engine, data)
 
-        self.scene = entities.Scene(["victory", "banner"], engine.vars)
+        self.scene = entities.Scene(["victory", "banner"])
 
         self.fix_banner()
 
         self.sound = audio.play_sound("Victory")
 
         self.victory = self.scene.names["victory"]
-        self.victory.set_action(entities.MoveLimited([0, -2], (224-48)/2))
 
         display.grab_mouse()
 
         utils.events.register(utils.Event.MOUSEBUTTONDOWN, self.on_click)
         utils.events.register(utils.Event.KEYDOWN, self.on_keydown)
+
+    def stop(self):
+        utils.events.unregister(utils.Event.MOUSEBUTTONDOWN, self.on_click)
+        utils.events.unregister(utils.Event.KEYDOWN, self.on_keydown)
 
     def on_click(self, event):
         """Abort victory song on click"""
@@ -614,7 +641,7 @@ class FinalState(State):
     def __init__(self, engine, data):
         State.__init__(self, engine, data)
 
-        self.scene = entities.Scene(["final", "banner"], engine.vars)
+        self.scene = entities.Scene(["final", "banner"])
 
         self.fix_banner()
 
@@ -625,7 +652,7 @@ class FinalState(State):
     def animate(self):
         """Animate little Doh"""
         self.doh.set_action(
-            entities.Animate(self.doh.cfg["animation"]).then(
+            entities.Animate("final_doh").then(
                 entities.PlaySound("High").then(
                     entities.Callback(utils.timers.start, 3.0, self.done))))
 
@@ -646,6 +673,7 @@ class Vars:
 
     def __init__(self, initial):
         self.data = initial
+        utils.events.register(utils.Event.VAR_REQUEST, self.on_request)
 
     def __getitem__(self, key):
         return self.data[key]
@@ -654,6 +682,11 @@ class Vars:
         self.data[key] = value
         utils.events.generate(utils.Event.VAR_CHANGE, name=key, value=value)
 
+    def on_request(self, event):
+        """Respond to variable request."""
+        utils.events.generate(utils.Event.VAR_CHANGE,
+                              name=event.name, value=self.data[event.name])
+
 
 class Engine(object):
     """Game engine"""
@@ -661,6 +694,7 @@ class Engine(object):
     INITIAL_STATE = SplashState
 
     def __init__(self):
+        self.state = None
         self.vars = Vars({
             "high": 0,
             "players": 1,
@@ -691,7 +725,7 @@ class Engine(object):
         # Create independent scenes for all levels for each player to track progress
         self.scenes = {}
         for player in range(1, self.vars["players"]+1):
-            self.scenes[player] = {levels.parse_num(key): entities.Scene([key], self.vars)
+            self.scenes[player] = {levels.parse_num(key): entities.Scene([key])
                                    for key in self.level_data}
 
     def set_lives(self, lives):
@@ -752,8 +786,8 @@ class Engine(object):
     def set_state(self, state, data):
         """Set engine state"""
         logging.info("State: %s", state.__name__)
-        utils.events.clear()
-        utils.timers.clear()
+        if self.state:
+            self.state.stop()
         self.state = state(self, data)
 
     def input(self, event):
