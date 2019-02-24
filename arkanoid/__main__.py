@@ -33,6 +33,9 @@ def main():
     # Enable logging
     utils.setup_logging("logging.json")
 
+    sys.stdout = utils.StreamToFunc(logging.info, "<stdout>")
+    sys.stderr = utils.StreamToFunc(logging.error, "<stderr>")
+
     # Run the game
     try:
         import engine

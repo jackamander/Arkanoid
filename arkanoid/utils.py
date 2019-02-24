@@ -57,6 +57,25 @@ def setup_logging(fname):
         logging.error("Missing logging config <%s>", fname)
 
 
+class StreamToFunc:
+    """Stream that directs to logging functions"""
+
+    def __init__(self, writefunc, prefix):
+        self.writefunc = writefunc
+        self.prefix = prefix
+        self.buffer = ""
+
+    def write(self, message):
+        """Called by writes to stream"""
+        self.buffer += message
+        while '\n' in self.buffer:
+            line, self.buffer = self.buffer.split('\n', 1)
+            self.writefunc(self.prefix + line)
+
+    def flush(self):
+        """Flush function to fulfill stream API"""
+        pass    #pylint:disable=unnecessary-pass
+
 def lerp(pt1, pt2, ratio):
     """Generic linear interpolation"""
     mixed = [(pt1[i] * ratio + pt2[i] * (1.0 - ratio))
