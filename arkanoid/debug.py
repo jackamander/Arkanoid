@@ -2,6 +2,7 @@
 debug assistance
 """
 import logging
+import tracemalloc
 
 import pygame
 
@@ -10,6 +11,15 @@ import display
 import engine
 import entities
 import utils
+
+
+def log_mem():
+    """Log memory statistics"""
+    memory_stats = tracemalloc.get_traced_memory()
+    logging.info("Memory usage - Current: %.1fkB, Peak: %.1fkB",
+                 memory_stats[0] / 1024,
+                 memory_stats[1] / 1024)
+
 
 SCENES = {
     "collision_test": [
@@ -79,28 +89,25 @@ class CollisionTest(DebugState):
 
 
 class DebugEngine(engine.Engine):
-    "Special engine for debugging"
+    """Special engine for debugging"""
 
     def __init__(self):
         engine.Engine.__init__(self)
         self.__running = True
 
-    def pause_on(self):
-        "Pause the simulation"
+    def _pause_on(self):
         self.__running = False
         display.release_mouse()
 
-    def pause_off(self):
-        "Unpause the simulation"
+    def _pause_off(self):
         self.__running = True
         display.grab_mouse()
 
-    def pause_toggle(self):
-        "Toggle simulation pause"
+    def _pause_toggle(self):
         if self.__running:
-            self.pause_on()
+            self._pause_on()
         else:
-            self.pause_off()
+            self._pause_off()
 
     def input(self, event):
         if event.type == utils.Event.KEYDOWN:
@@ -111,23 +118,28 @@ class DebugEngine(engine.Engine):
             elif event.key == pygame.K_r:
                 self.set_state(engine.StartState, {})
             elif event.key == pygame.K_p:
-                self.pause_toggle()
+                self._pause_toggle()
             elif event.key == pygame.K_s:
                 if self.__running:
-                    self.pause_on()
+                    self._pause_on()
                 else:
-                    self.step()
+                    self._step()
 
         if self.__running:
             engine.Engine.input(self, event)
 
     def update(self):
         if self.__running:
-            self.step()
+            self._step()
 
-    def step(self):
-        "single step the engine for one frame"
+    def _step(self):
         engine.Engine.update(self)
+
+    def reset(self):
+        # Hook for debug actions on reset
+        engine.Engine.reset(self)
+
+        log_mem()
 
 
 if __name__ == "__main__":
@@ -137,7 +149,14 @@ if __name__ == "__main__":
 
     # engine.Engine.INITIAL_STATE = CollisionTest
 
+    # Trace memory consumption - debug only
+    tracemalloc.start()
+
     try:
         engine.main_loop()
     except:  # pylint: disable=bare-except
         logging.exception("Uncaught exception!")
+
+    # Close memory tracking
+    log_mem()
+    tracemalloc.stop()
