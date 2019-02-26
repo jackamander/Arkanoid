@@ -841,6 +841,11 @@ def main_loop():
                 return
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                 return
+            elif event.type == pygame.MOUSEMOTION:
+                event.pos = window.screen2world(event.pos)
+                event.rel = window.screen2world(event.rel)
+            elif event.type in [pygame.MOUSEBUTTONDOWN, pygame.MOUSEBUTTONUP]:
+                event.pos = window.screen2world(event.pos)
 
             eng.input(event)
 

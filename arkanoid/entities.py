@@ -105,7 +105,7 @@ class PaddleMove(Action):
 
     def __init__(self, region):
         self.rect = region.copy()
-        self.delta = 0
+        self.delta = 0.0
 
     def start(self, sprite):
         utils.events.register(utils.Event.PADDLEMOVE, self.on_paddlemove)
@@ -118,9 +118,10 @@ class PaddleMove(Action):
         self.delta += event.delta
 
     def update(self, sprite):
-        sprite.rect.move_ip(self.delta, 0)
+        delta_int = int(self.delta)
+        sprite.rect.move_ip(delta_int, 0)
         sprite.rect.clamp_ip(self.rect)
-        self.delta = 0
+        self.delta -= delta_int
         return self
 
 

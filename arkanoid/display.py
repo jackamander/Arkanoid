@@ -56,6 +56,20 @@ class Window:
         "Clear the screen"
         self.screen.fill(utils.color(utils.config["bg_color"]))
 
+    def _get_size_multipliers(self):
+        """Calculate multipliers for converting from world to screen coords"""
+        screen_size = self.main.get_size()
+        world_size = self.screen.get_size()
+        x_mult = screen_size[0] // world_size[0]
+        y_mult = screen_size[1] // world_size[1]
+        return x_mult, y_mult
+
+    def screen2world(self, screen):
+        """Translate coordinates from screen to world."""
+        x_mult, y_mult = self._get_size_multipliers()
+        world = (screen[0] / x_mult, screen[1] / y_mult)
+        return world
+
 
 def grab_mouse():
     "Grab the mouse for this application"
