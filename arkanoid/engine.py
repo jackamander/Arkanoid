@@ -2,6 +2,7 @@
 Main game engine for Arkanoid
 """
 
+import gc
 import itertools
 import logging
 import re
@@ -146,6 +147,11 @@ class TitleState(State):
 
         display.release_mouse()
 
+        # Disable garbage
+        items = gc.collect()
+        logging.info("Garbage collection (%d items)", items)
+        gc.enable()
+
     def stop(self):
         utils.events.unregister(utils.Event.MOUSEBUTTONDOWN, self.on_click)
         utils.events.unregister(utils.Event.MOUSEMOTION, self.on_motion)
@@ -260,6 +266,7 @@ class StartState(State):
         utils.timers.start(3.0, self.engine.set_state, GameState, {})
 
         display.grab_mouse()
+        gc.disable()    # Disable GC during gameplay
 
     def draw(self, screen):
         self.scene.groups["all"].draw(screen)
