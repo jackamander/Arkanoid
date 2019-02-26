@@ -49,25 +49,46 @@ class Window:
 
     def flip(self):
         "Flip the screen buffer"
-        pygame.transform.scale(self.screen, self.main.get_size(), self.main)
+        screen_size = self.main.get_size()
+        world_size = self.screen.get_size()
+
+        x_mult = screen_size[0] // world_size[0]
+        y_mult = screen_size[1] // world_size[1]
+
+        x_offset = (screen_size[0] % world_size[0]) // 2
+        y_offset = (screen_size[1] % world_size[1]) // 2
+
+        self.main.fill(utils.color(utils.config["bg_color"]))
+
+        scaled = pygame.transform.scale(self.screen,
+                                        (world_size[0] * x_mult, world_size[1] * y_mult))
+
+        self.main.blit(scaled, (x_offset, y_offset))
+
         pygame.display.flip()
 
     def clear(self):
         "Clear the screen"
         self.screen.fill(utils.color(utils.config["bg_color"]))
 
-    def _get_size_multipliers(self):
-        """Calculate multipliers for converting from world to screen coords"""
+    def screen2world(self, screen, relative):
+        """Translate coordinates from screen to world."""
         screen_size = self.main.get_size()
         world_size = self.screen.get_size()
+
         x_mult = screen_size[0] // world_size[0]
         y_mult = screen_size[1] // world_size[1]
-        return x_mult, y_mult
 
-    def screen2world(self, screen):
-        """Translate coordinates from screen to world."""
-        x_mult, y_mult = self._get_size_multipliers()
-        world = (screen[0] / x_mult, screen[1] / y_mult)
+        if relative:
+            x_offset = 0
+            y_offset = 0
+        else:
+            x_offset = (screen_size[0] % world_size[0]) // 2
+            y_offset = (screen_size[1] % world_size[1]) // 2
+
+        world = ((screen[0] - x_offset) / x_mult,
+                 (screen[1] - y_offset) / y_mult)
+
         return world
 
 

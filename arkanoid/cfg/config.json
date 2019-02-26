@@ -5,8 +5,8 @@
         232
     ],
     "screen_size": [
-        256,
-        232
+        600,
+        500
     ],
     "full_screen": false,
     "frame_rate": 60,
