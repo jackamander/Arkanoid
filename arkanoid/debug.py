@@ -143,7 +143,7 @@ class DebugEngine(engine.Engine):
 
 
 if __name__ == "__main__":
-    utils.setup_logging("logging.json")
+    utils.setup_logging("debug.json")
 
     engine.EngineClass = DebugEngine
 

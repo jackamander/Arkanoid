@@ -835,8 +835,6 @@ def main_loop():
 
         # Event pump
         for event in pygame.event.get():
-            logging.debug("Event: %s", pygame.event.event_name(event.type))
-
             if event.type == pygame.QUIT:
                 return
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
