@@ -494,7 +494,8 @@ class GameState(State):
 
         # Send the motion event
         delta = utils.config["kb_speed"] * direction
-        utils.events.generate(utils.Event.PADDLEMOVE, delta=delta)
+        if delta:
+            utils.events.generate(utils.Event.PADDLEMOVE, delta=delta)
 
     def update(self):
         self.keyboard_input()
