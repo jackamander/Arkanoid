@@ -2,7 +2,6 @@
 Sprites, scenes, and their actions
 """
 
-import logging
 import math
 
 import pygame
@@ -672,7 +671,7 @@ class Sprite(pygame.sprite.DirtySprite):
             new_action.start(self)
 
     def update(self):
-        "Update the sprite for the current frame"
+        """Update the sprite for the current frame"""
         # Update the previous position
         self.last = self.rect.copy()
 

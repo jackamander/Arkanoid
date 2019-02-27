@@ -189,3 +189,12 @@ def get_image(name):
         image = pygame.transform.smoothscale(image, scaled)
 
     return image
+
+
+def init():
+    """Pre-load fonts and images into cache"""
+    for name in utils.config["fonts"]:
+        get_font(name)
+
+    for name in utils.config["images"]:
+        get_image(name)

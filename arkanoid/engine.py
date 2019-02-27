@@ -537,7 +537,9 @@ class GameState(State):
                 if hitters:
                     closest = collision.find_closest(projectile, hitters)
 
-                    logging.info("collision #%d Count %d", attempt, len(hitters))
+                    logging.info("collision #%d Count %d",
+                                 attempt,
+                                 len(hitters))
                     logging.debug("proj %s", projectile.rect)
                     for sprite in hitters:
                         logging.debug("targ %s", sprite.rect)
@@ -822,7 +824,11 @@ def main_loop():
 
     pygame.init()
 
+    audio.init()                    # Pre-load cache
+
     window = display.Window()
+
+    display.init()                  # Pre-load cache
 
     eng = EngineClass()
 

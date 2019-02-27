@@ -13,6 +13,12 @@ import utils
 pygame.mixer.pre_init(frequency=44100, buffer=512)
 
 
+def init():
+    """Pre-load audio files into cache"""
+    for name in utils.config["sounds"]:
+        get_sound(name)
+
+
 @functools.lru_cache(maxsize=None)
 def get_sound(name):
     "Load and configure a sound"
