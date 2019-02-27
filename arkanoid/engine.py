@@ -428,7 +428,7 @@ class GameState(State):
         score = self.engine.get_score()
         for threshold in itertools.chain([20000], itertools.count(60000, 60000)):
             if score < threshold:
-                logging.info("Next threshold:%d", threshold)
+                logging.info("Next score threshold:%d", threshold)
                 return threshold
 
     def speed_timer(self):
@@ -536,10 +536,10 @@ class GameState(State):
                 if hitters:
                     closest = collision.find_closest(projectile, hitters)
 
-                    logging.info("collision %d", attempt)
-                    logging.info("proj %s", projectile.rect)
+                    logging.info("collision #%d Count %d", attempt, len(hitters))
+                    logging.debug("proj %s", projectile.rect)
                     for sprite in hitters:
-                        logging.info("targ %s", sprite.rect)
+                        logging.debug("targ %s", sprite.rect)
 
                     projectile.hit(self.scene)
                     closest.hit(self.scene)
@@ -754,11 +754,10 @@ class Engine(object):
         key = "score1" if player == 1 else "score2"
         self.vars[key] = score
 
+        logging.info("P%d Score %d", player, score)
+
         if score > self.vars["high"]:
             self.vars["high"] = score
-            logging.info("P%d Score %d (h)", player, score)
-        else:
-            logging.info("P%d Score %d", player, score)
 
     def get_score(self):
         """Get the score for the current player"""
@@ -856,19 +855,17 @@ def main_loop():
         window.clear()
         eng.draw(window.screen)
 
-        fps = int(clock.get_fps())
-        window.screen.blit(display.draw_text(str(fps), "white"), (0, 0))
-
         utime = utilization_timer.get()
 
         # Frame sync
-        clock.tick(utils.config["frame_rate"])
+        clock.tick_busy_loop(utils.config["frame_rate"])
         window.flip()
 
         # FPS logging
         ftime = frame_timer.get()
         utilization = utime / ftime * 100
-        if ftime > 2.0 / utils.config["frame_rate"] or utilization > 50:
+        fps = int(clock.get_fps())
+        if ftime > 2.0 / utils.config["frame_rate"]:
             logfunc = logging.warning
         else:
             logfunc = logging.debug

@@ -16,6 +16,7 @@ pygame.mixer.pre_init(frequency=44100, buffer=512)
 @functools.lru_cache(maxsize=None)
 def get_sound(name):
     "Load and configure a sound"
+    logging.warning("Sound cache miss: %s", name)
     cfg = utils.config["sounds"][name]
 
     fname = cfg["filename"]             # Filename is mandatory
@@ -23,8 +24,6 @@ def get_sound(name):
 
     sound = pygame.mixer.Sound(fname)
     sound.set_volume(volume)
-
-    logging.warning("Sound cache miss: %s", name)
 
     return sound
 

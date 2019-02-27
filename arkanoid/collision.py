@@ -88,7 +88,7 @@ def collision_move_to_edge(sprite1, sprite2):
         delta_x = -vel_x * time_y
         delta_y = -vel_y * time_y
 
-    logging.info("Move: (%d, %d)", delta_x, delta_y)
+    logging.debug("Move: (%d, %d)", delta_x, delta_y)
 
     sprite1.rect.move_ip(int(delta_x), int(delta_y))
 
@@ -96,9 +96,9 @@ def collision_move_to_edge(sprite1, sprite2):
 def collision_side(sprite1, sprite2):
     """Determine the side of collisions between 2 sprites"""
     result = collision_side_worker(sprite1, sprite2)
-    logging.info("collision curr %s %s", sprite1.rect, sprite2.rect)
-    logging.info("collision prev %s %s", sprite1.last, sprite2.last)
-    logging.info("collision side %s", str(result))
+    logging.debug("collision curr %s %s", sprite1.rect, sprite2.rect)
+    logging.debug("collision prev %s %s", sprite1.last, sprite2.last)
+    logging.debug("collision side %s", str(result))
     return result
 
 

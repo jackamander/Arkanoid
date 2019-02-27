@@ -155,6 +155,7 @@ class Font:
 @functools.lru_cache(maxsize=None)
 def get_font(name):
     """Font factory with caching"""
+    logging.warning("Font cache miss: %s", name)
     font = Font(name)
     return font
 
@@ -169,6 +170,7 @@ def draw_text(text, font_name=None):
 @functools.lru_cache(maxsize=None)
 def get_image(name):
     "Fetch an image from cache or disk"
+    logging.warning("Image cache miss: %s", name)
     cfg = utils.config["images"][name]
 
     fname = cfg["filename"]
@@ -185,7 +187,5 @@ def get_image(name):
 
     if scaled:
         image = pygame.transform.smoothscale(image, scaled)
-
-    logging.warning("Image cache miss: %s", name)
 
     return image

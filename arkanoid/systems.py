@@ -159,7 +159,7 @@ class Paddle:
         ball.set_action(entities.Move(vel))
         audio.play_sound("Low")
 
-        logging.info("hit_ball d=%s vel=%s", delta, vel)
+        logging.info("paddle/ball d=%s vel=%s", delta, vel)
 
     def kill(self):
         """Kill the paddle"""
@@ -289,7 +289,7 @@ class Capsules:
 
             self.disable()
 
-            logging.info("Vels: %s", vels)
+            logging.debug("Vels: %s", vels)
         elif effect == "player":
             utils.events.generate(utils.Event.EXTRA_LIFE)
         elif effect == "slow":
