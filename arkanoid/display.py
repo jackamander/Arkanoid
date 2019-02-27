@@ -32,9 +32,11 @@ class Window:
         world_size = utils.config['world_size']
         screen_size = utils.config['screen_size']
 
-        flags = 0
         if utils.config['full_screen']:
             flags = pygame.FULLSCREEN | pygame.HWSURFACE | pygame.DOUBLEBUF
+        else:
+            flags = pygame.RESIZABLE
+            utils.events.register(utils.Event.VIDEORESIZE, self.on_resize)
 
         self.main = pygame.display.set_mode(screen_size, flags)
         self.screen = pygame.Surface(world_size)
@@ -46,6 +48,12 @@ class Window:
 
         # Load a white cursor
         set_cursor(pygame.cursors.thickarrow_strings)
+
+    def on_resize(self, event):
+        """Resize the window when commanded"""
+        width = max(event.w, utils.config["world_size"][0])
+        height = max(event.h, utils.config["world_size"][1])
+        self.main = pygame.display.set_mode((width, height), pygame.RESIZABLE)
 
     def flip(self):
         "Flip the screen buffer"
