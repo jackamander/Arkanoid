@@ -34,6 +34,11 @@ def get_sound(name):
     return sound
 
 
+def stop():
+    """Stop all sounds"""
+    pygame.mixer.stop()
+
+
 def play_sound(name):
     """Play the given sound"""
     sound = get_sound(name)

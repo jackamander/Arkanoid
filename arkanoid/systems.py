@@ -27,15 +27,18 @@ class Paddle:
 
     def stop(self):
         """Deregister the paddle"""
+        if self.sound and self.sound.get_busy():
+            self.sound.stop()
         utils.events.unregister(utils.Event.FIRE, self.fire_laser)
         utils.events.unregister(utils.Event.FIRE, self.release_ball)
+        utils.timers.cancel(self.release_ball)
 
     def normal_handler(self, event):
         """Event handler for normal paddle"""
         if event == "expand":
             action = self.sprite.action.plus(entities.Animate("paddle_grow"))
             self.sprite.set_action(action)
-            audio.play_sound("Enlarge")
+            self.sound = audio.play_sound("Enlarge")
             self.handler = self.expanded_handler
         elif event == "laser":
             action = self.sprite.action.plus(
@@ -67,7 +70,7 @@ class Paddle:
                 entities.Animate("laser_to_paddle").then(
                     entities.Animate("paddle_grow")))
             self.sprite.set_action(action)
-            audio.play_sound("Enlarge")
+            self.sound = audio.play_sound("Enlarge")
             self.handler = self.expanded_handler
             utils.events.unregister(utils.Event.FIRE, self.fire_laser)
         elif event == "normal":
@@ -87,7 +90,7 @@ class Paddle:
         self.state.scene.groups["all"].add(sprite)
         self.state.scene.groups["lasers"].add(sprite)
 
-        audio.play_sound("Laser")
+        self.sound = audio.play_sound("Laser")
 
     def enable_catch(self):
         """Enable catch mode"""
@@ -157,7 +160,7 @@ class Paddle:
         vel = [i * self.state.ball_speed for i in vel]
 
         ball.set_action(entities.Move(vel))
-        audio.play_sound("Low")
+        self.sound = audio.play_sound("Low")
 
         logging.info("paddle/ball d=%s vel=%s", delta, vel)
 

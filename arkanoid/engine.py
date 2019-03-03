@@ -32,7 +32,10 @@ class State(object):
 
     def input(self, event):
         """Process input event"""
-        pass
+
+        # Most states will return to the Title state on Esc
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+            self.engine.set_state(TitleState, {})
 
     def update(self):
         """Update the state for the next frame"""
@@ -158,6 +161,11 @@ class TitleState(State):
         utils.events.unregister(utils.Event.KEYDOWN, self.on_keydown)
         utils.events.unregister(utils.Event.VAR_CHANGE, self.on_var_change)
 
+    def input(self, event):
+        # Exit in this state on ESCAPE
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+            return True
+
     def on_var_change(self, event):
         """Update cursor position if number of players changed"""
         if event.name == "players":
@@ -214,6 +222,10 @@ class BlinkState(State):
         # Get rid of the cursor
         self.scene.names["cursor"].kill()
 
+    def stop(self):
+        if self.sound and self.sound.get_busy():
+            self.sound.stop()
+
     def update(self):
         self.scene.groups["all"].update()
 
@@ -236,6 +248,9 @@ class RoundState(State):
         self.fix_banner()
 
         utils.timers.start(2.0, self.engine.set_state, StartState, {})
+
+    def stop(self):
+        utils.timers.cancel(self.engine.set_state)
 
     def draw(self, screen):
         self.scene.groups["all"].draw(screen)
@@ -268,6 +283,11 @@ class StartState(State):
         display.grab_mouse()
         gc.disable()    # Disable GC during gameplay
 
+    def stop(self):
+        if self.sound and self.sound.get_busy():
+            self.sound.stop()
+        utils.timers.cancel(self.engine.set_state)
+
     def draw(self, screen):
         self.scene.groups["all"].draw(screen)
 
@@ -292,6 +312,9 @@ class BreakState(State):
 
         if not self.paddle.alive():
             self.next_level()
+
+    def stop(self):
+        self.paddle.stop()
 
     def draw(self, screen):
         self.scene.groups["all"].draw(screen)
@@ -320,6 +343,9 @@ class DeathState(State):
             else:
                 self.next_player()
 
+    def stop(self):
+        self.paddle.stop()
+
     def draw(self, screen):
         self.scene.groups["all"].draw(screen)
 
@@ -336,6 +362,11 @@ class GameOverState(State):
         self.sound = audio.play_sound("GameOver")
         utils.timers.start(4.0, self.next_player)
 
+    def stop(self):
+        if self.sound and self.sound.get_busy():
+            self.sound.stop()
+        utils.timers.cancel(self.next_player)
+
     def draw(self, screen):
         self.scene.groups["all"].draw(screen)
 
@@ -347,6 +378,7 @@ class ClearState(State):
         State.__init__(self, engine, data)
 
         self.scene = data["scene"]
+        self.sound = None
 
         self.doh = self.scene.names.get("doh", None)
         if self.doh:
@@ -364,6 +396,11 @@ class ClearState(State):
             if not self.sound.get_busy():
                 utils.timers.start(1.0, self.next_level)
                 self.doh = None
+
+    def stop(self):
+        if self.sound and self.sound.get_busy():
+            self.sound.stop()
+        utils.timers.cancel(self.next_level)
 
     def draw(self, screen):
         self.scene.groups["all"].draw(screen)
@@ -416,6 +453,7 @@ class GameState(State):
 
     def stop(self):
         self.capsules.stop()
+        self.paddle.stop()
         utils.events.unregister(utils.Event.MOUSEBUTTONDOWN, self.on_click)
         utils.events.unregister(utils.Event.MOUSEMOTION, self.on_motion)
         utils.events.unregister(utils.Event.KEYDOWN, self.on_keydown)
@@ -802,7 +840,7 @@ class Engine(object):
     def input(self, event):
         """Process input event"""
         utils.events.handle(event)
-        self.state.input(event)
+        return self.state.input(event)
 
     def update(self):
         """Update engine for the next frame"""
@@ -843,15 +881,14 @@ def main_loop():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
-            elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-                return
             elif event.type == pygame.MOUSEMOTION:
                 event.pos = window.screen2world(event.pos, relative=False)
                 event.rel = window.screen2world(event.rel, relative=True)
             elif event.type in [pygame.MOUSEBUTTONDOWN, pygame.MOUSEBUTTONUP]:
                 event.pos = window.screen2world(event.pos, relative=False)
 
-            eng.input(event)
+            if eng.input(event):
+                return
 
         # Integration
         eng.update()
