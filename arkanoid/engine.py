@@ -18,7 +18,7 @@ import systems
 import utils
 
 
-class State(object):
+class State:
     """Base class for game engine states"""
     # pylint: disable=unused-argument,unnecessary-pass
 
@@ -74,26 +74,6 @@ class State(object):
                 else:
                     self.scene.groups["all"].add(sprite)
 
-    def next_level(self):
-        """Bump to next level"""
-        level = self.engine.get_level() + 1
-        self.jump_level(level)
-
-    def jump_level(self, level):
-        """Jump to given level"""
-        exists = self.engine.set_level(level)
-        if exists:
-            self.engine.set_state(RoundState, {})
-        else:
-            self.engine.set_state(VictoryState, {})
-
-    def next_player(self):
-        """Switch to next player"""
-        if self.engine.switch_player():
-            self.engine.set_state(RoundState, {})
-        else:
-            self.engine.set_state(TitleState, {})
-
 
 class SplashState(State):
     """Game splash screen"""
@@ -148,9 +128,8 @@ class TitleState(State):
         utils.events.register(utils.Event.KEYDOWN, self.on_keydown)
         utils.events.register(utils.Event.VAR_CHANGE, self.on_var_change)
 
+        # Performance isn't a concern - enable background work and release the mouse
         display.release_mouse()
-
-        # Disable garbage
         items = gc.collect()
         logging.info("Garbage collection (%d items)", items)
         gc.enable()
@@ -162,9 +141,10 @@ class TitleState(State):
         utils.events.unregister(utils.Event.VAR_CHANGE, self.on_var_change)
 
     def input(self, event):
-        # Exit in this state on ESCAPE
+        # Quit the program in this state on ESCAPE
         if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
             return True
+        return False
 
     def on_var_change(self, event):
         """Update cursor position if number of players changed"""
@@ -280,8 +260,9 @@ class StartState(State):
 
         utils.timers.start(3.0, self.engine.set_state, GameState, {})
 
+        # Start high-performance mode
         display.grab_mouse()
-        gc.disable()    # Disable GC during gameplay
+        gc.disable()
 
     def stop(self):
         if self.sound and self.sound.get_busy():
@@ -303,15 +284,12 @@ class BreakState(State):
 
         self.paddle.break_()
 
-        for ball in self.scene.groups["balls"]:
-            ball.kill()
-
     def update(self):
         for name in ["high", "score1", "score2", "break", "paddle"]:
             self.scene.names[name].update()
 
         if not self.paddle.alive():
-            self.next_level()
+            self.engine.next_level()
 
     def stop(self):
         self.paddle.stop()
@@ -341,7 +319,7 @@ class DeathState(State):
             if lives == 0:
                 self.engine.set_state(GameOverState, {"scene": self.scene})
             else:
-                self.next_player()
+                self.engine.next_player()
 
     def stop(self):
         self.paddle.stop()
@@ -360,12 +338,12 @@ class GameOverState(State):
         self.scene.merge(entities.Scene(["gameover"]))
 
         self.sound = audio.play_sound("GameOver")
-        utils.timers.start(4.0, self.next_player)
+        utils.timers.start(4.0, self.engine.next_player)
 
     def stop(self):
         if self.sound and self.sound.get_busy():
             self.sound.stop()
-        utils.timers.cancel(self.next_player)
+        utils.timers.cancel(self.engine.next_player)
 
     def draw(self, screen):
         self.scene.groups["all"].draw(screen)
@@ -384,7 +362,7 @@ class ClearState(State):
         if self.doh:
             self.sound = audio.play_sound("DohDead")
         else:
-            utils.timers.start(2.0, self.next_level)
+            utils.timers.start(2.0, self.engine.next_level)
 
     def update(self):
         for name in ["high", "score1", "score2"]:
@@ -394,13 +372,13 @@ class ClearState(State):
             self.doh.update()
 
             if not self.sound.get_busy():
-                utils.timers.start(1.0, self.next_level)
+                utils.timers.start(1.0, self.engine.next_level)
                 self.doh = None
 
     def stop(self):
         if self.sound and self.sound.get_busy():
             self.sound.stop()
-        utils.timers.cancel(self.next_level)
+        utils.timers.cancel(self.engine.next_level)
 
     def draw(self, screen):
         self.scene.groups["all"].draw(screen)
@@ -655,8 +633,6 @@ class VictoryState(State):
 
         self.victory = self.scene.names["victory"]
 
-        display.grab_mouse()
-
         utils.events.register(utils.Event.MOUSEBUTTONDOWN, self.on_click)
         utils.events.register(utils.Event.KEYDOWN, self.on_keydown)
 
@@ -707,7 +683,7 @@ class FinalState(State):
     def done(self):
         """Switch to next player"""
         self.engine.set_lives(0)
-        self.next_player()
+        self.engine.next_player()
 
     def update(self):
         self.doh.update()
@@ -736,7 +712,7 @@ class Vars:
                               name=event.name, value=self.data[event.name])
 
 
-class Engine(object):
+class Engine:
     """Game engine"""
 
     INITIAL_STATE = SplashState
@@ -830,6 +806,26 @@ class Engine(object):
 
         return False
 
+    def next_level(self):
+        """Bump to next level"""
+        level = self.get_level() + 1
+        self.jump_level(level)
+
+    def jump_level(self, level):
+        """Jump to given level"""
+        exists = self.set_level(level)
+        if exists:
+            self.set_state(RoundState, {})
+        else:
+            self.set_state(VictoryState, {})
+
+    def next_player(self):
+        """Switch to next player"""
+        if self.switch_player():
+            self.set_state(RoundState, {})
+        else:
+            self.set_state(TitleState, {})
+
     def set_state(self, state, data):
         """Set engine state"""
         logging.info("State: %s", state.__name__)
@@ -838,7 +834,7 @@ class Engine(object):
         self.state = state(self, data)
 
     def input(self, event):
-        """Process input event"""
+        """Process input event.  Return true to quit."""
         utils.events.handle(event)
         return self.state.input(event)
 

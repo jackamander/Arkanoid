@@ -112,9 +112,9 @@ class DebugEngine(engine.Engine):
     def input(self, event):
         if event.type == utils.Event.KEYDOWN:
             if event.key == pygame.K_n:
-                self.state.next_level()
+                self.next_level()
             elif event.key == pygame.K_l:
-                self.state.jump_level(36)
+                self.jump_level(36)
             elif event.key == pygame.K_r:
                 self.set_state(engine.StartState, {})
             elif event.key == pygame.K_p:
