@@ -126,7 +126,8 @@ class DebugEngine(engine.Engine):
                     self._step()
 
         if self.__running:
-            engine.Engine.input(self, event)
+            return engine.Engine.input(self, event)
+        return False
 
     def update(self):
         if self.__running:
