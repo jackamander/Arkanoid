@@ -12,7 +12,8 @@ import pygame
 
 import utils
 
-os.environ['SDL_VIDEODRIVER'] = 'directx'
+# os.environ['SDL_VIDEODRIVER'] = 'directx'
+os.environ['SDL_VIDEODRIVER'] = 'windib'
 
 
 def set_cursor(cursor_strings, hotspot=(0, 0), scale=1):
