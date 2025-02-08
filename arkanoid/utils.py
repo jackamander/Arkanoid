@@ -145,7 +145,7 @@ class Events:
 
     def handle(self, event):
         """Handle an incoming event"""
-        logging.debug("%s", Event(event.type))
+        logging.debug("%s", pygame.event.event_name(event.type))
         handlers = self.handlers[event.type]
         for handler in handlers.copy():
             handler(event)
